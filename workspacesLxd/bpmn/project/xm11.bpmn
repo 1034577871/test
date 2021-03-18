@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" id="sample-diagram" targetNamespace="http://activiti.org/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="important_project" name="三重一大项目(预算投资金额≥50万元)" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>Flow_1fc7acj</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="Activity_1ynp9mo" name="提交申请" activiti:assignee="${business}">
+      <bpmn2:incoming>Flow_1fc7acj</bpmn2:incoming>
+      <bpmn2:incoming>Flow_1begxjj</bpmn2:incoming>
+      <bpmn2:incoming>Flow_1v92wgm</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0cppn0p</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_05kuybd</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="city_department_audit" name="市公司集客部审核" activiti:formKey="city_department_audit" activiti:candidateUsers="${cityDepartment}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="cityDepartmentAudit--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_05kuybd</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0lo91ee</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_1mwp08j">
+      <bpmn2:incoming>Flow_0lo91ee</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0dnuaca</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1begxjj</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="investmentCommittee_audit" name="投资委员会线下审核" activiti:formKey="investmentCommittee_audit" activiti:candidateUsers="${investmentCommittee}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="investmentCommitteeAudit--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0dnuaca</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0g0k8ga</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_0gvzo0k">
+      <bpmn2:incoming>Flow_0g0k8ga</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1mhh87m</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1v92wgm</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="partyCommittee_audit" name="党委会审核" activiti:formKey="partyCommittee_audit" activiti:candidateUsers="${partyCommittee}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="partyCommitteeAudit--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1mhh87m</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_08plpmb</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_0dfqjq0">
+      <bpmn2:incoming>Flow_08plpmb</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0e416y3</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0cppn0p</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:endEvent id="Event_018ato8">
+      <bpmn2:extensionElements>
+        <activiti:executionListener delegateExpression="${importantProjectEnd}" event="end" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0e416y3</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1fc7acj" sourceRef="StartEvent_1" targetRef="Activity_1ynp9mo" />
+    <bpmn2:sequenceFlow id="Flow_0lo91ee" sourceRef="city_department_audit" targetRef="Gateway_1mwp08j" />
+    <bpmn2:sequenceFlow id="Flow_0dnuaca" sourceRef="Gateway_1mwp08j" targetRef="investmentCommittee_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${cityDepartmentAudit==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0g0k8ga" sourceRef="investmentCommittee_audit" targetRef="Gateway_0gvzo0k" />
+    <bpmn2:sequenceFlow id="Flow_1mhh87m" sourceRef="Gateway_0gvzo0k" targetRef="partyCommittee_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${investmentCommitteeAudit==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_08plpmb" sourceRef="partyCommittee_audit" targetRef="Gateway_0dfqjq0" />
+    <bpmn2:sequenceFlow id="Flow_0e416y3" sourceRef="Gateway_0dfqjq0" targetRef="Event_018ato8">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${partyCommitteeAudit==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_05kuybd" sourceRef="Activity_1ynp9mo" targetRef="city_department_audit" />
+    <bpmn2:sequenceFlow id="Flow_1begxjj" sourceRef="Gateway_1mwp08j" targetRef="Activity_1ynp9mo">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${cityDepartmentAudit==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_1v92wgm" sourceRef="Gateway_0gvzo0k" targetRef="Activity_1ynp9mo">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${investmentCommitteeAudit==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0cppn0p" sourceRef="Gateway_0dfqjq0" targetRef="Activity_1ynp9mo">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${partyCommitteeAudit==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="important_project">
+      <bpmndi:BPMNEdge id="Flow_0cppn0p_di" bpmnElement="Flow_0cppn0p">
+        <di:waypoint x="1080" y="185" />
+        <di:waypoint x="1080" y="120" />
+        <di:waypoint x="310" y="120" />
+        <di:waypoint x="310" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v92wgm_di" bpmnElement="Flow_1v92wgm">
+        <di:waypoint x="840" y="185" />
+        <di:waypoint x="840" y="120" />
+        <di:waypoint x="310" y="120" />
+        <di:waypoint x="310" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1begxjj_di" bpmnElement="Flow_1begxjj">
+        <di:waypoint x="600" y="185" />
+        <di:waypoint x="600" y="120" />
+        <di:waypoint x="310" y="120" />
+        <di:waypoint x="310" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05kuybd_di" bpmnElement="Flow_05kuybd">
+        <di:waypoint x="360" y="210" />
+        <di:waypoint x="430" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e416y3_di" bpmnElement="Flow_0e416y3">
+        <di:waypoint x="1105" y="210" />
+        <di:waypoint x="1152" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08plpmb_di" bpmnElement="Flow_08plpmb">
+        <di:waypoint x="1010" y="210" />
+        <di:waypoint x="1055" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mhh87m_di" bpmnElement="Flow_1mhh87m">
+        <di:waypoint x="865" y="210" />
+        <di:waypoint x="910" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g0k8ga_di" bpmnElement="Flow_0g0k8ga">
+        <di:waypoint x="770" y="210" />
+        <di:waypoint x="815" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dnuaca_di" bpmnElement="Flow_0dnuaca">
+        <di:waypoint x="625" y="210" />
+        <di:waypoint x="670" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lo91ee_di" bpmnElement="Flow_0lo91ee">
+        <di:waypoint x="530" y="210" />
+        <di:waypoint x="575" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fc7acj_di" bpmnElement="Flow_1fc7acj">
+        <di:waypoint x="198" y="210" />
+        <di:waypoint x="260" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="162" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ynp9mo_di" bpmnElement="Activity_1ynp9mo">
+        <dc:Bounds x="260" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gih3ob_di" bpmnElement="city_department_audit">
+        <dc:Bounds x="430" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1mwp08j_di" bpmnElement="Gateway_1mwp08j" isMarkerVisible="true">
+        <dc:Bounds x="575" y="185" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ghww6r_di" bpmnElement="investmentCommittee_audit">
+        <dc:Bounds x="670" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0gvzo0k_di" bpmnElement="Gateway_0gvzo0k" isMarkerVisible="true">
+        <dc:Bounds x="815" y="185" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1dsw6d6_di" bpmnElement="partyCommittee_audit">
+        <dc:Bounds x="910" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dfqjq0_di" bpmnElement="Gateway_0dfqjq0" isMarkerVisible="true">
+        <dc:Bounds x="1055" y="185" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_018ato8_di" bpmnElement="Event_018ato8">
+        <dc:Bounds x="1152" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

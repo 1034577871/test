@@ -1,0 +1,269 @@
+package com.ruoyi.projectApproval.ApprovalNg.domain;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.projectApproval.AppNgBase.domain.AppNgBase;
+import com.ruoyi.projectApproval.AppNgConst.domain.AppNgConst;
+import com.ruoyi.projectApproval.AppNgMaterial.domain.AppNgMaterial;
+import com.ruoyi.projectApproval.AppxNgReq.domain.AppxNgReq;
+
+/**
+ * 事前审批主(集客类)对象 ct_bu_approval_ng
+ * 
+ * @author Mu
+ * @date 2020-12-08
+ */
+public class CtBuApprovalNg extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
+
+	/** 唯一ID */
+	private String id;
+
+	/** 申请编号 */
+	@Excel(name = "申请编号")
+	private String reqNo;
+
+	/** 项目名称 */
+	@Excel(name = "项目名称")
+	private String proName;
+
+	/** 项目类型编号 */
+	@Excel(name = "项目类型编号")
+	private String proType;
+
+	/** 项目类型名称 */
+	@Excel(name = "项目类型名称")
+	private String proTypeName;
+
+	/** 所属分公司编号 */
+	@Excel(name = "所属分公司编号")
+	private String belongCompanyid;
+
+	/** 所属分公司名称 */
+	@Excel(name = "所属分公司名称")
+	private String belongCompanyName;
+
+	/** 所属部门编号 */
+	@Excel(name = "所属部门编号")
+	private String belongDeptid;
+
+	/** 所属部门名称 */
+	@Excel(name = "所属部门名称")
+	private String belongDeptName;
+
+	/** 合同金额 */
+	@Excel(name = "合同金额")
+	private BigDecimal contractAmountTotal;
+
+	/** 不含税金额 */
+	@Excel(name = "不含税金额")
+	private BigDecimal contractAmountTax;
+
+	/** 税率 */
+	@Excel(name = "税率")
+	private BigDecimal taxrate;
+
+	/** 税额 */
+	@Excel(name = "税额")
+	private BigDecimal taxamount;
+
+	/** 状态 */
+	@Excel(name = "状态")
+	private Integer status;
+
+	/** 状态说明 */
+	@Excel(name = "状态说明")
+	private String statusPs;
+
+	/** 备注信息 */
+	@Excel(name = "备注信息")
+	private String remarks;
+
+	/** 删除标记 */
+	private Integer delFlag;
+
+	/** 项目基本情况 **/
+	private AppNgBase appNgBase;
+
+	/** 材料使用情况 **/
+	private List<AppNgMaterial> appNgMaterialList = new ArrayList<>();
+
+	/** 施工费情况 **/
+	private AppNgConst appNgConst;
+
+	/** 事前审批对象 **/
+	private AppxNgReq appxNgReq;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setReqNo(String reqNo) {
+		this.reqNo = reqNo;
+	}
+
+	public String getReqNo() {
+		return reqNo;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProType(String proType) {
+		this.proType = proType;
+	}
+
+	public String getProType() {
+		return proType;
+	}
+
+	public void setProTypeName(String proTypeName) {
+		this.proTypeName = proTypeName;
+	}
+
+	public String getProTypeName() {
+		return proTypeName;
+	}
+
+	public void setBelongCompanyid(String belongCompanyid) {
+		this.belongCompanyid = belongCompanyid;
+	}
+
+	public String getBelongCompanyid() {
+		return belongCompanyid;
+	}
+
+	public void setBelongCompanyName(String belongCompanyName) {
+		this.belongCompanyName = belongCompanyName;
+	}
+
+	public String getBelongCompanyName() {
+		return belongCompanyName;
+	}
+
+	public void setBelongDeptid(String belongDeptid) {
+		this.belongDeptid = belongDeptid;
+	}
+
+	public String getBelongDeptid() {
+		return belongDeptid;
+	}
+
+	public void setBelongDeptName(String belongDeptName) {
+		this.belongDeptName = belongDeptName;
+	}
+
+	public String getBelongDeptName() {
+		return belongDeptName;
+	}
+
+	public BigDecimal getContractAmountTotal() {
+		return contractAmountTotal;
+	}
+
+	public void setContractAmountTotal(BigDecimal contractAmountTotal) {
+		this.contractAmountTotal = contractAmountTotal;
+	}
+
+	public BigDecimal getContractAmountTax() {
+		return contractAmountTax;
+	}
+
+	public void setContractAmountTax(BigDecimal contractAmountTax) {
+		this.contractAmountTax = contractAmountTax;
+	}
+
+	public BigDecimal getTaxrate() {
+		return taxrate;
+	}
+
+	public void setTaxrate(BigDecimal taxrate) {
+		this.taxrate = taxrate;
+	}
+
+	public BigDecimal getTaxamount() {
+		return taxamount;
+	}
+
+	public void setTaxamount(BigDecimal taxamount) {
+		this.taxamount = taxamount;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getStatusPs() {
+		return statusPs;
+	}
+
+	public void setStatusPs(String statusPs) {
+		this.statusPs = statusPs;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public AppNgBase getAppNgBase() {
+		return appNgBase;
+	}
+
+	public void setAppNgBase(AppNgBase appNgBase) {
+		this.appNgBase = appNgBase;
+	}
+
+	public List<AppNgMaterial> getAppNgMaterialList() {
+		return appNgMaterialList;
+	}
+
+	public void setAppNgMaterialList(List<AppNgMaterial> appNgMaterialList) {
+		this.appNgMaterialList = appNgMaterialList;
+	}
+
+	public AppNgConst getAppNgConst() {
+		return appNgConst;
+	}
+
+	public void setAppNgConst(AppNgConst appNgConst) {
+		this.appNgConst = appNgConst;
+	}
+
+	public AppxNgReq getAppxNgReq() {
+		return appxNgReq;
+	}
+
+	public void setAppxNgReq(AppxNgReq appxNgReq) {
+		this.appxNgReq = appxNgReq;
+	}
+}

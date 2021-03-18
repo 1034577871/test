@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.dictionary.company.mapper.CtDicCompanyMapper">
+
+	<resultMap type="CtDicCompany" id="CtDicCompanyResult">
+		<result property="id" column="id" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="creditCode" column="credit_code" />
+		<result property="companyName" column="company_name" />
+		<result property="provinceName" column="province_name" />
+		<result property="provinceId" column="province_id" />
+		<result property="provinceName" column="province_name" />
+		<result property="cityId" column="city_id" />
+		<result property="cityName" column="city_name" />
+		<result property="address" column="address" />
+		<result property="linkMan" column="link_man" />
+		<result property="linkPhone" column="link_phone" />
+		<result property="openingBank" column="opening_bank" />
+		<result property="openingAccount" column="opening_account" />
+		<result property="companyType" column="company_type" />
+		<result property="delFlag" column="del_flag" />
+		<result property="remark" column="remark" />
+	</resultMap>
+
+	<sql id="selectCtDicCompanyVo"> select id, create_by, create_time,
+		update_by, update_time, credit_code, company_name, province_id, province_name,
+		city_id, city_name, address, link_man, link_phone, opening_bank,
+		opening_account,
+		company_type, del_flag, remark from ct_dic_company
+	</sql>
+
+	<select id="selectCtDicCompanyList" parameterType="CtDicCompany"
+		resultMap="CtDicCompanyResult">
+		<include refid="selectCtDicCompanyVo" />
+		<where>
+			<if test="creditCode != null  and creditCode != ''"> and credit_code = #{creditCode}</if>
+			<if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')
+			</if>
+			<if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+			<if test="provinceName != null  and provinceName != ''"> and province_name like concat('%', #{provinceName}, '%')
+			</if>
+			<if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+			<if test="cityName != null  and cityName != ''"> and city_name like concat('%', #{cityName}, '%')</if>
+			<if test="address != null  and address != ''"> and address = #{address}</if>
+			<if test="linkMan != null  and linkMan != ''"> and link_man = #{linkMan}</if>
+			<if test="linkPhone != null  and linkPhone != ''"> and link_phone = #{linkPhone}</if>
+			<if test="openingBank != null  and openingBank != ''"> and opening_bank = #{openingBank}</if>
+			<if test="openingAccount != null  and openingAccount != ''"> and opening_account = #{openingAccount}</if>
+			<if test="companyType != null "> and company_type = #{companyType}</if>
+		</where>
+	</select>
+
+	<select id="selectCtDicCompanyById" parameterType="String"
+		resultMap="CtDicCompanyResult">
+		<include refid="selectCtDicCompanyVo" />
+		where id = #{id}
+	</select>
+
+	<insert id="insertCtDicCompany" parameterType="CtDicCompany">
+		insert into ct_dic_company
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="creditCode != null">credit_code,</if>
+			<if test="companyName != null">company_name,</if>
+			<if test="provinceId != null">province_id,</if>
+			<if test="provinceName != null">province_name,</if>
+			<if test="cityId != null">city_id,</if>
+			<if test="cityName != null">city_name,</if>
+			<if test="address != null">address,</if>
+			<if test="linkMan != null">link_man,</if>
+			<if test="linkPhone != null">link_phone,</if>
+			<if test="openingBank != null">opening_bank,</if>
+			<if test="openingAccount != null">opening_account,</if>
+			<if test="companyType != null">company_type,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="remark != null">remark,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="creditCode != null">#{creditCode},</if>
+			<if test="companyName != null">#{companyName},</if>
+			<if test="provinceId != null">#{provinceId},</if>
+			<if test="provinceName != null">#{provinceName},</if>
+			<if test="cityId != null">#{cityId},</if>
+			<if test="cityName != null">#{cityName},</if>
+			<if test="address != null">#{address},</if>
+			<if test="linkMan != null">#{linkMan},</if>
+			<if test="linkPhone != null">#{linkPhone},</if>
+			<if test="openingBank != null">#{openingBank},</if>
+			<if test="openingAccount != null">#{openingAccount},</if>
+			<if test="companyType != null">#{companyType},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="remark != null">#{remark},</if>
+		</trim>
+	</insert>
+
+	<update id="updateCtDicCompany" parameterType="CtDicCompany">
+		update ct_dic_company
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="creditCode != null">credit_code = #{creditCode},</if>
+			<if test="companyName != null">company_name = #{companyName},</if>
+			<if test="provinceId != null">province_id = #{provinceId},</if>
+			<if test="provinceName != null">province_name = #{provinceName},</if>
+			<if test="cityId != null">city_id = #{cityId},</if>
+			<if test="cityName != null">city_name = #{cityName},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="linkMan != null">link_man = #{linkMan},</if>
+			<if test="linkPhone != null">link_phone = #{linkPhone},</if>
+			<if test="openingBank != null">opening_bank = #{openingBank},</if>
+			<if test="openingAccount != null">opening_account = #{openingAccount},</if>
+			<if test="companyType != null">company_type = #{companyType},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+			<if test="remark != null">remark = #{remark},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteCtDicCompanyById" parameterType="String">
+		delete from
+		ct_dic_company where id = #{id}
+	</delete>
+
+	<delete id="deleteCtDicCompanyByIds" parameterType="String">
+		delete from ct_dic_company where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

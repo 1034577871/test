@@ -1,0 +1,1016 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="项目类别" prop="projectCategory">
+        <el-select v-model="queryParams.projectCategory" placeholder="请选择项目类别" clearable size="small">
+          <el-option v-for="dict in projectCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="项目编号" prop="projectNo">
+        <el-input
+          v-model="queryParams.projectNo"
+          placeholder="请输入项目编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="项目名称" prop="projectName">
+        <el-input
+          v-model="queryParams.projectName"
+          placeholder="请输入项目名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="合同编号" prop="contractNo">
+        <el-input
+          v-model="queryParams.contractNo"
+          placeholder="请输入合同编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="合同名称" prop="contractName">
+        <el-input
+          v-model="queryParams.contractName"
+          placeholder="请输入合同名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
+
+      <el-form-item label="合同类别" prop="contractCategory">
+        <el-select v-model="queryParams.contractCategory" placeholder="请选择合同类别" clearable size="small">
+          <el-option v-for="dict in contractCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="收入类型" prop="incomeType">
+        <el-select v-model="queryParams.contractCategory" placeholder="请选择收入类型" clearable size="small">
+          <el-option v-for="dict in incomeTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="对方单位名称" prop="oppositeName">
+        <el-input
+          v-model="queryParams.oppositeName"
+          placeholder="请输入对方单位名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <!-- <el-form-item label="对方单位银行账户" prop="oppositeBank">
+        <el-input
+          v-model="queryParams.oppositeBank"
+          placeholder="请输入对方单位银行账户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="对方单位银行账号" prop="oppositeBankId">
+        <el-input
+          v-model="queryParams.oppositeBankId"
+          placeholder="请输入对方单位银行账号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+     <!-- <el-form-item label="对方单位联系人" prop="oppositeContacts">
+        <el-input
+          v-model="queryParams.oppositeContacts"
+          placeholder="请输入对方单位联系人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位联系电话" prop="oppositePhone">
+        <el-input
+          v-model="queryParams.oppositePhone"
+          placeholder="请输入对方单位联系电话"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="对方单位联系地址" prop="oppositeAddress">
+        <el-input
+          v-model="queryParams.oppositeAddress"
+          placeholder="请输入对方单位联系地址"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <el-form-item label="我方单位名称" prop="ourName">
+        <el-input
+          v-model="queryParams.ourName"
+          placeholder="请输入我方单位名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <!-- <el-form-item label="我方单位联系人" prop="ourContacts">
+        <el-input
+          v-model="queryParams.ourContacts"
+          placeholder="请输入我方单位联系人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="我方单位联系电话" prop="ourPhone">
+        <el-input
+          v-model="queryParams.ourPhone"
+          placeholder="请输入我方单位联系电话"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="我方单位银行账户" prop="ourBank">
+        <el-input
+          v-model="queryParams.ourBank"
+          placeholder="请输入我方单位银行账户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="我方单位银行账号" prop="ourBankId">
+        <el-input
+          v-model="queryParams.ourBankId"
+          placeholder="请输入我方单位银行账号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="我方单位联系地址" prop="ourAddress">
+        <el-input
+          v-model="queryParams.ourAddress"
+          placeholder="请输入我方单位联系地址"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+
+
+     <!-- <el-form-item label="合同签订日期">
+        <el-date-picker
+          v-model="starttime"
+          size="small"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item> -->
+
+
+
+      <!-- <el-form-item label="合同截止日期">
+        <el-date-picker
+          v-model="endtime"
+          size="small"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item> -->
+
+      <el-form-item label="合同服务开始日期">
+        <el-date-picker
+          v-model="contractServeStart"
+          size="small"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+
+      <!-- <el-form-item label="合同服务截止日期">
+        <el-date-picker
+          v-model="contractServeEnd"
+          size="small"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item> -->
+
+
+      <el-form-item label="付款方式" prop="payMethod">
+        <el-select v-model="queryParams.payMethod" placeholder="请选择付款方式" clearable size="small">
+          <el-option v-for="dict in payMethodList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="经办部门" prop="manageDeptment">
+        <el-input
+          v-model="queryParams.manageDeptment"
+          placeholder="请输入经办部门"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="经办人" prop="manageUser">
+        <el-input
+          v-model="queryParams.manageUser"
+          placeholder="请输入经办人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+          <el-option v-for="dict in contractStatusList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['contract:contractInfo:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['contract:contractInfo:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['contract:contractInfo:editRemove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['contract:contractInfo:export']"
+        >导出</el-button>
+      </el-col>
+	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column label="备注信息" align="center" prop="id" /> -->
+      <el-table-column label="合同编号" align="center" prop="contractNo" />
+      <el-table-column label="项目类别" align="center" prop="projectCategory" />
+      <!-- <el-table-column label="项目ID" align="center" prop="projectId" /> -->
+      <el-table-column label="项目编号" align="center" prop="projectNo" />
+      <el-table-column label="项目名称" align="center" prop="projectName" >
+<!--         <template slot-scope="scope">
+//可编辑思路
+            <el-input v-model="scope.row.projectName"></el-input>
+          </template> -->
+      </el-table-column>
+
+      <el-table-column label="合同名称" align="center" prop="contractName" />
+      <!-- <el-table-column label="月份" align="center" prop="month" /> -->
+      <el-table-column label="合同类别" align="center" prop="contractCategory" />
+      <el-table-column label="收入类型" align="center" prop="incomeType" />
+      <el-table-column label="对方单位名称" align="center" prop="oppositeName" />
+      <el-table-column label="我方单位名称" align="center" prop="ourName" />
+      <el-table-column label="合同签订日期" align="center" prop="starttime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合同截止日期" align="center" prop="endtime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合同服务开始日期" align="center" prop="contractServeStart" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.contractServeStart, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="服务期限" align="center" prop="serviceTerm" /> -->
+      <el-table-column label="合同服务截止日期" align="center" prop="contractServeEnd" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.contractServeEnd, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合同标的额" align="center" prop="totalMoney" />
+      <el-table-column label="税率" align="center" prop="taxrate" />
+      <el-table-column label="不含税金额" align="center" prop="notTaxMoney" />
+      <el-table-column label="付款方式" align="center" prop="payMethod" />
+      <!-- <el-table-column label="合同归档资料" align="center" prop="archiveFiles" /> -->
+      <el-table-column label="经办部门" align="center" prop="manageDeptment" />
+      <el-table-column label="经办人" align="center" prop="manageUser" />
+      <!-- <el-table-column label="变更之前ID" align="center" prop="originalId" /> -->
+      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态说明" align="center" prop="statusPs" />
+      <!-- <el-table-column label="合同扫描件" align="center" prop="contractScanningFile" /> -->
+      <!-- <el-table-column label="合同签订审批流程附件" align="center" prop="contractApprovalFile" /> -->
+      <!-- <el-table-column label="其他附件" align="center" prop="otherFiles" /> -->
+      <!-- <el-table-column label="备注信息" align="center" prop="remarks" /> -->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['contract:contractInfo:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['contract:contractInfo:editRemove']"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+      <div slot='append' style='padding: 20px 0'>
+        统计：
+        合同标的额:{{sum.totalMoneySum}};
+        不含税金额:{{sum.notTaxMoneySum}};
+        未收金额:{{sum.outstandingAmountSum}};
+        已收金额:{{sum.receiveAmountSum}};
+        已核销金额:{{sum.writeOffAmountSum}};
+        未核销金额:{{sum.nwriteOffAmountSum}};
+      </div>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改合同信息录入主对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="基本信息" name="first">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="项目类别" prop="projectCategory">
+                  <el-select v-model="form.projectCategory" placeholder="请选择项目类别" clearable size="small">
+                    <el-option v-for="dict in projectCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+<!--              <el-col :span="12">
+                <el-form-item label="项目ID" prop="projectId">
+                  <el-input v-model="form.projectId" placeholder="请输入项目ID" />
+                </el-form-item>
+              </el-col> -->
+<!--              <el-col :span="12">
+                <el-form-item label="项目编号" prop="projectNo">
+                  <el-input v-model="form.projectNo" placeholder="请输入项目编号" />
+                </el-form-item>
+              </el-col> -->
+              <el-col :span="12">
+                <el-form-item label="项目名称" prop="projectName">
+                  <!-- <el-input v-model="form.projectName" placeholder="请输入项目名称" /> -->
+                  <selectObjectDialog ref='objDialog' @ok='objDialogOk'/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同名称" prop="contractName">
+                  <el-input v-model="form.contractName" placeholder="请输入合同名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同类别" prop="contractCategory">
+                  <el-select v-model="form.contractCategory" placeholder="请选择合同类别" clearable size="small">
+                    <el-option v-for="dict in contractCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="收入类型" prop="incomeType">
+                  <el-select v-model="form.incomeType" placeholder="请选择收入类型" clearable size="small">
+                    <el-option v-for="dict in incomeTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对方单位名称" prop="oppositeName">
+                  <el-input v-model="form.oppositeName" placeholder="请输入对方单位名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对方单位银行账户" prop="oppositeBank">
+                  <el-input v-model="form.oppositeBank" placeholder="请输入对方单位银行账户" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对方单位银行账号" prop="oppositeBankId">
+                  <el-input v-model="form.oppositeBankId" placeholder="请输入对方单位银行账号" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对方单位联系人" prop="oppositeContacts">
+                  <el-input v-model="form.oppositeContacts" placeholder="请输入对方单位联系人" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对方单位联系电话" prop="oppositePhone">
+                  <el-input v-model="form.oppositePhone" placeholder="请输入对方单位联系电话" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="对方单位联系地址" prop="oppositeAddress">
+                  <el-input v-model="form.oppositeAddress" placeholder="请输入对方单位联系地址" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="我方单位名称" prop="ourName">
+                  <el-input v-model="form.ourName" placeholder="请输入我方单位名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="我方单位联系人" prop="ourContacts">
+                  <el-input v-model="form.ourContacts" placeholder="请输入我方单位联系人" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="我方单位联系电话" prop="ourPhone">
+                  <el-input v-model="form.ourPhone" placeholder="请输入我方单位联系电话" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="我方单位银行账户" prop="ourBank">
+                  <el-input v-model="form.ourBank" placeholder="请输入我方单位银行账户" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+               <el-form-item label="我方单位银行账号" prop="ourBankId">
+                 <el-input v-model="form.ourBankId" placeholder="请输入我方单位银行账号" />
+               </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="我方单位联系地址" prop="ourAddress">
+                  <el-input v-model="form.ourAddress" placeholder="请输入我方单位联系地址" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+               <el-form-item label="合同签订日期" prop="starttime">
+                 <el-date-picker clearable size="small" style="width: 200px"
+                   v-model="form.starttime"
+                   type="date"
+                   value-format="yyyy-MM-dd"
+                   placeholder="选择合同签订日期">
+                 </el-date-picker>
+               </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同截止日期" prop="endtime">
+                  <el-date-picker clearable size="small" style="width: 200px"
+                    v-model="form.endtime"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择合同截止日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同服务开始日期" prop="contractServeStart">
+                  <el-date-picker clearable size="small" style="width: 200px"
+                    v-model="form.contractServeStart"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择合同服务开始日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="服务期限" prop="serviceTerm">
+                  <el-input v-model="form.serviceTerm" placeholder="请输入服务期限" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同标的额" prop="totalMoney">
+                  <el-input v-model="form.totalMoney" placeholder="请输入合同标的额" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="税率" prop="taxrate">
+                  <el-input v-model="form.taxrate" placeholder="请输入税率" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="不含税金额" prop="notTaxMoney">
+                  <el-input v-model="form.notTaxMoney" placeholder="请输入不含税金额" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="付款方式" prop="payMethod">
+                  <el-select v-model="queryParams.payMethod" placeholder="请选择付款方式" clearable size="small">
+                    <el-option v-for="dict in payMethodList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item label="合同归档资料" prop="archiveFiles">
+                  <el-input v-model="form.archiveFiles" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="经办部门" prop="manageDeptment">
+                  <el-input v-model="form.manageDeptment" placeholder="请输入经办部门" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="经办人" prop="manageUser">
+                  <el-input v-model="form.manageUser" placeholder="请输入经办人" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="变更之前ID" prop="originalId">
+                  <el-input v-model="form.originalId" placeholder="请输入变更之前ID" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+               <el-form-item label="状态" prop="status">
+                 <el-select v-model="form.status" placeholder="请选择状态" clearable size="small">
+                   <el-option v-for="dict in contractStatusList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+                 </el-select>
+               </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="状态说明" prop="statusPs">
+                  <el-input v-model="form.statusPs" placeholder="请输入状态说明" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同扫描件" prop="contractScanningFile">
+                  <el-input v-model="form.contractScanningFile" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="合同签订审批流程附件" prop="contractApprovalFile">
+                  <el-input v-model="form.contractApprovalFile" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="其他附件" prop="otherFiles">
+                  <el-input v-model="form.otherFiles" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="备注信息" prop="remarks">
+                  <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-tab-pane>
+          <el-tab-pane label="材料信息" name="second">
+            <el-row>
+              <el-form-item label="合同编号" prop="contractId">
+                <el-input v-model="form.contractId" placeholder="请输入合同编号" />
+              </el-form-item>
+              <el-form-item label="项目类型" prop="contentType">
+                <el-select v-model="form.contentType" placeholder="请选择项目类型">
+                  <el-option label="请选择字典生成" value="" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="类型税率" prop="contentTaxrate">
+                <el-input v-model="form.contentTaxrate" placeholder="请输入类型税率" />
+              </el-form-item>
+              <el-form-item label="类型名称" prop="contentName">
+                <el-input v-model="form.contentName" placeholder="请输入类型名称" />
+              </el-form-item>
+              <el-form-item label="含税金额" prop="intaxAmount">
+                <el-input v-model="form.intaxAmount" placeholder="请输入含税金额" />
+              </el-form-item>
+              <el-form-item label="不含税金额" prop="extaxAmount">
+                <el-input v-model="form.extaxAmount" placeholder="请输入不含税金额" />
+              </el-form-item>
+             <!-- <el-form-item label="删除标志" prop="delFlag">
+                <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
+              </el-form-item> -->
+              <el-form-item label="备注" prop="remark">
+                <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+              </el-form-item>
+            </el-row>
+          </el-tab-pane>
+          <el-tab-pane label="合同付款" name="third">
+
+
+            <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="100px">
+              <el-col :span="12">
+               <!-- <el-form-item label="材料编码" >
+                	<el-input v-model="formData.materialCode" ></el-input>
+                </el-form-item> -->
+                <el-form-item label="合同编号" prop="contractId">
+                  <el-input v-model="form.contractId" placeholder="请输入合同编号" />
+                </el-form-item>
+              </el-col>
+
+            </el-form>
+            <!-- <el-row>
+              <el-form-item label="合同编号" prop="contractId">
+                <el-input v-model="form.contractId" placeholder="请输入合同编号" />
+              </el-form-item>
+
+              <el-table>
+
+              </el-table>
+
+              <el-form-item label="预计付款时间" prop="estimateTime">
+                <el-date-picker clearable size="small" style="width: 200px"
+                  v-model="form.estimateTime"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择预计付款时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="付款条件说明" prop="conditionInfo">
+                <el-input v-model="form.conditionInfo" type="textarea" placeholder="请输入内容" />
+              </el-form-item>
+              <el-form-item label="付款比例" prop="paymentRatio">
+                <el-input v-model="form.paymentRatio" placeholder="请输入付款比例" />
+              </el-form-item>
+              <el-form-item label="应付款金额" prop="estimateMoney">
+                <el-input v-model="form.estimateMoney" placeholder="请输入应付款金额" />
+              </el-form-item>
+              <el-form-item label="实际付款时间" prop="actualTime">
+                <el-date-picker clearable size="small" style="width: 200px"
+                  v-model="form.actualTime"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择实际付款时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="实际付款金额" prop="actualMoney">
+                <el-input v-model="form.actualMoney" placeholder="请输入实际付款金额" />
+              </el-form-item>
+              <el-form-item label="发票号码" prop="invoiceId">
+                <el-input v-model="form.invoiceId" placeholder="请输入发票号码" />
+              </el-form-item>
+              <el-form-item label="发票含税金额" prop="invoiceMoney">
+                <el-input v-model="form.invoiceMoney" placeholder="请输入发票含税金额" />
+              </el-form-item>
+              <el-form-item label="发票不含税金额" prop="invoiceNomoney">
+                <el-input v-model="form.invoiceNomoney" placeholder="请输入发票不含税金额" />
+              </el-form-item>
+              <el-form-item label="发票代码" prop="invoiceCode">
+                <el-input v-model="form.invoiceCode" placeholder="请输入发票代码" />
+              </el-form-item>
+              <el-form-item label="发票时间" prop="invoiceTime">
+                <el-date-picker clearable size="small" style="width: 200px"
+                  v-model="form.invoiceTime"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择发票时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="备注信息" prop="remarks">
+                <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
+              </el-form-item>
+              <el-form-item label="删除标记" prop="delFlag">
+                <el-input v-model="form.delFlag" placeholder="请输入删除标记" />
+              </el-form-item>
+            </el-row> -->
+          </el-tab-pane>
+        </el-tabs>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+  </div>
+</template>
+
+<script>
+import { listContract, getContract, delContract, addContract, updateContract, exportContract } from "@/api/contract/contractInfo";
+import selectObjectDialog from './selectObjectDialog'
+export default {
+  name: "Contract",
+  components:{
+    selectObjectDialog
+  },
+  data() {
+    return {
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 合同信息录入主表格数据
+      contractList: [],
+      projectCategoryTypeList: [],
+      contentTypeList:[],
+      contractCategoryTypeList: [],
+      incomeTypeList: [],
+      payMethodList: [],
+      contractStatusList: [],
+      // 日期范围
+      starttime: [],
+      endtime: [],
+      contractServeStart: [],
+      contractServeEnd: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        projectCategory: null,
+        contentType: null,
+        projectId: null,
+        projectNo: null,
+        projectName: null,
+        contractNo: null,
+        contractName: null,
+        month: null,
+        contractCategory: null,
+        incomeType: null,
+        oppositeName: null,
+        oppositeBank: null,
+        oppositeBankId: null,
+        oppositeContacts: null,
+        oppositePhone: null,
+        oppositeAddress: null,
+        ourName: null,
+        ourContacts: null,
+        ourPhone: null,
+        ourBank: null,
+        ourBankId: null,
+        ourAddress: null,
+        starttime: null,
+        endtime: null,
+        contractServeStart: null,
+        serviceTerm: null,
+        contractServeEnd: null,
+        totalMoney: null,
+        taxrate: null,
+        notTaxMoney: null,
+        payMethod: null,
+        archiveFiles: null,
+        manageDeptment: null,
+        manageUser: null,
+        originalId: null,
+        status: null,
+        statusPs: null,
+        contractScanningFile: null,
+        contractApprovalFile: null,
+        otherFiles: null,
+        remarks: null,
+        sum:'',//统计
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+      },
+      activeName:'first',//切換tab
+    };
+  },
+  created() {
+    this.getList();
+    //项目类型列表
+    this.getDicts("project_category_type").then((response) => {
+      this.projectCategoryTypeList = response.data;
+    });
+    this.getDicts("content_type").then((response) => {
+      this.contentTypeList = response.data;
+    });
+    //合同类别
+    this.getDicts("contract_category_type").then((response) => {
+      this.contractCategoryTypeList = response.data;
+    });
+    //收入类型
+    this.getDicts("income_type").then((response) => {
+      this.incomeTypeList = response.data;
+    });
+    //付款方式
+    this.getDicts("pay_method").then((response) => {
+      this.payMethodList = response.data;
+    });
+    //合同状态
+    this.getDicts("contract_status").then((response) => {
+      this.contractStatusList = response.data;
+    });
+  },
+
+  methods: {
+    /** 查询合同信息录入主列表 */
+    getList() {
+      this.loading = true;
+      listContract(this.addDateRange(this.queryParams, this.contractServeStart)).then(response => {
+        this.contractList = response.rows[0];
+        this.sum =  response.rows[1];
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        projectCategory: null,
+
+        projectId: null,
+        projectNo: null,
+        projectName: null,
+        contractNo: null,
+        contractName: null,
+        month: null,
+        contractCategory: null,
+        incomeType: null,
+        oppositeName: null,
+        oppositeBank: null,
+        oppositeBankId: null,
+        oppositeContacts: null,
+        oppositePhone: null,
+        oppositeAddress: null,
+        ourName: null,
+        ourContacts: null,
+        ourPhone: null,
+        ourBank: null,
+        ourBankId: null,
+        ourAddress: null,
+        starttime: null,
+        endtime: null,
+        contractServeStart: null,
+        serviceTerm: null,
+        contractServeEnd: null,
+        totalMoney: null,
+        taxrate: null,
+        notTaxMoney: null,
+        payMethod: null,
+        archiveFiles: null,
+        manageDeptment: null,
+        manageUser: null,
+        originalId: null,
+        status: 0,
+        statusPs: null,
+        contractScanningFile: null,
+        contractApprovalFile: null,
+        otherFiles: null,
+        delFlag: null,
+        remarks: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length!==1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加合同信息录入主";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getContract(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改合同信息录入主";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateContract(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addContract(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除合同信息录入主编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delContract(ids);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        })
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm('是否确认导出所有合同信息录入主数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return exportContract(queryParams);
+        }).then(response => {
+          this.download(response.msg);
+        })
+    },
+    /*选择项目弹出框 调用方法*/
+    objDialogOk(id,no,name){
+      console.log(id,no,name,'3333333333333333333')
+      this.form.projectId = id;
+      this.form.projectNo = no;
+      // this.form.projectName = name;
+      this.$set(this.form,'projectName',name)
+    },
+  }
+};
+</script>

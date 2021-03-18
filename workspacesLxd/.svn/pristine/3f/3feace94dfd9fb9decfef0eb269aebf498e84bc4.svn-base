@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.projectApproval.AppNgReqList.mapper.AppNgReqListMapper">
+
+	<resultMap type="AppNgReqList" id="AppNgReqListResult">
+		<result property="id" column="id" />
+		<result property="pid" column="pid" />
+		<result property="name" column="name" />
+		<result property="createTime" column="create_time" />
+		<result property="money" column="money" />
+		<result property="taxRate" column="tax_rate" />
+		<result property="noTaxMoney" column="no_tax_money" />
+		<result property="incomeMoney" column="income_money" />
+		<result property="remarks" column="remarks" />
+	</resultMap>
+
+	<sql id="selectAppNgReqListVo">
+		select id, pid,create_time, name, money, tax_rate, no_tax_money,
+		income_money, remarks
+		from ct_bu_approvaldt_ng_req_list
+	</sql>
+
+	<select id="selectAppNgReqListList" parameterType="AppNgReqList"
+		resultMap="AppNgReqListResult">
+		<include refid="selectAppNgReqListVo" />
+		<where>
+			<if test="pid != null  and pid != ''"> and pid = #{pid}</if>
+			<if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+			<if test="money != null "> and money = #{money}</if>
+			<if test="taxRate != null "> and tax_rate = #{taxRate}</if>
+			<if test="noTaxMoney != null "> and no_tax_money = #{noTaxMoney}</if>
+			<if test="incomeMoney != null "> and income_money = #{incomeMoney}</if>
+			<if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+		</where>
+		ORDER BY create_time ASC
+	</select>
+
+	<select id="selectAppNgReqListById" parameterType="String"
+		resultMap="AppNgReqListResult">
+		<include refid="selectAppNgReqListVo" />
+		where id = #{id}
+	</select>
+
+	<insert id="insertAppNgReqList" parameterType="AppNgReqList">
+		insert into ct_bu_approvaldt_ng_req_list
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="pid != null">pid,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="name != null">name,</if>
+			<if test="money != null">money,</if>
+			<if test="taxRate != null">tax_rate,</if>
+			<if test="noTaxMoney != null">no_tax_money,</if>
+			<if test="incomeMoney != null">income_money,</if>
+			<if test="remarks != null">remarks,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="pid != null">#{pid},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="name != null">#{name},</if>
+			<if test="money != null">#{money},</if>
+			<if test="taxRate != null">#{taxRate},</if>
+			<if test="noTaxMoney != null">#{noTaxMoney},</if>
+			<if test="incomeMoney != null">#{incomeMoney},</if>
+			<if test="remarks != null">#{remarks},</if>
+		</trim>
+	</insert>
+
+	<update id="updateAppNgReqList" parameterType="AppNgReqList">
+		update ct_bu_approvaldt_ng_req_list
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="pid != null">pid = #{pid},</if>
+			<if test="createTime != null"> create_time = #{createTime},</if>
+			<if test="name != null">name = #{name},</if>
+			<if test="money != null">money = #{money},</if>
+			<if test="taxRate != null">tax_rate = #{taxRate},</if>
+			<if test="noTaxMoney != null">no_tax_money = #{noTaxMoney},</if>
+			<if test="incomeMoney != null">income_money = #{incomeMoney},</if>
+			<if test="remarks != null">remarks = #{remarks},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteAppNgReqListById" parameterType="String">
+		delete from
+		ct_bu_approvaldt_ng_req_list where id = #{id}
+	</delete>
+
+	<delete id="deleteAppNgReqListByIds" parameterType="String">
+		delete from ct_bu_approvaldt_ng_req_list where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

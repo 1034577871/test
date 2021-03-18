@@ -1,0 +1,61 @@
+<template>
+  <div class="app-container">
+
+    <el-table v-loading="loading" :data="projectCount" @selection-change="handleSelectionChange">
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <el-table-column label="公司ID" align="center" prop="deptId" v-if="show" />
+      <el-table-column label="公司名称" align="center" prop="deptName" />
+      <el-table-column label="集客数量" align="center" prop="countApprovalNg" />
+      <el-table-column label="非集客数量" align="center" prop="countAppNgc" />
+      <el-table-column label="合同签订数量" align="center" prop="countContract" />
+      <el-table-column label="进行中合同数量" align="center" prop="countContractUnderway" />
+      <el-table-column label="未启动合同数量" align="center" prop="countContractUnStart" />
+      <el-table-column label="完成合同数量" align="center" prop="countContractAccomplish" />
+    </el-table>
+
+  </div>
+</template>
+
+<script>
+import { listContract, getContract, delContract, addContract, updateContract, exportContract, projectCount } from '@/api/contract/contractInfo';
+
+export default {
+  name: 'Warning',
+  data() {
+    return {
+      // 遮罩层
+      loading: true,
+      show: false,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 统计数据
+      projectCount: [],
+      form: {},
+      // 表单校验
+      rules: {}
+    };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    getList() {
+      this.loading = true;
+      projectCount().then(response => {
+        this.projectCount = response;
+        this.loading = false;
+      });
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
+    },
+  }
+};
+</script>

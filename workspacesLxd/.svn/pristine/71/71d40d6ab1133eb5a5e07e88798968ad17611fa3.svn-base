@@ -1,0 +1,1585 @@
+<template>
+  <div style="padding: 0 15px;">
+    <h2 style="text-align: center;color:#3388ee;">集客项目事前审批表</h2>
+
+    <el-row :gutter="15">
+      <el-form
+        ref="elForm"
+        :model="formData"
+        :rules="rules"
+        size="medium"
+        label-width="100px"
+      >
+        <table
+          class="table table-bordered"
+          style="text-align: center;width: 100%;vertical-align:middle;"
+        >
+          <tbody>
+          <tr>
+            <td colspan="2" width="10%" style="text-align: right;">
+              <span class="labelX">申请公司</span>
+            </td>
+            <td colspan="2" width="30%">
+              <el-input
+                v-model="formData.applyCompany"
+                placeholder="申请公司"
+                style="border: none;"
+                :readOnly="true"
+              ></el-input>
+              <!--                {{ formData.applyCompany }}-->
+            </td>
+            <td colspan="3" width="30%" style="text-align: right;">
+              <span class="labelX">项目编号</span>
+            </td>
+            <td colspan="2" width="30%">
+              <el-input
+                v-model="formData.appxNgNo"
+                placeholder="项目编号"
+                style="border: none;"
+                :readOnly="true"
+              ></el-input>
+              <!--                {{ formData.appxNgNo }}-->
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="text-align: right;">
+              <span class="labelX">项目名称</span>
+            </td>
+            <td colspan="7" style="text-align: left;">
+              <el-input
+                v-model="this.appxNgName"
+                placeholder="项目名称"
+                style="border: none;"
+                :readOnly="true"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="text-align: right;">
+              <span class="labelX">项目类别</span>
+            </td>
+            <td colspan="2">
+
+              <el-select
+                v-model="formData.proType"
+                clearable
+                :disabled="true"
+              >
+                <el-option
+                  v-for="dict in proTypeNameList"
+                  :key="dict.id"
+                  :label="dict.typeName"
+                  :value="dict.id"
+                />
+              </el-select>
+            </td>
+            <td colspan="3" style="text-align: right;">
+              <span class="labelX">申请日期</span>
+            </td>
+            <td colspan="2">
+              {{ formData.applyDate }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" rowspan="10">
+                <span class="labelX title" style="color: #1AA034;"
+                >项<br />目<br />收<br />入</span
+                >
+            </td>
+          </tr>
+          <tr style="background-color:#eff3fa">
+            <td width="20%"><span class="labelX">项目名称</span></td>
+            <td width="10%"><span class="labelX">合同金额(元)</span></td>
+            <td width="10%"><span class="labelX">税率(%)</span></td>
+            <td width="10%"><span class="labelX">不含税金额(元)</span></td>
+            <td width="10%"><span class="labelX">销项税额(元)</span></td>
+            <td colspan="2"><span class="labelX">备注</span></td>
+          </tr>
+          <tr>
+            <td><span class="labelX">传输收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.tranrevenue"
+                v-on:input="changeNum()"
+
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.trantaxrate"
+                v-on:input="changeNum()"
+
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.tranrevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.tranoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.tranremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">设备收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.devicerevenue"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.devicetaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.devicerevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.deviceoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.deviceremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">技术服务收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.serverevenue"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.servetaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.serverevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.serveoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.serveremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">工程收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.projectrevenue"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.projecttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.projectrevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.projectoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.projectremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">租赁收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.leaserevenue"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.leasetaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.leaserevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.leaseoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.leaseremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">软件收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.softwarerevenue"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.softwaretaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.softwarerevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.softwareoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.softwareremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">广告收入</span></td>
+            <td>
+              <el-input
+                v-model="formData.advertrevenue"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.adverttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.advertrevenueno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.advertoutput"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.advertremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX title red">收入合计</span></td>
+            <td>
+              <span class="red">{{ formData.incomerevenue }}</span>
+            </td>
+            <td></td>
+            <td>
+              <span class="red">{{ formData.incomerevenueno }}</span>
+            </td>
+            <td>
+              <span class="red">{{ formData.incomeoutput }}</span>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="2" :rowspan="rowspanNum" id="addPay">
+              <span class="title red labelX">项<br />目<br />支<br />出</span>
+            </td>
+          </tr>
+          <tr style="background-color: #eff3fa;">
+            <td><span class="labelX">项目名称</span></td>
+            <td><span class="labelX">合同金额(元)</span></td>
+            <td><span class="labelX">税率(%)</span></td>
+            <td><span class="labelX">不含税金额(元)</span></td>
+            <td><span class="labelX">进项税额(元)</span></td>
+            <td colspan="2"><span class="labelX">备注</span></td>
+          </tr>
+          <tr>
+            <td><span class="labelX">设备成本</span></td>
+            <td>
+              <el-input
+                v-model="formData.devicecostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.devicecosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.devicecostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.devicecostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.devicecostremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">材料成本</span></td>
+            <td>
+              <el-input
+                v-model="formData.stuffcostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.stuffcosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.stuffcostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.stuffcostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.stuffcostremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">工程转包成本(包工包料)</span></td>
+            <td>
+              <el-input
+                v-model="formData.turncostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.turncosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.turncostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.turncostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.turncostremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">服务费</span></td>
+            <td>
+              <el-input
+                v-model="formData.servecostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.servecosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.servecostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.servecostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.servecostremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">施工费</span></td>
+            <td>
+              <el-input
+                v-model="formData.buildcostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.buildcosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.buildcostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.buildcostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.buildcostremarks"
+                type="textarea"
+              ></el-input>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="labelX">自有产权设备投资</span></td>
+            <td>
+              <el-input
+                v-model="formData.havedevicemoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.havedevicetaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.havedevicemoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.havedeviceincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td rowspan="2">
+              <el-input
+                v-model="formData.havedeviceremarks"
+                type="textarea"
+              ></el-input>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="labelX">自有产权线路投资</span></td>
+            <td>
+              <el-input
+                v-model="formData.havelinemoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.havelinetaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.havelinemoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.havelineincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="labelX">维护成本(年维护费用*服务年度)</span></td>
+            <td>
+              <el-input
+                v-model="formData.upholdcostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.upholdcosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.upholdcostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.upholdcostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <div style="width: 75%;float: left;">
+                <el-input
+                  v-model="formData.upholdcostremarks"
+                  type="textarea"
+                ></el-input>
+              </div>
+              <div style="width: 25%;float: right;margin-top: 10px;">
+                <el-button
+                  size="mini"
+                  type="success"
+                  @click="loadMore()"
+                  style="margin:5px 10px;"
+                >新增</el-button
+                >
+              </div>
+            </td>
+          </tr>
+          <tr v-for="(value, index) in formData.dataList" :key="index">
+            <td>
+              <el-input
+                v-model="value.name"
+                :name="'appMateList[' + index + '].name'"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.money"
+                :name="'appMateList[' + index + '].money'"
+                v-on:input="changeNum()"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.taxRate"
+                :name="'appMateList[' + index + '].taxRate'"
+                v-on:input="changeNum()"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.noTaxMoney"
+                :name="'appMateList[' + index + '].noTaxMoney'"
+                :disabled="true"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.incomeMoney"
+                :name="'appMateList[' + index + '].incomeMoney'"
+                v-on:input="changeNum(index)"
+                :disabled="true"
+              />
+            </td>
+            <td>
+              <div style="width: 75%;float: left;">
+                <el-input
+                  v-model="value.remarks"
+                  :name="'appMateList[' + index + '].remarks'"
+                  v-on:input="changeNum(index)"
+                />
+              </div>
+              <div style="width: 25%;float: right;margin-top: 10px;">
+                <el-button
+                  size="mini"
+                  type="warning"
+                  @click.prevent="removeTodo(index)"
+                >删除</el-button
+                >
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">中标服务费、鉴证费等</span></td>
+            <td>
+              <el-input
+                v-model="formData.othercostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.othercosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.othercostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.othercostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.othercostremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX">垫资利息</span></td>
+            <td>
+              <el-input
+                v-model="formData.interestcostmoney"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.interestcosttaxrate"
+                v-on:input="changeNum()"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.interestcostmoneyno"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                v-model="formData.interestcostincome"
+                :disabled="true"
+              ></el-input>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.interestcostremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td><span class="labelX title red">成本合计</span></td>
+            <td>
+              <span class="red">{{ formData.costmoney }}</span>
+            </td>
+            <td></td>
+            <td>
+              <span class="red">{{ formData.costmoneyno }}</span>
+            </td>
+            <td>
+              <span class="red">{{ formData.costincome }}</span>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="2" rowspan="4">
+                <span class="labelX title" style="color: #FFA500;"
+                >其<br />他<br />费<br />用</span
+                >
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><span class="labelX">增值税</span></td>
+            <td colspan="2" rowspan="5"></td>
+            <td>
+              <span>{{ formData.incrementtaxrate }}</span>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.incrementremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><span class="labelX">附加税</span></td>
+            <td>
+              {{ formData.attachtaxrate }}
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.attachremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><span class="labelX">文化事业建设费</span></td>
+            <td>{{ formData.culturebuild }}</td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.culturebuildremarks"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <span class="labelX title green">预计利润</span>
+            </td>
+            <td>
+              <div class="green">{{ formData.estimateprofit }}</div>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.estimateprofitremarks"
+              ></el-input>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="4">
+              <span class="labelX title green">预计利润率</span>
+            </td>
+            <td>
+              <div class="green">{{ formData.epmargin }}</div>
+            </td>
+            <td>
+              <el-input
+                type="textarea"
+                v-model="formData.epmarginremarks"
+              ></el-input>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </el-form>
+    </el-row>
+  </div>
+</template>
+<script>
+  import {
+    findProjectType,
+    findBranchOffice,
+    findLoginbyCompany,
+    findNextAppNo
+  } from "@/api/utils";
+
+  export default {
+    components: {},
+    props: {
+      approvalInfoDate: {},
+      appxNgName:{
+        type:String,
+        default:''
+      },
+      proType:{}
+    },
+    data() {
+      return {
+        formData: {stuffcostmoney:1111},
+        proTypeNameList: [],
+        rowspanNum: 13,
+        rules: {}
+      };
+    },
+    created() {
+      console.log(this.approvalInfoDate);
+      findProjectType().then(response => {
+        this.proTypeNameList = response.data;
+      });
+
+      console.log("xxx:"+this.approvalInfoDate);
+      if (!this.approvalInfoDate) {
+        this.formData = {
+          id: null,
+          appxNgNo: null,
+          appxNgName: null,
+          proType: '',
+          applyDate: null,
+          bid: null,
+          applyCompany: null,
+          tranrevenue: null,
+          trantaxrate: 6,
+          tranrevenueno: null,
+          tranoutput: null,
+          tranremarks: null,
+          devicerevenue: null,
+          devicetaxrate: 13,
+          devicerevenueno: null,
+          deviceoutput: null,
+          deviceremarks: null,
+          serverevenue: null,
+          servetaxrate: 6,
+          serverevenueno: null,
+          serveoutput: null,
+          serveremarks: null,
+          projectrevenue: null,
+          projecttaxrate: 9,
+          projectrevenueno: null,
+          projectoutput: null,
+          projectremarks: null,
+          leaserevenue: null,
+          leasetaxrate: 6,
+          leaserevenueno: null,
+          leaseoutput: null,
+          leaseremarks: null,
+          softwarerevenue: null,
+          softwaretaxrate: 13,
+          softwarerevenueno: null,
+          softwareoutput: null,
+          softwareremarks: null,
+          advertrevenue: null,
+          adverttaxrate: 6,
+          advertrevenueno: null,
+          advertoutput: null,
+          advertremarks: null,
+          incomerevenue: null,
+          incomerevenueno: null,
+          incomeoutput: null,
+          devicecostmoney: null,
+          devicecosttaxrate: 13,
+          devicecostmoneyno: null,
+          devicecostincome: null,
+          devicecostremarks: "无产权工程",
+          stuffcostmoney: null,
+          stuffcosttaxrate: 13,
+          stuffcostmoneyno: null,
+          stuffcostincome: null,
+          stuffcostremarks: "无产权工程",
+          turncostmoney: null,
+          turncosttaxrate: 9,
+          turncostmoneyno: null,
+          turncostincome: null,
+          turncostremarks: "无产权工程",
+          servecostmoney: null,
+          servecosttaxrate: 6,
+          servecostmoneyno: null,
+          servecostincome: null,
+          servecostremarks: "无产权工程",
+          buildcostmoney: null,
+          buildcosttaxrate: 3,
+          buildcostmoneyno: null,
+          buildcostincome: null,
+          buildcostremarks:
+            "无产权工程，小规模纳税人税率3%，一般纳税人税率9%，根据施工方情况可修改税率",
+          havedevicemoney: null,
+          havedevicetaxrate: 13,
+          havedevicemoneyno: null,
+          havedeviceincome: null,
+          havedeviceremarks:
+            "自有产权工程，成本（不含税金额）按折旧计算，按投资形成资产月折旧金额*项目期限，即成本=折旧=设备不含税金额*0.95/折旧年限*服务年份，设备折旧年限8年，线路资产折旧年限15年",
+          havelinemoney: null,
+          havelinetaxrate: 9,
+          havelinemoneyno: null,
+          havelineincome: null,
+          upholdcostmoney: null,
+          upholdcosttaxrate: 6,
+          upholdcostmoneyno: null,
+          upholdcostincome: null,
+          upholdcostremarks: null,
+          othercostmoney: null,
+          othercosttaxrate: null,
+          othercostmoneyno: null,
+          othercostincome: null,
+          othercostremarks: null,
+          interestcostmoney: null,
+          interestcosttaxrate: null,
+          interestcostmoneyno: null,
+          interestcostincome: null,
+          interestcostremarks:
+            "政府采购项目经批准后可以垫资，需计算垫资利息作为项目成本，利率按4.35%计算。其他集客项目原则上不允许垫资。垫资金额   万元，垫资   月，垫资利息=垫资金额*4.35%/12*月份",
+          costmoney: null,
+          costmoneyno: null,
+          costincome: null,
+          incrementtaxrate: null,
+          incrementremarks: null,
+          attachtaxrate: null,
+          attachremarks:
+            "综合税率12.5%（城市维护建设税7%，教育费附加3%，地方教育费附加2%，地方水利建设基金0.5%）",
+          culturebuild: null,
+          culturebuildremarks:
+            "费率3%，暂减按1.5%征收，文化事业建设费=广告收入*1.5%",
+          estimateprofit: null,
+          estimateprofitremarks: null,
+          epmargin: null,
+          epmarginremarks: null,
+          remarks: null,
+          dataList: []
+        };
+
+
+      }
+    },
+    methods: {
+      /** 添加行 **/
+      loadMore: function() {
+        this.rowspanNum += 1;
+        this.formData.dataList.push({
+          id: null,
+          materialCode: null,
+          materialName: null,
+          materialUnit: null,
+          materialPrice: null,
+          materialMount: null,
+          materialAmount: null
+        });
+      },
+      /** 删除行 **/
+      removeTodo: function(index) {
+        this.rowspanNum -= 1;
+        this.formData.dataList.splice(index, 1);
+        this.changeNum();
+      },
+      changeNum() {
+        /** -----------------------项目收入-------------------------- **/
+        /** 计算传输收入 **/
+        console.log("***********AAAAAAAAAAAA*********************************");
+        console.log(this.formData);
+        let tranrevenue = this.formData.tranrevenue;
+        let trantaxrate = this.formData.trantaxrate;
+
+          if (tranrevenue && trantaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = trantaxrate / 100;
+          this.formData.tranrevenueno = this.formatPrice(
+            tranrevenue / (1 + taxrateStr)
+          );
+          this.formData.tranoutput = this.formatPrice(
+            tranrevenue - this.formData.tranrevenueno
+          );
+        }
+        /** 计算设备收入 **/
+        let devicerevenue = this.formData.devicerevenue;
+        let devicetaxrate = this.formData.devicetaxrate;
+
+        if (devicerevenue && devicetaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = devicetaxrate / 100;
+          this.formData.devicerevenueno = this.formatPrice(
+            devicerevenue / (1 + taxrateStr)
+          );
+          this.formData.deviceoutput = this.formatPrice(
+            devicerevenue - this.formData.devicerevenueno
+          );
+        }
+        /** 技术服务收入 **/
+        let serverevenue = this.formData.serverevenue;
+        let servetaxrate = this.formData.servetaxrate;
+
+
+
+        if (serverevenue && servetaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = servetaxrate / 100;
+          this.formData.serverevenueno = this.formatPrice(
+            serverevenue / (1 + taxrateStr)
+          );
+          this.formData.serveoutput = this.formatPrice(
+            serverevenue - this.formData.serverevenueno
+          );
+        }
+        /** 计算工程收入 **/
+        let projectrevenue = this.formData.projectrevenue;
+        let projecttaxrate = this.formData.projecttaxrate;
+
+
+
+
+
+        if (projectrevenue && projecttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = projecttaxrate / 100;
+          this.formData.projectrevenueno = this.formatPrice(
+            projectrevenue / (1 + taxrateStr)
+          );
+          this.formData.projectoutput = this.formatPrice(
+            projectrevenue - this.formData.projectrevenueno
+          );
+        }
+        /** 计算租赁收入 **/
+        let leaserevenue = this.formData.leaserevenue;
+        let leasetaxrate = this.formData.leasetaxrate;
+
+
+
+        if (leaserevenue && leasetaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = leasetaxrate / 100;
+          this.formData.leaserevenueno = this.formatPrice(
+            leaserevenue / (1 + taxrateStr)
+          );
+          this.formData.leaseoutput = this.formatPrice(
+            leaserevenue - this.formData.leaserevenueno
+          );
+        }
+        /** 计算软件收入 **/
+        let softwarerevenue = this.formData.softwarerevenue;
+        let softwaretaxrate = this.formData.softwaretaxrate;
+
+
+        if (softwarerevenue && softwaretaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = softwaretaxrate / 100;
+          this.formData.softwarerevenueno = this.formatPrice(
+            softwarerevenue / (1 + taxrateStr)
+          );
+          this.formData.softwareoutput = this.formatPrice(
+            softwarerevenue - this.formData.softwarerevenueno
+          );
+        }
+        /** 计算广告收入 **/
+        let advertrevenue = this.formData.advertrevenue;
+        let adverttaxrate = this.formData.adverttaxrate;
+        if (advertrevenue && adverttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = adverttaxrate / 100;
+          this.formData.advertrevenueno = this.formatPrice(
+            advertrevenue / (1 + taxrateStr)
+          );
+          this.formData.advertoutput = this.formatPrice(
+            advertrevenue - this.formData.advertrevenueno
+          );
+        }
+        /** 计算收入合计---合同金额 **/
+        let incomeMoney = 0;
+        if (this.formData.tranrevenue) {
+          let aaaa = parseFloat(this.formData.tranrevenue);
+          incomeMoney += aaaa;
+        }
+        if (this.formData.devicerevenue) {
+          let aaaa = parseFloat(this.formData.devicerevenue);
+          incomeMoney += aaaa;
+        }
+        if (this.formData.serverevenue) {
+          let aaaa = parseFloat(this.formData.serverevenue);
+          incomeMoney += aaaa;
+        }
+        if (this.formData.projectrevenue) {
+          let aaaa = parseFloat(this.formData.projectrevenue);
+          incomeMoney += aaaa;
+        }
+        if (this.formData.leaserevenue) {
+          let aaaa = parseFloat(this.formData.leaserevenue);
+          incomeMoney += aaaa;
+        }
+        if (this.formData.softwarerevenue) {
+          let aaaa = parseFloat(this.formData.softwarerevenue);
+          incomeMoney += aaaa;
+        }
+        if (this.formData.advertrevenue) {
+          let aaaa = parseFloat(this.formData.advertrevenue);
+          incomeMoney += aaaa;
+        }
+        this.formData.incomerevenue = this.formatPrice(incomeMoney);
+        /** 计算收入合计---不含税金额(元) **/
+        let incomeMoneyNoTaxrate = 0;
+        if (this.formData.tranrevenueno) {
+          let aaaa = parseFloat(this.formData.tranrevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        if (this.formData.devicerevenueno) {
+          let aaaa = parseFloat(this.formData.devicerevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        if (this.formData.serverevenueno) {
+          let aaaa = parseFloat(this.formData.serverevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        if (this.formData.projectrevenueno) {
+          let aaaa = parseFloat(this.formData.projectrevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        if (this.formData.leaserevenueno) {
+          let aaaa = parseFloat(this.formData.leaserevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        if (this.formData.softwarerevenueno) {
+          let aaaa = parseFloat(this.formData.softwarerevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        if (this.formData.advertrevenueno) {
+          let aaaa = parseFloat(this.formData.advertrevenueno);
+          incomeMoneyNoTaxrate += aaaa;
+        }
+        this.formData.incomerevenueno = this.formatPrice(incomeMoneyNoTaxrate);
+        /** 计算收入合计---销项税额(元) **/
+        let incomeWriteOff = 0;
+        if (this.formData.tranoutput) {
+          let aaaa = parseFloat(this.formData.tranoutput);
+          incomeWriteOff += aaaa;
+        }
+        if (this.formData.deviceoutput) {
+          let aaaa = parseFloat(this.formData.deviceoutput);
+          incomeWriteOff += aaaa;
+        }
+        if (this.formData.serveoutput) {
+          let aaaa = parseFloat(this.formData.serveoutput);
+          incomeWriteOff += aaaa;
+        }
+        if (this.formData.projectoutput) {
+          let aaaa = parseFloat(this.formData.projectoutput);
+          incomeWriteOff += aaaa;
+        }
+        if (this.formData.leaseoutput) {
+          let aaaa = parseFloat(this.formData.leaseoutput);
+          incomeWriteOff += aaaa;
+        }
+        if (this.formData.softwareoutput) {
+          let aaaa = parseFloat(this.formData.softwareoutput);
+          incomeWriteOff += aaaa;
+        }
+        if (this.formData.advertoutput) {
+          let aaaa = parseFloat(this.formData.advertoutput);
+          incomeWriteOff += aaaa;
+        }
+        this.formData.incomeoutput = this.formatPrice(incomeWriteOff);
+
+        /** -----------------------项目支出-------------------------- **/
+        /** 计算设备成本 **/
+        let devicecostmoney = this.formData.devicecostmoney;
+        let devicecosttaxrate = this.formData.devicecosttaxrate;
+        if (devicecostmoney && devicecosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = devicecosttaxrate / 100;
+          this.formData.devicecostmoneyno = this.formatPrice(
+            devicecostmoney / (1 + taxrateStr)
+          );
+          this.formData.devicecostincome = this.formatPrice(
+            devicecostmoney - this.formData.devicecostmoneyno
+          );
+        }
+        /** 计算材料成本 **/
+        let stuffcostmoney = this.formData.stuffcostmoney;
+        let stuffcosttaxrate = this.formData.stuffcosttaxrate;
+        if (stuffcostmoney && stuffcosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = stuffcosttaxrate / 100;
+          this.formData.stuffcostmoneyno = this.formatPrice(
+            stuffcostmoney / (1 + taxrateStr)
+          );
+          this.formData.stuffcostincome = this.formatPrice(
+            stuffcostmoney - this.formData.stuffcostmoneyno
+          );
+        }
+        /** 计算工程转包成本(包工包料) **/
+        let turncostmoney = this.formData.turncostmoney;
+        let turncosttaxrate = this.formData.turncosttaxrate;
+        if (turncostmoney && turncosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = turncosttaxrate / 100;
+          this.formData.turncostmoneyno = this.formatPrice(
+            turncostmoney / (1 + taxrateStr)
+          );
+          this.formData.turncostincome = this.formatPrice(
+            turncostmoney - this.formData.turncostmoneyno
+          );
+        }
+        /** 计算服务费 **/
+        let servecostmoney = this.formData.servecostmoney;
+        let servecosttaxrate = this.formData.servecosttaxrate;
+        if (servecostmoney && servecosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = servecosttaxrate / 100;
+          this.formData.servecostmoneyno = this.formatPrice(
+            servecostmoney / (1 + taxrateStr)
+          );
+          this.formData.servecostincome = this.formatPrice(
+            servecostmoney - this.formData.servecostmoneyno
+          );
+        }
+        /** 计算施工费 **/
+        let buildcostmoney = this.formData.buildcostmoney;
+        let buildcosttaxrate = this.formData.buildcosttaxrate;
+        if (buildcostmoney && buildcosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = buildcosttaxrate / 100;
+          this.formData.buildcostmoneyno = this.formatPrice(
+            buildcostmoney / (1 + taxrateStr)
+          );
+          this.formData.buildcostincome = this.formatPrice(
+            buildcostmoney - this.formData.buildcostmoneyno
+          );
+        }
+        /** 计算自有产权设备投资 **/
+        let havedevicemoney = this.formData.havedevicemoney;
+        let havedevicetaxrate = this.formData.havedevicetaxrate;
+        if (havedevicemoney && havedevicetaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = havedevicetaxrate / 100;
+          this.formData.havedevicemoneyno = this.formatPrice(
+            havedevicemoney / (1 + taxrateStr)
+          );
+          this.formData.havedeviceincome = this.formatPrice(
+            havedevicemoney - this.formData.havedevicemoneyno
+          );
+        }
+        /** 计算自有产权线路投资 **/
+        let havelinemoney = this.formData.havelinemoney;
+        let havelinetaxrate = this.formData.havelinetaxrate;
+        if (havelinemoney && havelinetaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = havelinetaxrate / 100;
+          this.formData.havelinemoneyno = this.formatPrice(
+            havelinemoney / (1 + taxrateStr)
+          );
+          this.formData.havelineincome = this.formatPrice(
+            havelinemoney - this.formData.havelinemoneyno
+          );
+        }
+        /** 计算维护成本 **/
+        let upholdcostmoney = this.formData.upholdcostmoney;
+        let upholdcosttaxrate = this.formData.upholdcosttaxrate;
+        if (upholdcostmoney && upholdcosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = upholdcosttaxrate / 100;
+          this.formData.upholdcostmoneyno = this.formatPrice(
+            upholdcostmoney / (1 + taxrateStr)
+          );
+          this.formData.upholdcostincome = this.formatPrice(
+            upholdcostmoney - this.formData.upholdcostmoneyno
+          );
+        }
+        /** 计算中标服务费、鉴证费 **/
+        let othercostmoney = this.formData.othercostmoney;
+        let othercosttaxrate = this.formData.othercosttaxrate;
+        if (othercostmoney && othercosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = othercosttaxrate / 100;
+          this.formData.othercostmoneyno = this.formatPrice(
+            othercostmoney / (1 + taxrateStr)
+          );
+          this.formData.othercostincome = this.formatPrice(
+            othercostmoney - this.formData.othercostmoneyno
+          );
+        }
+        /** 计算垫资利息 **/
+        let interestcostmoney = this.formData.interestcostmoney;
+        let interestcosttaxrate = this.formData.interestcosttaxrate;
+        if (interestcostmoney && interestcosttaxrate) {
+          /** 税率转换 **/
+          let taxrateStr = interestcosttaxrate / 100;
+          this.formData.interestcostmoneyno = this.formatPrice(
+            interestcostmoney / (1 + taxrateStr)
+          );
+          this.formData.interestcostincome = this.formatPrice(
+            interestcostmoney - this.formData.interestcostmoneyno
+          );
+        }
+        /** 计算添加行 **/
+        let dataList = this.formData.dataList;
+        if (dataList && dataList.length > 0) {
+          for (let i = 0; i < dataList.length; i++) {
+            let money = dataList[i].money;
+            let taxRate = dataList[i].taxRate;
+            if (money && taxRate) {
+              /** 税率转换 **/
+              let taxrateStr = taxRate / 100;
+              dataList[i].noTaxMoney = this.formatPrice(money / (1 + taxrateStr));
+              dataList[i].incomeMoney = this.formatPrice(
+                money - dataList[i].noTaxMoney
+              );
+            }
+          }
+        }
+        /** 计算成本合计 合同金额(元) **/
+        let costMoney = 0;
+        if (this.formData.devicecostmoney) {
+          costMoney += parseFloat(this.formData.devicecostmoney);
+        }
+        if (this.formData.stuffcostmoney) {
+          costMoney += parseFloat(this.formData.stuffcostmoney);
+        }
+        if (this.formData.turncostmoney) {
+          costMoney += parseFloat(this.formData.turncostmoney);
+        }
+        if (this.formData.servecostmoney) {
+          costMoney += parseFloat(this.formData.servecostmoney);
+        }
+        if (this.formData.buildcostmoney) {
+          costMoney += parseFloat(this.formData.buildcostmoney);
+        }
+        if (this.formData.havedevicemoney) {
+          costMoney += parseFloat(this.formData.havedevicemoney);
+        }
+        if (this.formData.havelinemoney) {
+          costMoney += parseFloat(this.formData.havelinemoney);
+        }
+        if (this.formData.upholdcostmoney) {
+          costMoney += parseFloat(this.formData.upholdcostmoney);
+        }
+        if (this.formData.othercostmoney) {
+          costMoney += parseFloat(this.formData.othercostmoney);
+        }
+        if (this.formData.interestcostmoney) {
+          costMoney += parseFloat(this.formData.interestcostmoney);
+        }
+        /** 计算成本合计----不含税金额 **/
+        let costmoneyno = 0;
+        if (this.formData.devicecostmoneyno) {
+          costmoneyno += parseFloat(this.formData.devicecostmoneyno);
+        }
+        if (this.formData.stuffcostmoneyno) {
+          costmoneyno += parseFloat(this.formData.stuffcostmoneyno);
+        }
+        if (this.formData.turncostmoneyno) {
+          costmoneyno += parseFloat(this.formData.turncostmoneyno);
+        }
+        if (this.formData.servecostmoneyno) {
+          costmoneyno += parseFloat(this.formData.servecostmoneyno);
+        }
+        if (this.formData.buildcostmoneyno) {
+          costmoneyno += parseFloat(this.formData.buildcostmoneyno);
+        }
+        if (this.formData.havedevicemoneyno) {
+          costmoneyno += parseFloat(this.formData.havedevicemoneyno);
+        }
+        if (this.formData.havelinemoneyno) {
+          costmoneyno += parseFloat(this.formData.havelinemoneyno);
+        }
+        if (this.formData.upholdcostmoneyno) {
+          costmoneyno += parseFloat(this.formData.upholdcostmoneyno);
+        }
+        if (this.formData.othercostmoneyno) {
+          costmoneyno += parseFloat(this.formData.othercostmoneyno);
+        }
+        if (this.formData.interestcostmoneyno) {
+          costmoneyno += parseFloat(this.formData.interestcostmoneyno);
+        }
+        /** 计算成本合计----进项税额 **/
+        let costincome = 0;
+        if (this.formData.devicecostincome) {
+          costincome += parseFloat(this.formData.devicecostincome);
+        }
+        if (this.formData.stuffcostincome) {
+          costincome += parseFloat(this.formData.stuffcostincome);
+        }
+        if (this.formData.turncostincome) {
+          costincome += parseFloat(this.formData.turncostincome);
+        }
+        if (this.formData.servecostincome) {
+          costincome += parseFloat(this.formData.servecostincome);
+        }
+        if (this.formData.buildcostincome) {
+          costincome += parseFloat(this.formData.buildcostincome);
+        }
+        if (this.formData.havedeviceincome) {
+          costincome += parseFloat(this.formData.havedeviceincome);
+        }
+        if (this.formData.havelineincome) {
+          costincome += parseFloat(this.formData.havelineincome);
+        }
+        if (this.formData.upholdcostincome) {
+          costincome += parseFloat(this.formData.upholdcostincome);
+        }
+        if (this.formData.othercostincome) {
+          costincome += parseFloat(this.formData.othercostincome);
+        }
+        if (this.formData.interestcostincome) {
+          costincome += parseFloat(this.formData.interestcostincome);
+        }
+
+        /** 计算增加行信息 **/
+        let rowList = this.formData.dataList;
+        if (rowList && rowList.length > 0) {
+          for (let i = 0; i < rowList.length; i++) {
+            if (rowList[i].money) {
+              costMoney += parseFloat(rowList[i].money);
+            }
+            if (rowList[i].noTaxMoney) {
+              costmoneyno += parseFloat(rowList[i].noTaxMoney);
+            }
+            if (rowList[i].incomeMoney) {
+              costincome += parseFloat(rowList[i].incomeMoney);
+            }
+          }
+        }
+        this.formData.costmoney = this.formatPrice(costMoney);
+        this.formData.costmoneyno = this.formatPrice(costmoneyno);
+        this.formData.costincome = this.formatPrice(costincome);
+
+        /** 计算增值税 **/
+        /** 销项税额 **/
+        let addA = this.formData.incomeoutput;
+        /** 进项税额 **/
+        let addB = this.formData.costincome;
+        let addMoney = 0;
+        if (addA) {
+          if (addB) {
+            addMoney = parseFloat(addA) - parseFloat(addB);
+          } else {
+            addMoney = parseFloat(addA);
+          }
+        } else {
+          if (addB) {
+            addMoney = 0 - parseFloat(addB);
+          } else {
+            addMoney = 0;
+          }
+        }
+        this.formData.incrementtaxrate = this.formatPrice(addMoney);
+
+        /** 计算附加税---增值税*0.125 **/
+        let attach = 0;
+        if (this.formData.incrementtaxrate) {
+          attach = parseFloat(this.formData.incrementtaxrate) * 0.125;
+        }
+        this.formData.attachtaxrate = this.formatPrice(attach);
+
+        /** 计算文化事业建设费--广告金额 * 0.015 **/
+        let culturebuild = 0;
+        if (this.formData.advertrevenue) {
+          culturebuild = parseFloat(this.formData.advertrevenue) * 0.015;
+        }
+        this.formData.culturebuild = this.formatPrice(culturebuild);
+
+        /** 计算预计利润  收入合计(不含税金额) - 成本合计(不含税金额) - 附加税 - 文化事业建设费 **/
+        let estimateprofit = 0;
+        if (this.formData.incomerevenueno) {
+          estimateprofit = parseFloat(this.formData.incomerevenueno);
+        }
+        if (this.formData.costmoneyno) {
+          estimateprofit = estimateprofit - parseFloat(this.formData.costmoneyno);
+        }
+        if (this.formData.attachtaxrate) {
+          estimateprofit =
+            estimateprofit - parseFloat(this.formData.attachtaxrate);
+        }
+        if (this.formData.culturebuild) {
+          estimateprofit =
+            estimateprofit - parseFloat(this.formData.culturebuild);
+        }
+        this.formData.estimateprofit = this.formatPrice(estimateprofit);
+        /** 预计利润率  预计利润 / 收入合计(不含税金额) **/
+        let epmargin = 0;
+        if (this.formData.estimateprofit && this.formData.incomerevenueno) {
+          let numA = parseFloat(this.formData.estimateprofit);
+          let numB = parseFloat(this.formData.incomerevenueno);
+          epmargin = numA / numB;
+        }
+        this.formData.epmargin = this.formatPrice(epmargin);
+      },
+
+      /** 格式化数字,保留小数点后2位 **/
+      formatPrice(value) {
+        let tempVal = parseFloat(value).toFixed(3);
+        let realVal = tempVal.substring(0, tempVal.length - 1);
+        return realVal;
+      }
+    }
+  };
+</script>
+<style scoped  lang="scss">
+  .table-bordered {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  .table-bordered td {
+    border: 1px solid #ddd;
+  }
+  .labelX {
+    display: inline-block;
+    max-width: 100%;
+    margin: 8px 5px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .marks {
+    padding: 10px;
+    width: 300px;
+    text-align: left;
+  }
+  .title {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .green {
+    color: rgb(0, 191, 255);
+  }
+  .red {
+    color: red;
+  }
+
+</style>

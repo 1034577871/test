@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.paymentManagement.payinfo.mapper.CtBuPayinfoMapper">
+    
+    <resultMap type="CtBuPayinfo" id="CtBuPayinfoResult">
+        <result property="id"    column="id"    />
+        <result property="proNo"    column="pro_no"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="paytype"    column="paytype"    />
+        <result property="paymoney"    column="paymoney"    />
+        <result property="ntaxmoney"    column="ntaxmoney"    />
+        <result property="taxmoney"    column="taxmoney"    />
+        <result property="oppositeName"    column="opposite_name"    />
+        <result property="oppositeBank"    column="opposite_bank"    />
+        <result property="oppositeBankId"    column="opposite_bank_id"    />
+        <result property="oppositeContacts"    column="opposite_contacts"    />
+        <result property="oppositePhone"    column="opposite_phone"    />
+        <result property="oppositeAddress"    column="opposite_address"    />
+        <result property="imageData"    column="image_data"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="writeOffUserid"    column="write_off_userid"    />
+        <result property="writeOffUsername"    column="write_off_username"    />
+        <result property="instanceId"    column="instance_id"    />
+    </resultMap>
+
+    <sql id="selectCtBuPayinfoVo">
+        select id, pro_no, pro_name, contract_id, contract_no, contract_name, paytype, paymoney, ntaxmoney, taxmoney, opposite_name, opposite_bank, opposite_bank_id, opposite_contacts, opposite_phone, opposite_address, image_data, status, statusPS, del_flag, remark, create_by, create_time, update_by, update_time, write_off_userid, write_off_username, instance_id from ct_bu_payinfo
+    </sql>
+
+    <select id="selectCtBuPayinfoList" parameterType="CtBuPayinfo" resultMap="CtBuPayinfoResult">
+        <include refid="selectCtBuPayinfoVo"/>
+        <where>  
+            <if test="proNo != null  and proNo != ''"> and pro_no = #{proNo}</if>
+            <if test="proName != null  and proName != ''"> and pro_name like concat('%', #{proName}, '%')</if>
+            <if test="contractId != null  and contractId != ''"> and contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="paytype != null "> and paytype = #{paytype}</if>
+            <if test="paymoney != null "> and paymoney = #{paymoney}</if>
+            <if test="ntaxmoney != null "> and ntaxmoney = #{ntaxmoney}</if>
+            <if test="taxmoney != null "> and taxmoney = #{taxmoney}</if>
+            <if test="oppositeName != null  and oppositeName != ''"> and opposite_name like concat('%', #{oppositeName}, '%')</if>
+            <if test="oppositeBank != null  and oppositeBank != ''"> and opposite_bank = #{oppositeBank}</if>
+            <if test="oppositeBankId != null  and oppositeBankId != ''"> and opposite_bank_id = #{oppositeBankId}</if>
+            <if test="oppositeContacts != null  and oppositeContacts != ''"> and opposite_contacts = #{oppositeContacts}</if>
+            <if test="oppositePhone != null  and oppositePhone != ''"> and opposite_phone = #{oppositePhone}</if>
+            <if test="oppositeAddress != null  and oppositeAddress != ''"> and opposite_address = #{oppositeAddress}</if>
+            <if test="imageData != null  and imageData != ''"> and image_data = #{imageData}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and statusPS = #{statusps}</if>
+            <if test="writeOffUserid != null  and writeOffUserid != ''"> and write_off_userid = #{writeOffUserid}</if>
+            <if test="writeOffUsername != null  and writeOffUsername != ''"> and write_off_username like concat('%', #{writeOffUsername}, '%')</if>
+            <if test="instanceId != null  and instanceId != ''"> and instance_id = #{instanceId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuPayinfoById" parameterType="String" resultMap="CtBuPayinfoResult">
+        <include refid="selectCtBuPayinfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtBuPayinfo" parameterType="CtBuPayinfo">
+        insert into ct_bu_payinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="proNo != null">pro_no,</if>
+            <if test="proName != null">pro_name,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="paytype != null">paytype,</if>
+            <if test="paymoney != null">paymoney,</if>
+            <if test="ntaxmoney != null">ntaxmoney,</if>
+            <if test="taxmoney != null">taxmoney,</if>
+            <if test="oppositeName != null">opposite_name,</if>
+            <if test="oppositeBank != null">opposite_bank,</if>
+            <if test="oppositeBankId != null">opposite_bank_id,</if>
+            <if test="oppositeContacts != null">opposite_contacts,</if>
+            <if test="oppositePhone != null">opposite_phone,</if>
+            <if test="oppositeAddress != null">opposite_address,</if>
+            <if test="imageData != null">image_data,</if>
+            <if test="status != null">status,</if>
+            <if test="statusps != null">statusPS,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="writeOffUserid != null">write_off_userid,</if>
+            <if test="writeOffUsername != null">write_off_username,</if>
+            <if test="instanceId != null">instance_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="proNo != null">#{proNo},</if>
+            <if test="proName != null">#{proName},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="paytype != null">#{paytype},</if>
+            <if test="paymoney != null">#{paymoney},</if>
+            <if test="ntaxmoney != null">#{ntaxmoney},</if>
+            <if test="taxmoney != null">#{taxmoney},</if>
+            <if test="oppositeName != null">#{oppositeName},</if>
+            <if test="oppositeBank != null">#{oppositeBank},</if>
+            <if test="oppositeBankId != null">#{oppositeBankId},</if>
+            <if test="oppositeContacts != null">#{oppositeContacts},</if>
+            <if test="oppositePhone != null">#{oppositePhone},</if>
+            <if test="oppositeAddress != null">#{oppositeAddress},</if>
+            <if test="imageData != null">#{imageData},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusps != null">#{statusps},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="writeOffUserid != null">#{writeOffUserid},</if>
+            <if test="writeOffUsername != null">#{writeOffUsername},</if>
+            <if test="instanceId != null">#{instanceId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuPayinfo" parameterType="CtBuPayinfo">
+        update ct_bu_payinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="paytype != null">paytype = #{paytype},</if>
+            <if test="paymoney != null">paymoney = #{paymoney},</if>
+            <if test="ntaxmoney != null">ntaxmoney = #{ntaxmoney},</if>
+            <if test="taxmoney != null">taxmoney = #{taxmoney},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="imageData != null">image_data = #{imageData},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="writeOffUserid != null">write_off_userid = #{writeOffUserid},</if>
+            <if test="writeOffUsername != null">write_off_username = #{writeOffUsername},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtBuPayinfoById" parameterType="String">
+        delete from ct_bu_payinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuPayinfoByIds" parameterType="String">
+        delete from ct_bu_payinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateCtBuPayinfoById" parameterType="String">
+        update ct_bu_payinfo set del_flag= '2' where id = #{id}
+    </update>
+    
+</mapper>

@@ -1,0 +1,78 @@
+package com.ruoyi.projectApproval.AppNgConst.mapper;
+
+import java.util.List;
+
+import com.ruoyi.projectApproval.AppNgConst.domain.AppNgConst;
+
+/**
+ * 事前审批明细(集客类-施工费情况)Mapper接口
+ * 
+ * @author Mu
+ * @date 2020-12-09
+ */
+public interface AppNgConstMapper {
+
+	/**
+	 * 查询事前审批明细(集客类-施工费情况)
+	 * 
+	 * @param id 事前审批明细(集客类-施工费情况)ID
+	 * @return 事前审批明细(集客类-施工费情况)
+	 */
+	public AppNgConst selectAppNgConstById(String id);
+
+	/**
+	 * @Title: IAppNgConstService.java
+	 * @Description: 根据事前审批主表ID获取施工费信息
+	 * @Author M.Mu
+	 * @Date 2020-12-09
+	 */
+	public AppNgConst selectAppNgConstByBid(String id);
+
+	/**
+	 * 查询事前审批明细(集客类-施工费情况)列表
+	 * 
+	 * @param appNgConst 事前审批明细(集客类-施工费情况)
+	 * @return 事前审批明细(集客类-施工费情况)集合
+	 */
+	public List<AppNgConst> selectAppNgConstList(AppNgConst appNgConst);
+
+	/**
+	 * 新增事前审批明细(集客类-施工费情况)
+	 * 
+	 * @param appNgConst 事前审批明细(集客类-施工费情况)
+	 * @return 结果
+	 */
+	public int insertAppNgConst(AppNgConst appNgConst);
+
+	/**
+	 * 修改事前审批明细(集客类-施工费情况)
+	 * 
+	 * @param appNgConst 事前审批明细(集客类-施工费情况)
+	 * @return 结果
+	 */
+	public int updateAppNgConst(AppNgConst appNgConst);
+
+	/**
+	 * 删除事前审批明细(集客类-施工费情况)
+	 * 
+	 * @param id 事前审批明细(集客类-施工费情况)ID
+	 * @return 结果
+	 */
+	public int deleteAppNgConstById(String id);
+
+	/**
+	 * 批量删除事前审批明细(集客类-施工费情况)
+	 * 
+	 * @param ids 需要删除的数据ID
+	 * @return 结果
+	 */
+	public int deleteAppNgConstByIds(String[] ids);
+
+	/**
+	 * @Title: IAppNgConstService.java
+	 * @Description: 根据事前审批主表ID逻辑删除施工费信息
+	 * @Author M.Mu
+	 * @Date 2020-12-09
+	 */
+	public int deleteAppNgConstByBid(String id);
+}

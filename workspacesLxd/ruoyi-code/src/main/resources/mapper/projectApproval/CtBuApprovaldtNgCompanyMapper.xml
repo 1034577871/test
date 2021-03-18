@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.projectApproval.AppNgCompany.mapper.CtBuApprovaldtNgCompanyMapper">
+    
+    <resultMap type="CtBuApprovaldtNgCompany" id="CtBuApprovaldtNgCompanyResult">
+        <result property="id"    column="id"    />
+        <result property="bid"    column="bid"    />
+        <result property="branchInvolvedId"    column="branch_involved_id"    />
+        <result property="branchInvolvedName"    column="branch_involved_name"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+
+    </resultMap>
+
+    <sql id="selectCtBuApprovaldtNgCompanyVo">
+        select id, bid, branch_involved_id, branch_involved_name, del_flag, create_by, remark, create_time, update_by, update_time from ct_bu_approvaldt_ng_company
+    </sql>
+
+    <select id="selectCtBuApprovaldtNgCompanyList" parameterType="CtBuApprovaldtNgCompany" resultMap="CtBuApprovaldtNgCompanyResult">
+        <include refid="selectCtBuApprovaldtNgCompanyVo"/>
+        <where>  
+            <if test="bid != null  and bid != ''"> and bid = #{bid}</if>
+            <if test="branchInvolvedId != null  and branchInvolvedId != ''"> and branch_involved_id = #{branchInvolvedId}</if>
+            <if test="branchInvolvedName != null  and branchInvolvedName != ''"> and branch_involved_name like concat('%', #{branchInvolvedName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuApprovaldtNgCompanyById" parameterType="String" resultMap="CtBuApprovaldtNgCompanyResult">
+        <include refid="selectCtBuApprovaldtNgCompanyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtBuApprovaldtNgCompany" parameterType="CtBuApprovaldtNgCompany">
+        insert into ct_bu_approvaldt_ng_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="bid != null">bid,</if>
+            <if test="branchInvolvedId != null">branch_involved_id,</if>
+            <if test="branchInvolvedName != null">branch_involved_name,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="bid != null">#{bid},</if>
+            <if test="branchInvolvedId != null">#{branchInvolvedId},</if>
+            <if test="branchInvolvedName != null">#{branchInvolvedName},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuApprovaldtNgCompany" parameterType="CtBuApprovaldtNgCompany">
+        update ct_bu_approvaldt_ng_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bid != null">bid = #{bid},</if>
+            <if test="branchInvolvedId != null">branch_involved_id = #{branchInvolvedId},</if>
+            <if test="branchInvolvedName != null">branch_involved_name = #{branchInvolvedName},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtBuApprovaldtNgCompanyById" parameterType="String">
+        delete from ct_bu_approvaldt_ng_company where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuApprovaldtNgCompanyByIds" parameterType="String">
+        delete from ct_bu_approvaldt_ng_company where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCtBuApprovaldtNgCompanyByIBid" parameterType="java.util.HashMap">
+        delete from ct_bu_approvaldt_ng_company where bid =#{bid}
+        <if test="branchs != null and branchs!=''"> and branch_involved_id  = #{branchs}</if>
+<!--        <foreach item="branchInvolvedIds" collection="array" open="(" separator="," close=")">-->
+<!--            #{branchInvolvedIds}-->
+<!--        </foreach>-->
+<!--        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">-->
+<!--            #{item}-->
+<!--        </foreach>-->
+    </delete>
+    
+</mapper>

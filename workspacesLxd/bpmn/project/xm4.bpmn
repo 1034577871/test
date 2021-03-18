@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" id="sample-diagram" targetNamespace="http://activiti.org/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="xmlx4" name="不涉及网络自主建设或技术平台建设及应用(项目金额≥10万元（非垫资）)" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>Flow_1tdrwif</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="cwzcbsh" name="财务资产部审核" activiti:formKey="cwzcbsh" activiti:candidateUsers="${cwzcbsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="cwzcbshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_11bubay</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_15iot0n</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_0qowo1w">
+      <bpmn2:incoming>Flow_15iot0n</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_05jaimn</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0n8ly4r</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="sgsjkbsh" name="市公司集客部审核" activiti:formKey="sgsjkbsh" activiti:candidateUsers="${sgsjkbsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="sgsjkbshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_05jaimn</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1huzx93</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_0hrhibx">
+      <bpmn2:incoming>Flow_1huzx93</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0i5yzxc</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0l6nsx3</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="fgfzsh" name="财务总监/集客分管副总审核" activiti:formKey="fgfzsh" activiti:assignee="${fgfzsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="fgfzshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+        <activiti:taskListener class="com.ruoyi.activiti.config.lxsh4jkbProcessEndListener" event="complete" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0i5yzxc</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_09uj5d7</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics activiti:collection="${fgfzshList}" activiti:elementVariable="fgfzsh">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${pass==false}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_04vfv1x">
+      <bpmn2:incoming>Flow_09uj5d7</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1fwkod9</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0rlbho9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:userTask id="zjlsh" name="总经理审核" activiti:formKey="zjlsh" activiti:candidateUsers="${zjlsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="zjlshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1fwkod9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0q7dwv9</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:endEvent id="Event_14wh347">
+      <bpmn2:extensionElements>
+        <activiti:executionListener delegateExpression="${lxsh4ProcessEndListener}" event="end" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0wjrx8a</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_0q7dwv9" sourceRef="zjlsh" targetRef="Gateway_1365box" />
+    <bpmn2:sequenceFlow id="Flow_1tdrwif" sourceRef="StartEvent_1" targetRef="Activity_1crbs30" />
+    <bpmn2:sequenceFlow id="Flow_15iot0n" sourceRef="cwzcbsh" targetRef="Gateway_0qowo1w" />
+    <bpmn2:sequenceFlow id="Flow_05jaimn" sourceRef="Gateway_0qowo1w" targetRef="sgsjkbsh">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${cwzcbshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_1huzx93" sourceRef="sgsjkbsh" targetRef="Gateway_0hrhibx" />
+    <bpmn2:sequenceFlow id="Flow_09uj5d7" sourceRef="fgfzsh" targetRef="Gateway_04vfv1x" />
+    <bpmn2:sequenceFlow id="Flow_1fwkod9" sourceRef="Gateway_04vfv1x" targetRef="zjlsh">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${fgfzshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:userTask id="Activity_1crbs30" name="项目申请" activiti:assignee="${apply}">
+      <bpmn2:incoming>Flow_1tdrwif</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_11bubay</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="Flow_11bubay" sourceRef="Activity_1crbs30" targetRef="cwzcbsh" />
+    <bpmn2:sequenceFlow id="Flow_0i5yzxc" sourceRef="Gateway_0hrhibx" targetRef="fgfzsh">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${sgsjkbshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0n8ly4r" sourceRef="Gateway_0qowo1w" targetRef="Event_0n5jbm0">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${cwzcbshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0l6nsx3" sourceRef="Gateway_0hrhibx" targetRef="Event_0n5jbm0">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${sgsjkbshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0rlbho9" sourceRef="Gateway_04vfv1x" targetRef="Event_0n5jbm0">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${fgfzshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="Gateway_1365box">
+      <bpmn2:incoming>Flow_0q7dwv9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0wjrx8a</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_19ko887</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0wjrx8a" sourceRef="Gateway_1365box" targetRef="Event_14wh347">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${zjlshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_19ko887" sourceRef="Gateway_1365box" targetRef="Event_0n5jbm0">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${zjlshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="Event_0n5jbm0">
+      <bpmn2:extensionElements>
+        <activiti:executionListener delegateExpression="${lxsh2ZzProcessEndListener}" event="end" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0n8ly4r</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0l6nsx3</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0rlbho9</bpmn2:incoming>
+      <bpmn2:incoming>Flow_19ko887</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="TerminateEventDefinition_1jdpd79" />
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="xmlx4">
+      <bpmndi:BPMNEdge id="Flow_19ko887_di" bpmnElement="Flow_19ko887">
+        <di:waypoint x="1270" y="195" />
+        <di:waypoint x="1270" y="120" />
+        <di:waypoint x="1302" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wjrx8a_di" bpmnElement="Flow_0wjrx8a">
+        <di:waypoint x="1295" y="220" />
+        <di:waypoint x="1332" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rlbho9_di" bpmnElement="Flow_0rlbho9">
+        <di:waypoint x="1020" y="195" />
+        <di:waypoint x="1020" y="120" />
+        <di:waypoint x="1300" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0l6nsx3_di" bpmnElement="Flow_0l6nsx3">
+        <di:waypoint x="770" y="195" />
+        <di:waypoint x="770" y="120" />
+        <di:waypoint x="1300" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n8ly4r_di" bpmnElement="Flow_0n8ly4r">
+        <di:waypoint x="530" y="195" />
+        <di:waypoint x="530" y="120" />
+        <di:waypoint x="1302" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i5yzxc_di" bpmnElement="Flow_0i5yzxc">
+        <di:waypoint x="795" y="220" />
+        <di:waypoint x="840" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11bubay_di" bpmnElement="Flow_11bubay">
+        <di:waypoint x="330" y="220" />
+        <di:waypoint x="360" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fwkod9_di" bpmnElement="Flow_1fwkod9">
+        <di:waypoint x="1045" y="220" />
+        <di:waypoint x="1090" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09uj5d7_di" bpmnElement="Flow_09uj5d7">
+        <di:waypoint x="940" y="220" />
+        <di:waypoint x="995" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1huzx93_di" bpmnElement="Flow_1huzx93">
+        <di:waypoint x="700" y="220" />
+        <di:waypoint x="745" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05jaimn_di" bpmnElement="Flow_05jaimn">
+        <di:waypoint x="555" y="220" />
+        <di:waypoint x="600" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15iot0n_di" bpmnElement="Flow_15iot0n">
+        <di:waypoint x="460" y="220" />
+        <di:waypoint x="505" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tdrwif_di" bpmnElement="Flow_1tdrwif">
+        <di:waypoint x="178" y="220" />
+        <di:waypoint x="230" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q7dwv9_di" bpmnElement="Flow_0q7dwv9">
+        <di:waypoint x="1190" y="220" />
+        <di:waypoint x="1245" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="142" y="202" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1j1bigk_di" bpmnElement="cwzcbsh">
+        <dc:Bounds x="360" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0qowo1w_di" bpmnElement="Gateway_0qowo1w" isMarkerVisible="true">
+        <dc:Bounds x="505" y="195" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1041r6x_di" bpmnElement="sgsjkbsh">
+        <dc:Bounds x="600" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0hrhibx_di" bpmnElement="Gateway_0hrhibx" isMarkerVisible="true">
+        <dc:Bounds x="745" y="195" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lisd45_di" bpmnElement="fgfzsh">
+        <dc:Bounds x="840" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_04vfv1x_di" bpmnElement="Gateway_04vfv1x" isMarkerVisible="true">
+        <dc:Bounds x="995" y="195" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i4lxd0_di" bpmnElement="zjlsh">
+        <dc:Bounds x="1090" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14wh347_di" bpmnElement="Event_14wh347">
+        <dc:Bounds x="1332" y="202" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1crbs30_di" bpmnElement="Activity_1crbs30">
+        <dc:Bounds x="230" y="180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1365box_di" bpmnElement="Gateway_1365box" isMarkerVisible="true">
+        <dc:Bounds x="1245" y="195" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0a4tp4o_di" bpmnElement="Event_0n5jbm0">
+        <dc:Bounds x="1302" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

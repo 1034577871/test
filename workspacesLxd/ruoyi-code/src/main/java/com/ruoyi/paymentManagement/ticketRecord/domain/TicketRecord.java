@@ -1,0 +1,502 @@
+package com.ruoyi.paymentManagement.ticketRecord.domain;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 收票记录对象 ct_bu_ticket_record
+ * 
+ * @author lps
+ * @date 2020-12-17
+ */
+public class TicketRecord extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+    /** $column.columnComment */
+    private String cbcId;
+    @Excel(name = "合同编号")
+    private String cbcContractNo;
+    @Excel(name = "合同名称")
+    private String cbcContractName;
+    @Excel(name = "项目编号")
+    private String projectNo;
+    @Excel(name = "项目名称")
+    private String projectName;
+    @Excel(name = "对方单位名称")
+    private String cbcOppositeName;
+
+    private String id;
+
+    /** 项目编号 */
+
+    private String proNo;
+
+    /** 项目名称 */
+//    @Excel(name = "项目名称")
+    private String proName;
+
+    /** 合同id */
+//    @Excel(name = "合同id")
+    private String contractId;
+
+    /** 合同编号 */
+//    @Excel(name = "合同编号")
+    private String contractNo;
+
+    /** 合同名称 */
+//    @Excel(name = "合同名称")
+    private String contractName;
+    /** 付款周期*/
+//    @Excel(name = "付款周期id")
+    private String payinfoid;
+    /** 付款周期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @Excel(name = "付款周期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date paymentPeriod;
+
+    /** 开票日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "开票日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date invoiceDate;
+
+    /** 发票代码 */
+    @Excel(name = "发票代码")
+    private String invoiceCode;
+
+    /** 发票号码 */
+    @Excel(name = "发票号码")
+    private String invoiceNo;
+
+    /** 发票金额（含税） */
+    @Excel(name = "发票金额含税金额")
+    private BigDecimal invoiceMoney;
+
+    /** 税率 */
+    @Excel(name = "税率")
+    private Long taxrate;
+
+    /** 发票金额（不含税） */
+    @Excel(name = "发票金额不含税金额")
+    private BigDecimal invoiceNomoney;
+
+    /** 对方单位名称 */
+//    @Excel(name = "对方单位名称")
+    private String oppositeName;
+
+    /** 对方单位银行账户 */
+//    @Excel(name = "对方单位银行账户")
+    private String oppositeBank;
+
+    /** 对方单位银行账号 */
+//    @Excel(name = "对方单位银行账号")
+    private String oppositeBankId;
+
+    /** 对方单位联系人 */
+//    @Excel(name = "对方单位联系人")
+    private String oppositeContacts;
+
+    /** 对方单位联系电话 */
+//    @Excel(name = "对方单位联系电话")
+    private String oppositePhone;
+
+    /** 对方单位联系地址 */
+//    @Excel(name = "对方单位联系地址")
+    private String oppositeAddress;
+
+    /** 发票凭证 */
+//    @Excel(name = "发票凭证")
+    private String invoiceVoucher;
+
+    /** 对方单位资质 */
+//    @Excel(name = "对方单位资质")
+    private String unitQualification;
+
+    /** 状态 */
+//    @Excel(name = "状态")
+    private Long status;
+
+    /** 状态说明 */
+//    @Excel(name = "状态说明")
+    private String statusps;
+
+    /** 删除标志 */
+    private String delFlag;
+
+    private String instanceId;
+
+    /**
+     * 合同标的额
+     */
+//    @Excel(name = "合同标的额")
+    private BigDecimal totalMoney;
+
+    /**
+     * 对方单位纳税人识别号
+     */
+    private String oppositeCreditCode;
+
+    private BigDecimal paidMoney;
+
+    private BigDecimal unpaidMoney;
+
+
+
+
+
+    public void setId(String id) 
+    {
+        this.id = id;
+    }
+
+    public String getId() 
+    {
+        return id;
+    }
+    public void setProNo(String proNo) 
+    {
+        this.proNo = proNo;
+    }
+
+    public String getProNo() 
+    {
+        return proNo;
+    }
+    public void setProName(String proName) 
+    {
+        this.proName = proName;
+    }
+
+    public String getProName() 
+    {
+        return proName;
+    }
+    public void setContractId(String contractId) 
+    {
+        this.contractId = contractId;
+    }
+
+    public String getContractId() 
+    {
+        return contractId;
+    }
+    public void setContractNo(String contractNo) 
+    {
+        this.contractNo = contractNo;
+    }
+
+    public String getContractNo() 
+    {
+        return contractNo;
+    }
+    public void setContractName(String contractName) 
+    {
+        this.contractName = contractName;
+    }
+
+    public String getContractName() 
+    {
+        return contractName;
+    }
+    public void setPaymentPeriod(Date paymentPeriod) 
+    {
+        this.paymentPeriod = paymentPeriod;
+    }
+
+    public Date getPaymentPeriod() 
+    {
+        return paymentPeriod;
+    }
+    public void setInvoiceDate(Date invoiceDate) 
+    {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public Date getInvoiceDate() 
+    {
+        return invoiceDate;
+    }
+    public void setInvoiceCode(String invoiceCode) 
+    {
+        this.invoiceCode = invoiceCode;
+    }
+
+    public String getInvoiceCode() 
+    {
+        return invoiceCode;
+    }
+    public void setInvoiceNo(String invoiceNo) 
+    {
+        this.invoiceNo = invoiceNo;
+    }
+
+    public String getInvoiceNo() 
+    {
+        return invoiceNo;
+    }
+    public void setInvoiceMoney(BigDecimal invoiceMoney)
+    {
+        this.invoiceMoney = invoiceMoney;
+    }
+
+    public BigDecimal getInvoiceMoney()
+    {
+        return invoiceMoney;
+    }
+    public void setTaxrate(Long taxrate) 
+    {
+        this.taxrate = taxrate;
+    }
+
+    public Long getTaxrate() 
+    {
+        return taxrate;
+    }
+    public void setInvoiceNomoney(BigDecimal invoiceNomoney)
+    {
+        this.invoiceNomoney = invoiceNomoney;
+    }
+
+    public BigDecimal getInvoiceNomoney()
+    {
+        return invoiceNomoney;
+    }
+    public void setOppositeName(String oppositeName) 
+    {
+        this.oppositeName = oppositeName;
+    }
+
+    public String getOppositeName() 
+    {
+        return oppositeName;
+    }
+    public void setOppositeBank(String oppositeBank) 
+    {
+        this.oppositeBank = oppositeBank;
+    }
+
+    public String getOppositeBank() 
+    {
+        return oppositeBank;
+    }
+    public void setOppositeBankId(String oppositeBankId) 
+    {
+        this.oppositeBankId = oppositeBankId;
+    }
+
+    public String getOppositeBankId() 
+    {
+        return oppositeBankId;
+    }
+    public void setOppositeContacts(String oppositeContacts) 
+    {
+        this.oppositeContacts = oppositeContacts;
+    }
+
+    public String getOppositeContacts() 
+    {
+        return oppositeContacts;
+    }
+    public void setOppositePhone(String oppositePhone) 
+    {
+        this.oppositePhone = oppositePhone;
+    }
+
+    public String getOppositePhone() 
+    {
+        return oppositePhone;
+    }
+    public void setOppositeAddress(String oppositeAddress) 
+    {
+        this.oppositeAddress = oppositeAddress;
+    }
+
+    public String getOppositeAddress() 
+    {
+        return oppositeAddress;
+    }
+    public void setInvoiceVoucher(String invoiceVoucher) 
+    {
+        this.invoiceVoucher = invoiceVoucher;
+    }
+
+    public String getInvoiceVoucher() 
+    {
+        return invoiceVoucher;
+    }
+    public void setUnitQualification(String unitQualification) 
+    {
+        this.unitQualification = unitQualification;
+    }
+
+    public String getUnitQualification() 
+    {
+        return unitQualification;
+    }
+    public void setStatus(Long status) 
+    {
+        this.status = status;
+    }
+
+    public Long getStatus() 
+    {
+        return status;
+    }
+    public void setStatusps(String statusps) 
+    {
+        this.statusps = statusps;
+    }
+
+    public String getStatusps() 
+    {
+        return statusps;
+    }
+    public void setDelFlag(String delFlag) 
+    {
+        this.delFlag = delFlag;
+    }
+
+    public String getDelFlag() 
+    {
+        return delFlag;
+    }
+
+    public String getPayinfoid() {
+		return payinfoid;
+	}
+
+	public void setPayinfoid(String payinfoid) {
+		this.payinfoid = payinfoid;
+	}
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
+
+    public BigDecimal getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(BigDecimal totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public String getOppositeCreditCode() {
+        return oppositeCreditCode;
+    }
+
+    public void setOppositeCreditCode(String oppositeCreditCode) {
+        this.oppositeCreditCode = oppositeCreditCode;
+    }
+
+    public BigDecimal getPaidMoney() {
+        return paidMoney;
+    }
+
+    public void setPaidMoney(BigDecimal paidMoney) {
+        this.paidMoney = paidMoney;
+    }
+
+    public BigDecimal getUnpaidMoney() {
+        return unpaidMoney;
+    }
+
+    public void setUnpaidMoney(BigDecimal unpaidMoney) {
+        this.unpaidMoney = unpaidMoney;
+    }
+
+    public String getCbcId() {
+        return cbcId;
+    }
+
+    public void setCbcId(String cbcId) {
+        this.cbcId = cbcId;
+    }
+
+    public String getCbcContractNo() {
+        return cbcContractNo;
+    }
+
+    public void setCbcContractNo(String cbcContractNo) {
+        this.cbcContractNo = cbcContractNo;
+    }
+
+    public String getCbcContractName() {
+        return cbcContractName;
+    }
+
+    public void setCbcContractName(String cbcContractName) {
+        this.cbcContractName = cbcContractName;
+    }
+
+    public String getProjectNo() {
+        return projectNo;
+    }
+
+    public void setProjectNo(String projectNo) {
+        this.projectNo = projectNo;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getCbcOppositeName() {
+        return cbcOppositeName;
+    }
+
+    public void setCbcOppositeName(String cbcOppositeName) {
+        this.cbcOppositeName = cbcOppositeName;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
+            .append("proNo", getProNo())
+            .append("proName", getProName())
+            .append("contractId", getContractId())
+            .append("contractNo", getContractNo())
+            .append("contractName", getContractName())
+            .append("payinfoid", getPayinfoid())
+            .append("paymentPeriod", getPaymentPeriod())
+            .append("invoiceDate", getInvoiceDate())
+            .append("invoiceCode", getInvoiceCode())
+            .append("invoiceNo", getInvoiceNo())
+            .append("invoiceMoney", getInvoiceMoney())
+            .append("taxrate", getTaxrate())
+            .append("invoiceNomoney", getInvoiceNomoney())
+            .append("oppositeName", getOppositeName())
+            .append("oppositeBank", getOppositeBank())
+            .append("oppositeBankId", getOppositeBankId())
+            .append("oppositeContacts", getOppositeContacts())
+            .append("oppositePhone", getOppositePhone())
+            .append("oppositeAddress", getOppositeAddress())
+            .append("invoiceVoucher", getInvoiceVoucher())
+            .append("unitQualification", getUnitQualification())
+            .append("status", getStatus())
+            .append("statusps", getStatusps())
+            .append("delFlag", getDelFlag())
+            .append("remark", getRemark())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .toString();
+    }
+}

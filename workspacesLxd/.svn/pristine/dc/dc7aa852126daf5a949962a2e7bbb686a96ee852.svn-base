@@ -1,0 +1,104 @@
+<template>
+  <div>
+    <el-row :gutter="15">
+      <el-form
+        ref="elForm"
+        :model="formData"
+        :rules="rules"
+        size="medium"
+        label-width="120px"
+      >
+        <el-col :span="24">
+          <el-form-item label="施工项目">
+            <el-input v-model="formData.projectName"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="内容说明">
+            <el-input v-model="formData.description"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="单位">
+            <el-input v-model="formData.projectUnit"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="所需工日">
+            <el-input
+              v-model="formData.days"
+              v-on:input="changeNum()"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="工日单价">
+            <el-input
+              v-model="formData.daysPrice"
+              v-on:input="changeNum()"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="金额">
+            <el-input v-model="formData.daysAmount" :disabled="true"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
+  </div>
+</template>
+<script>
+export default {
+  components: {},
+  props: [],
+  data() {
+    return {
+      formData: {
+        projectName: "",
+        description: "",
+        projectUnit: "",
+        days: 0,
+        daysPrice: 0,
+        daysAmount: 0
+      },
+      rules: {
+        field102: [
+          {
+            required: true,
+            message: "请选择日期选择",
+            trigger: "change"
+          }
+        ],
+        field101: [
+          {
+            required: true,
+            message: "请选择日期选择",
+            trigger: "change"
+          }
+        ]
+      }
+    };
+  },
+  created() {},
+  methods: {
+    resetForm() {
+      this.$refs["elForm"].resetFields();
+    },
+    /** 计算金额,格式化信息 **/
+    changeNum() {
+      let price = this.formData.daysPrice;
+      let mount = this.formData.days;
+      if (price && mount) {
+        this.formData.daysAmount = this.formatPrice(price * mount);
+      }
+    },
+    /** 格式化金额 **/
+    formatPrice(value) {
+      let tempVal = parseFloat(value).toFixed(3);
+      let realVal = tempVal.substring(0, tempVal.length - 1);
+      return realVal;
+    }
+  }
+};
+</script>

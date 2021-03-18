@@ -1,0 +1,117 @@
+package com.ruoyi.projectApproval.AppNgCompany.domain;
+
+import com.ruoyi.projectApproval.AppNgBase.domain.AppNgBase;
+import com.ruoyi.projectApproval.AppNgConst.domain.AppNgConst;
+import com.ruoyi.projectApproval.AppNgMaterial.domain.AppNgMaterial;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.List;
+
+/**
+ * 事前审批明细(集客类-涉及分公司)对象 ct_bu_approvaldt_ng_company
+ * 
+ * @author ruoyi
+ * @date 2021-01-19
+ */
+public class CtBuApprovaldtNgCompany extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+    /** 材料使用情况 **/
+    private List<List<AppNgMaterial>> appNgMaterialLists ;
+
+    /** 施工费情况 **/
+    private List<List<AppNgConst>> appNgConstLists;
+
+    public List<List<AppNgMaterial>> getAppNgMaterialLists() {
+        return appNgMaterialLists;
+    }
+
+    public void setAppNgMaterialLists(List<List<AppNgMaterial>> appNgMaterialLists) {
+        this.appNgMaterialLists = appNgMaterialLists;
+    }
+
+    public List<List<AppNgConst>> getAppNgConstLists() {
+        return appNgConstLists;
+    }
+
+    public void setAppNgConstLists(List<List<AppNgConst>> appNgConstLists) {
+        this.appNgConstLists = appNgConstLists;
+    }
+
+    public List<AppNgBase> getAppNgBaseList() {
+        return appNgBaseList;
+    }
+
+    public void setAppNgBaseList(List<AppNgBase> appNgBaseList) {
+        this.appNgBaseList = appNgBaseList;
+    }
+
+    private List<AppNgBase> appNgBaseList;
+
+    /** 序号 */
+    private String id;
+
+    /** 申请编号 */
+    @Excel(name = "申请编号")
+    private String bid;
+
+    /** 涉及分公司编号 */
+    @Excel(name = "涉及分公司编号")
+    private String branchInvolvedId;
+
+    /** 涉及分公司名称 */
+    @Excel(name = "涉及分公司名称")
+    private String branchInvolvedName;
+
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    /** 删除标志 */
+    private String delFlag;
+
+    public void setId(String id) 
+    {
+        this.id = id;
+    }
+
+    public String getId() 
+    {
+        return id;
+    }
+    public void setBid(String bid) 
+    {
+        this.bid = bid;
+    }
+
+    public String getBid() 
+    {
+        return bid;
+    }
+    public void setBranchInvolvedId(String branchInvolvedId) 
+    {
+        this.branchInvolvedId = branchInvolvedId;
+    }
+
+    public String getBranchInvolvedId() 
+    {
+        return branchInvolvedId;
+    }
+    public void setBranchInvolvedName(String branchInvolvedName) 
+    {
+        this.branchInvolvedName = branchInvolvedName;
+    }
+
+    public String getBranchInvolvedName() 
+    {
+        return branchInvolvedName;
+    }
+}

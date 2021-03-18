@@ -1,0 +1,125 @@
+<template>
+  <el-form
+        ref="form"
+        :model="form"
+        size="medium"
+        label-width="120px"
+      >
+    <el-row :gutter="15">
+      <el-col :span="12">
+        <el-form-item label="项目名称" prop="proName">
+          <el-input v-model="form.proName" placeholder="请输入项目名称" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="预计投资金额" prop="expectAmount">
+          <el-input
+            v-model="form.expectAmount"
+            clearable
+            placeholder="请输入预计投资金额"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="规划部是否确认" prop="isPlanConfirm">
+            <el-select
+              v-model="form.isPlanConfirm"
+              placeholder="请选择"
+              style="width: 100%;"
+            >
+              <el-option
+                v-for="dict in isPlanConfirmList"
+                :key="dict.id"
+                :label="dict.typeName"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="企业是否垫资" prop="isAdvanceNeed">
+              <el-select
+                v-model="form.isAdvanceNeed"
+                placeholder="请选择"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="dict in isAdvanceNeedList"
+                  :key="dict.id"
+                  :label="dict.typeName"
+                  :value="dict.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="涉及分公司">
+              <el-select
+                v-model="form.selectComp"
+                multiple
+                placeholder="请选择"
+                :style="{ width: '100%' }"
+              >
+                <el-option
+                  v-for="dict in belongCompanyNameList"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="项目描述" prop="projectDescription">
+            <el-input
+              type="textarea"
+              :rows="3"
+              placeholder="请输入内容"
+              v-model="form.projectDescription">
+            </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="项目效益说明" prop="benefitDescription">
+            <el-input
+              type="textarea"
+              :rows="3"
+              placeholder="请输入内容"
+              v-model="form.benefitDescription">
+            </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="12">
+              <el-form-item label="事前审批表" prop="isPlanConfirm">
+                <el-button type="primary" size="small" plain @click="showApprovalInfo()">在线填写</el-button>
+              </el-form-item>
+          </el-col>
+        </el-row>
+    </el-form>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      belongCompanyNameList:[],
+      isAdvanceNeedList:[],
+      isPlanConfirmList:[],
+      form: {
+        proName:"",
+        expectAmount:null,
+        isPlanConfirm:null,
+        isAdvanceNeed:null,
+        selectComp:null,
+        projectDescription:"",
+        benefitDescription:"",
+      }
+    }
+  }
+}
+</script>

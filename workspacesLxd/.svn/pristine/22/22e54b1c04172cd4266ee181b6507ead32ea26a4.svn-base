@@ -1,0 +1,1237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contract.contractInfo.mapper.CtBuContractMapper">
+
+    <resultMap type="CtBuContract" id="CtBuContractResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="projectCategory" column="project_category"/>
+        <result property="projectCategoryName" column="project_category_name"/>
+        <result property="projectId" column="project_id"/>
+        <result property="projectNo" column="project_no"/>
+        <result property="projectName" column="project_name"/>
+        <result property="contractNo" column="contract_no"/>
+        <result property="contractName" column="contract_name"/>
+        <result property="month" column="month"/>
+        <result property="contractCategory" column="contract_category"/>
+        <result property="contractCategoryName" column="contract_category_name"/>
+        <result property="oppositeName" column="opposite_name"/>
+        <result property="oppositeBank" column="opposite_bank"/>
+        <result property="oppositeBankId" column="opposite_bank_id"/>
+        <result property="oppositeContacts" column="opposite_contacts"/>
+        <result property="oppositePhone" column="opposite_phone"/>
+        <result property="oppositeAddress" column="opposite_address"/>
+        <result property="oppositeCreditCode" column="opposite_credit_code"/>
+        <result property="ourName" column="our_name"/>
+        <result property="ourContacts" column="our_contacts"/>
+        <result property="ourPhone" column="our_phone"/>
+        <result property="ourBank" column="our_bank"/>
+        <result property="ourBankId" column="our_bank_id"/>
+        <result property="ourAddress" column="our_address"/>
+        <result property="starttime" column="starttime"/>
+        <result property="endtime" column="endtime"/>
+        <result property="contractServeStart" column="contract_serve_start"/>
+        <result property="serviceTerm" column="service_term"/>
+        <result property="contractServeEnd" column="contract_serve_end"/>
+        <result property="totalMoney" column="total_money"/>
+        <result property="taxrate" column="taxrate"/>
+        <result property="notTaxMoney" column="not_tax_money"/>
+        <result property="payMethod" column="pay_method"/>
+        <result property="payMethodName" column="pay_method_name"/>
+        <result property="archiveFiles" column="archive_files"/>
+        <result property="manageCompany" column="manage_company"/>
+        <result property="manageCompanyName" column="manage_company_name"/>
+        <result property="manageDeptment" column="manage_deptment"/>
+        <result property="manageDeptmentName" column="manage_deptment_name"/>
+        <result property="manageUser" column="manage_user"/>
+        <result property="manageUserName" column="manage_user_name"/>
+        <result property="originalId" column="original_id"/>
+        <result property="status" column="status"/>
+        <result property="statusPs" column="status_ps"/>
+        <result property="contractScanningFile" column="contract_scanning_file"/>
+        <result property="receiveAmount" column="receive_amount"/>
+        <result property="contractApprovalFile" column="contract_approval_file"/>
+        <result property="outstandingAmount" column="outstanding_amount"/>
+        <result property="writeOffAmount" column="write_off_amount"/>
+        <result property="otherFiles" column="other_files"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="nwriteOffAmount" column="nwrite_off_amount"/>
+        <result property="remarks" column="remarks"/>
+        <result property="instanceId" column="instance_id"/>
+        <result property="cbanId" column="cbanId"/>
+        <result property="cbanReqNo" column="cbanReqNo"/>
+        <result property="cbanProName" column="cbanProName"/>
+        <result property="cbanProType" column="cbanProType"/>
+        <result property="isArchive" column="is_archive"/>
+        <result property="finalArchiveFile" column="final_archive_file"/>
+        <result property="unfinishedArchiveCause" column="unfinished_archive_cause"/>
+        <result property="isVirtual" column="is_virtual"/>
+        <result property="isOldCon" column="isOldCon"/>
+        <result property="contractNo1" column="contract_no1"/>
+        <result property="contractNo2" column="contract_no2"/>
+        <result property="contractNo3" column="contract_no3"/>
+        <result property="contractNo4" column="contract_no4"/>
+    </resultMap>
+
+    <sql id="selectCtBuContractVo">
+        select id, create_by, create_time, update_by, update_time, project_category, project_category_name, project_id, project_no, project_name, contract_no, contract_name, month, contract_category, contract_category_name, opposite_name, opposite_bank, opposite_bank_id, opposite_contacts, opposite_phone, opposite_address, our_name, our_contacts, our_phone, our_bank, our_bank_id, our_address, starttime, endtime, contract_serve_start, service_term, contract_serve_end, total_money, taxrate, not_tax_money, pay_method, pay_method_name, archive_files, manage_company, manage_company_name, manage_deptment, manage_deptment_name, manage_user, manage_user_name, original_id, status, status_ps, contract_scanning_file, receive_amount, contract_approval_file, outstanding_amount, write_off_amount, other_files, del_flag, nwrite_off_amount, remarks, instance_id, opposite_credit_code, is_archive,final_archive_file,unfinished_archive_cause, is_virtual, isOldCon, contract_no1, contract_no2, contract_no3,contract_no4 from ct_bu_contract
+    </sql>
+
+    <select id="selectCtBuContractList2" parameterType="CtBuContract" resultMap="CtBuContractResult">
+        <include refid="selectCtBuContractVo"/>
+        <where>
+            del_flag = '1'
+            <if test="projectCategory != null and projectCategory != ''">and project_category = #{projectCategory}</if>
+            <if test="projectCategoryName != null ">and project_category_name = #{projectCategoryName}</if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="projectNo != null  and projectNo != ''">and project_no = #{projectNo}</if>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="contractNo != null  and contractNo != ''">and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''">and contract_name like concat('%', #{contractName},
+                '%')
+            </if>
+            <if test="month != null  and month != ''">and month = #{month}</if>
+            <if test="contractCategory != null  and contractCategory != ''">and contract_category =
+                #{contractCategory}
+            </if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''">and contract_category_name =
+                #{contractCategoryName}
+            </if>
+            <if test="oppositeName != null  and oppositeName != ''">and opposite_name like concat('%', #{oppositeName},
+                '%')
+            </if>
+            <if test="oppositeBank != null  and oppositeBank != ''">and opposite_bank = #{oppositeBank}</if>
+            <if test="oppositeBankId != null  and oppositeBankId != ''">and opposite_bank_id = #{oppositeBankId}</if>
+            <if test="oppositeContacts != null  and oppositeContacts != ''">and opposite_contacts =
+                #{oppositeContacts}
+            </if>
+            <if test="oppositePhone != null  and oppositePhone != ''">and opposite_phone = #{oppositePhone}</if>
+            <if test="oppositeAddress != null  and oppositeAddress != ''">and opposite_address = #{oppositeAddress}</if>
+            <if test="oppositeCreditCode != null  and oppositeCreditCode != ''">and opposite_credit_code =
+                #{oppositeCreditCode}
+            </if>
+            <if test="ourName != null  and ourName != ''">and our_name like concat('%', #{ourName}, '%')</if>
+            <if test="ourContacts != null  and ourContacts != ''">and our_contacts = #{ourContacts}</if>
+            <if test="ourPhone != null  and ourPhone != ''">and our_phone = #{ourPhone}</if>
+            <if test="ourBank != null  and ourBank != ''">and our_bank = #{ourBank}</if>
+            <if test="ourBankId != null  and ourBankId != ''">and our_bank_id = #{ourBankId}</if>
+            <if test="ourAddress != null  and ourAddress != ''">and our_address = #{ourAddress}</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="endtime1 != null ">
+                and date_format(endtime,'%y%m%d') &gt;= date_format(#{endtime1},'%y%m%d')
+            </if>
+            <if test="endtime2 != null ">
+                and date_format(endtime,'%y%m%d') &lt;= date_format(#{endtime2},'%y%m%d')
+            </if>
+            <if test="contractServeStart1 != null ">
+                and date_format(contract_serve_start,'%y%m%d') &gt;= date_format(#{contractServeStart1},'%y%m%d')
+            </if>
+            <if test="contractServeStart2 != null ">
+                and date_format(contract_serve_start,'%y%m%d') &lt;= date_format(#{contractServeStart2},'%y%m%d')
+            </if>
+            <if test="contractServeEnd1 != null ">
+                and date_format(contract_serve_end,'%y%m%d') &gt;= date_format(#{contractServeEnd1},'%y%m%d')
+            </if>
+            <if test="contractServeEnd2 != null ">
+                and date_format(contract_serve_end,'%y%m%d') &lt;= date_format(#{contractServeEnd2},'%y%m%d')
+            </if>
+
+            <if test="contractServeStart != null ">and contract_serve_start = #{contractServeStart}</if>
+            <if test="serviceTerm != null ">and service_term = #{serviceTerm}</if>
+            <if test="contractServeEnd != null ">and contract_serve_end = #{contractServeEnd}</if>
+            <if test="totalMoney != null ">and total_money = #{totalMoney}</if>
+            <if test="taxrate != null ">and taxrate = #{taxrate}</if>
+            <if test="notTaxMoney != null ">and not_tax_money = #{notTaxMoney}</if>
+            <if test="payMethod != null ">and pay_method = #{payMethod}</if>
+            <if test="payMethodName != null ">and pay_method_name = #{payMethodName}</if>
+            <if test="archiveFiles != null  and archiveFiles != ''">and archive_files = #{archiveFiles}</if>
+            <if test="manageCompany != null  and manageCompany != ''">and manage_company = #{manageCompany}</if>
+            <if test="manageCompanyName != null  and manageCompanyName != ''">and manage_company_name =
+                #{manageCompanyName}
+            </if>
+            <if test="manageDeptment != null  and manageDeptment != ''">and manage_deptment = #{manageDeptment}</if>
+            <if test="manageDeptmentName != null  and manageDeptmentName != ''">and manage_deptment_name =
+                #{manageDeptmentName}
+            </if>
+            <if test="manageUser != null  and manageUser != ''">and manage_user = #{manageUser}</if>
+            <if test="manageUserName != null  and manageUserName != ''">and manage_user_name = #{manageUserName}</if>
+            <if test="originalId != null  and originalId != ''">and original_id = #{originalId}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="statusPs != null  and statusPs != ''">and status_ps = #{statusPs}</if>
+            <if test="contractScanningFile != null  and contractScanningFile != ''">and contract_scanning_file =
+                #{contractScanningFile}
+            </if>
+            <if test="contractApprovalFile != null  and contractApprovalFile != ''">and contract_approval_file =
+                #{contractApprovalFile}
+            </if>
+            <if test="otherFiles != null  and otherFiles != ''">and other_files = #{otherFiles}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="instanceId != null  and instanceId != ''">and instance_id = #{instanceId}</if>
+            <if test="isOldCon != null  and isOldCon != 0">and isOldCon = #{isOldCon}</if>
+
+            <if test="isArchive != null  and isArchive != ''">and is_archive = #{isArchive}</if>
+            <if test="contractNo1 != null  and contractNo1 != ''">and contract_no1 = #{contractNo1}</if>
+            <if test="contractNo2 != null  and contractNo2 != ''">and contract_no2 = #{contractNo2}</if>
+            <if test="contractNo3 != null  and contractNo3 != ''">and contract_no3 = #{contractNo3}</if>
+            <if test="contractNo4 != null  and contractNo4 != ''">and contract_no4 = #{contractNo4}</if>
+        </where>
+        ORDER BY contract_no DESC
+    </select>
+
+
+    <select id="selectCtBuContractList" parameterType="CtBuContract" resultMap="CtBuContractResult">
+        SELECT cbc.id, cbc.create_by,cbc.create_time, cbc.update_by, cbc.update_time, cbc.project_category,
+        cbc.project_category_name, cbc.project_id, cbc.project_no, cbc.project_name, cbc.contract_no, cbc.contract_name,
+        cbc.month, cbc.contract_category, cbc.contract_category_name, cbc.income_type, cbc.opposite_name,
+        cbc.opposite_bank, cbc.opposite_bank_id, cbc.opposite_contacts, cbc.opposite_phone, cbc.opposite_address,
+        cbc.our_name, cbc.our_contacts, cbc.our_phone, our_bank, cbc.our_bank_id, cbc.our_address, cbc.starttime,
+        cbc.endtime, cbc.contract_serve_start, cbc.service_term, cbc.contract_serve_end, cbc.total_money, cbc.taxrate,
+        cbc.not_tax_money,cbc.pay_method, cbc.pay_method_name, cbc.archive_files, cbc.manage_company,
+        cbc.manage_company_name, cbc.manage_deptment, cbc.manage_deptment_name, cbc.manage_user, cbc.manage_user_name,
+        cbc.original_id, cbc.status, cbc.status_ps, cbc.contract_scanning_file, cbc.receive_amount,
+        cbc.contract_approval_file, cbc.outstanding_amount, cbc.write_off_amount, cbc.other_files, cbc.del_flag,
+        cbc.nwrite_off_amount, cbc.remarks, cbc.instance_id, cbc.opposite_credit_code,cbc.contract_no1, cbc.contract_no2,
+        cbc.contract_no3,cbc.contract_no4
+        FROM ct_bu_contract cbc
+        LEFT JOIN sys_user u ON u.user_id = cbc.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cbc.manage_deptment
+        WHERE cbc.del_flag = '1'
+        <if test="projectCategory != null and projectCategory != ''">and cbc.project_category = #{projectCategory}</if>
+        <if test="projectId != null  and projectId != ''">and cbc.project_id = #{projectId}</if>
+        <if test="projectNo != null  and projectNo != ''">and cbc.project_no = #{projectNo}</if>
+        <if test="projectName != null  and projectName != ''">and cbc.project_name like concat('%', #{projectName},
+            '%')
+        </if>
+        <if test="contractNo != null  and contractNo != ''">and cbc.contract_no = #{contractNo}</if>
+        <if test="contractName != null  and contractName != ''">and cbc.contract_name like concat('%', #{contractName},
+            '%')
+        </if>
+        <if test="month != null  and month != ''">and cbc.month = #{month}</if>
+        <if test="contractCategory != null  and contractCategory != ''">and cbc.contract_category =
+            #{contractCategory}
+        </if>
+        <if test="contractCategoryName != null  and contractCategoryName != ''">and cbc.contract_category_name =
+            #{contractCategoryName}
+        </if>
+        <if test="oppositeName != null  and oppositeName != ''">and cbc.opposite_name like concat('%', #{oppositeName},
+            '%')
+        </if>
+        <if test="oppositeBank != null  and oppositeBank != ''">and cbc.opposite_bank = #{oppositeBank}</if>
+        <if test="oppositeBankId != null  and oppositeBankId != ''">and cbc.opposite_bank_id = #{oppositeBankId}</if>
+        <if test="oppositeContacts != null  and oppositeContacts != ''">and cbc.opposite_contacts =
+            #{oppositeContacts}
+        </if>
+        <if test="oppositePhone != null  and oppositePhone != ''">and cbc.opposite_phone = #{oppositePhone}</if>
+        <if test="oppositeAddress != null  and oppositeAddress != ''">and cbc.opposite_address = #{oppositeAddress}</if>
+        <if test="oppositeCreditCode != null  and oppositeCreditCode != ''">and cbc.opposite_credit_code =
+            #{oppositeCreditCode}
+        </if>
+        <if test="ourName != null  and ourName != ''">and cbc.our_name like concat('%', #{ourName}, '%')</if>
+        <if test="ourContacts != null  and ourContacts != ''">and cbc.our_contacts = #{ourContacts}</if>
+        <if test="ourPhone != null  and ourPhone != ''">and cbc.our_phone = #{ourPhone}</if>
+        <if test="ourBank != null  and ourBank != ''">and cbc.our_bank = #{ourBank}</if>
+        <if test="ourBankId != null  and ourBankId != ''">and cbc.our_bank_id = #{ourBankId}</if>
+        <if test="ourAddress != null  and ourAddress != ''">and cbc.our_address = #{ourAddress}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(cbc.starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            and date_format(cbc.starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="endtime1 != null ">
+            and date_format(cbc.endtime,'%y%m%d') &gt;= date_format(#{endtime1},'%y%m%d')
+        </if>
+        <if test="endtime2 != null ">
+            and date_format(cbc.endtime,'%y%m%d') &lt;= date_format(#{endtime2},'%y%m%d')
+        </if>
+        <if test="contractServeStart1 != null ">
+            and date_format(cbc.contract_serve_start,'%y%m%d') &gt;= date_format(#{contractServeStart1},'%y%m%d')
+        </if>
+        <if test="contractServeStart2 != null ">
+            and date_format(cbc.contract_serve_start,'%y%m%d') &lt;= date_format(#{contractServeStart2},'%y%m%d')
+        </if>
+        <if test="contractServeEnd1 != null ">
+            and date_format(cbc.contract_serve_end,'%y%m%d') &gt;= date_format(#{contractServeEnd1},'%y%m%d')
+        </if>
+        <if test="contractServeEnd2 != null ">
+            and date_format(cbc.contract_serve_end,'%y%m%d') &lt;= date_format(#{contractServeEnd2},'%y%m%d')
+        </if>
+        <if test="serviceTerm != null ">and cbc.service_term = #{serviceTerm}</if>
+        <if test="totalMoney != null ">and cbc.total_money = #{totalMoney}</if>
+        <if test="taxrate != null ">and cbc.taxrate = #{taxrate}</if>
+        <if test="notTaxMoney != null ">and cbc.not_tax_money = #{notTaxMoney}</if>
+        <if test="payMethod != null ">and cbc.pay_method = #{payMethod}</if>
+        <if test="payMethodName != null ">and cbc.pay_method_name = #{payMethodName}</if>
+        <if test="archiveFiles != null  and archiveFiles != ''">and cbc.archive_files = #{archiveFiles}</if>
+        <if test="manageCompany != null  and manageCompany != ''">and cbc.manage_company = #{manageCompany}</if>
+        <if test="manageCompanyName != null  and manageCompanyName != ''">and cbc.manage_company_name =
+            #{manageCompanyName}
+        </if>
+        <if test="manageDeptment != null  and manageDeptment != ''">and cbc.manage_deptment = #{manageDeptment}</if>
+        <if test="manageDeptmentName != null  and manageDeptmentName != ''">and cbc.manage_deptment_name =
+            #{manageDeptmentName}
+        </if>
+        <if test="manageUser != null  and manageUser != ''">and cbc.manage_user = #{manageUser}</if>
+        <if test="manageUserName != null  and manageUserName != ''">and cbc.manage_user_name = #{manageUserName}</if>
+        <if test="originalId != null  and originalId != ''">and cbc.original_id = #{originalId}</if>
+        <if test="status != null ">and cbc.status = #{status}</if>
+        <if test="statusPs != null  and statusPs != ''">and cbc.status_ps = #{statusPs}</if>
+        <if test="contractScanningFile != null  and contractScanningFile != ''">and cbc.contract_scanning_file =
+            #{contractScanningFile}
+        </if>
+        <if test="contractApprovalFile != null  and contractApprovalFile != ''">and cbc.contract_approval_file =
+            #{contractApprovalFile}
+        </if>
+        <if test="otherFiles != null  and otherFiles != ''">and cbc.other_files = #{otherFiles}</if>
+        <if test="remarks != null  and remarks != ''">and cbc.remarks = #{remarks}</if>
+        <if test="instanceId != null  and instanceId != ''">and cbc.instance_id = #{instanceId}</if>
+        <if test="isArchive != null  and isArchive != ''">and cbc.is_archive = #{isArchive}</if>
+        <if test="contractNo1 != null  and contractNo1 != ''">and cbc.contract_no1 = #{contractNo1}</if>
+        <if test="contractNo2 != null  and contractNo2 != ''">and cbc.contract_no2 = #{contractNo2}</if>
+        <if test="contractNo3 != null  and contractNo3 != ''">and cbc.contract_no3 = #{contractNo3}</if>
+        <if test="contractNo4 != null  and contractNo4 != ''">and cbc.contract_no4 = #{contractNo4}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        ORDER BY cbc.contract_no DESC
+    </select>
+
+
+    <select id="collectionAndPaymentStatistics" resultMap="CtBuContractResult">
+        <include refid="selectCtBuContractVo"/>
+        <where>
+            del_flag = '1'
+            <if test="contractNo != null  and contractNo != ''">and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''">and contract_name like concat('%', #{contractName},
+                '%')
+            </if>
+            <if test="contractCategory != null  and contractCategory != ''">and contract_category =
+                #{contractCategory}
+            </if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+        ORDER BY contract_no DESC
+    </select>
+
+
+    <resultMap type="HashMap" id="CtBuContractSum">
+        <result property="totalMoneySum" column="IF(ISNULL(SUM(total_money)),0,SUM(total_money))"/>
+        <result property="notTaxMoneySum" column="IF(ISNULL(SUM(not_tax_money)),0,SUM(not_tax_money))"/>
+        <result property="receiveAmountSum" column="IF(ISNULL(SUM(receive_amount)),0,SUM(receive_amount))"/>
+        <result property="outstandingAmountSum" column="IF(ISNULL(SUM(outstanding_amount)),0,SUM(outstanding_amount))"/>
+        <result property="writeOffAmountSum" column="IF(ISNULL(SUM(write_off_amount)),0,SUM(write_off_amount))"/>
+        <result property="nwriteOffAmountSum" column="IF(ISNULL(SUM(nwrite_off_amount)),0,SUM(nwrite_off_amount))"/>
+    </resultMap>
+
+
+    <select id="selectCtBuContractSum" parameterType="HashMap" resultMap="CtBuContractSum">
+        SELECT IF(ISNULL(SUM(total_money)),0,SUM(total_money)),
+        IF(ISNULL(SUM(not_tax_money)),0,SUM(not_tax_money)),
+        IF(ISNULL(SUM(receive_amount)),0,SUM(receive_amount)),
+        IF(ISNULL(SUM(outstanding_amount)),0,SUM(outstanding_amount)),
+        IF(ISNULL(SUM(write_off_amount)),0,SUM(write_off_amount)),
+        IF(ISNULL(SUM(nwrite_off_amount)),0,SUM(nwrite_off_amount))
+        FROM ct_bu_contract
+        <where>
+            del_flag = '1'
+            <if test="projectCategory != null ">and project_category = #{projectCategory}</if>
+            <if test="projectCategoryName != null ">and project_category_name = #{projectCategoryName}</if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="projectNo != null  and projectNo != ''">and project_no = #{projectNo}</if>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="contractNo != null  and contractNo != ''">and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''">and contract_name like concat('%', #{contractName},
+                '%')
+            </if>
+            <if test="month != null  and month != ''">and month = #{month}</if>
+            <if test="contractCategory != null  and contractCategory != ''">and contract_category =
+                #{contractCategory}
+            </if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''">and contract_category_name =
+                #{contractCategoryName}
+            </if>
+            <if test="oppositeName != null  and oppositeName != ''">and opposite_name like concat('%', #{oppositeName},
+                '%')
+            </if>
+            <if test="oppositeBank != null  and oppositeBank != ''">and opposite_bank = #{oppositeBank}</if>
+            <if test="oppositeBankId != null  and oppositeBankId != ''">and opposite_bank_id = #{oppositeBankId}</if>
+            <if test="oppositeContacts != null  and oppositeContacts != ''">and opposite_contacts =
+                #{oppositeContacts}
+            </if>
+            <if test="oppositePhone != null  and oppositePhone != ''">and opposite_phone = #{oppositePhone}</if>
+            <if test="oppositeAddress != null  and oppositeAddress != ''">and opposite_address = #{oppositeAddress}</if>
+            <if test="oppositeCreditCode != null  and oppositeCreditCode != ''">and opposite_credit_code =
+                #{oppositeCreditCode}
+            </if>
+            <if test="ourName != null  and ourName != ''">and our_name like concat('%', #{ourName}, '%')</if>
+            <if test="ourContacts != null  and ourContacts != ''">and our_contacts = #{ourContacts}</if>
+            <if test="ourPhone != null  and ourPhone != ''">and our_phone = #{ourPhone}</if>
+            <if test="ourBank != null  and ourBank != ''">and our_bank = #{ourBank}</if>
+            <if test="ourBankId != null  and ourBankId != ''">and our_bank_id = #{ourBankId}</if>
+            <if test="ourAddress != null  and ourAddress != ''">and our_address = #{ourAddress}</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="endtime != null ">and endtime = #{endtime}</if>
+
+            <if test="contractServeStart != null ">and contract_serve_start = #{contractServeStart}</if>
+            <if test="serviceTerm != null ">and service_term = #{serviceTerm}</if>
+            <if test="contractServeEnd != null ">and contract_serve_end = #{contractServeEnd}</if>
+            <if test="totalMoney != null ">and total_money = #{totalMoney}</if>
+            <if test="taxrate != null ">and taxrate = #{taxrate}</if>
+            <if test="notTaxMoney != null ">and not_tax_money = #{notTaxMoney}</if>
+            <if test="payMethod != null ">and pay_method = #{payMethod}</if>
+            <if test="payMethodName != null ">and pay_method_name = #{payMethodName}</if>
+            <if test="archiveFiles != null  and archiveFiles != ''">and archive_files = #{archiveFiles}</if>
+            <if test="manageDeptment != null  and manageDeptment != ''">and manage_deptment = #{manageDeptment}</if>
+            <if test="manageDeptmentName != null  and manageDeptmentName != ''">and manage_deptment_name =
+                #{manageDeptmentName}
+            </if>
+            <if test="manageUser != null  and manageUser != ''">and manage_user = #{manageUser}</if>
+            <if test="manageUserName != null  and manageUserName != ''">and manage_user_name = #{manageUserName}</if>
+            <if test="originalId != null  and originalId != ''">and original_id = #{originalId}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="statusPs != null  and statusPs != ''">and status_ps = #{statusPs}</if>
+            <if test="contractScanningFile != null  and contractScanningFile != ''">and contract_scanning_file =
+                #{contractScanningFile}
+            </if>
+            <if test="contractApprovalFile != null  and contractApprovalFile != ''">and contract_approval_file =
+                #{contractApprovalFile}
+            </if>
+            <if test="otherFiles != null  and otherFiles != ''">and other_files = #{otherFiles}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="instanceId != null  and instanceId != ''">and instance_id = #{instanceId}</if>
+            <if test="contractNo1 != null  and contractNo1 != ''">and contract_no1 = #{contractNo1}</if>
+            <if test="contractNo2 != null  and contractNo2 != ''">and contract_no2 = #{contractNo2}</if>
+            <if test="contractNo3 != null  and contractNo3 != ''">and contract_no3 = #{contractNo3}</if>
+            <if test="contractNo4 != null  and contractNo4 != ''">and contract_no4 = #{contractNo4}</if>
+        </where>
+    </select>
+
+    <select id="selectCtBuContractById" parameterType="String" resultMap="CtBuContractResult">
+        <include refid="selectCtBuContractVo"/>
+        where id = #{id} AND del_flag = '1'
+    </select>
+
+    <insert id="insertCtBuContract" parameterType="CtBuContract">
+        insert into ct_bu_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="projectCategory != null">project_category,</if>
+            <if test="projectCategoryName != null">project_category_name,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="projectNo != null">project_no,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="month != null">month,</if>
+            <if test="contractCategory != null">contract_category,</if>
+            <if test="contractCategoryName != null">contract_category_name,</if>
+            <if test="oppositeName != null">opposite_name,</if>
+            <if test="oppositeBank != null">opposite_bank,</if>
+            <if test="oppositeBankId != null">opposite_bank_id,</if>
+            <if test="oppositeContacts != null">opposite_contacts,</if>
+            <if test="oppositePhone != null">opposite_phone,</if>
+            <if test="oppositeAddress != null">opposite_address,</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code,</if>
+            <if test="ourName != null">our_name,</if>
+            <if test="ourContacts != null">our_contacts,</if>
+            <if test="ourPhone != null">our_phone,</if>
+            <if test="ourBank != null">our_bank,</if>
+            <if test="ourBankId != null">our_bank_id,</if>
+            <if test="ourAddress != null">our_address,</if>
+            <if test="starttime != null">starttime,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="contractServeStart != null">contract_serve_start,</if>
+            <if test="serviceTerm != null">service_term,</if>
+            <if test="contractServeEnd != null">contract_serve_end,</if>
+            <if test="totalMoney != null">total_money,</if>
+            <if test="taxrate != null">taxrate,</if>
+            <if test="notTaxMoney != null">not_tax_money,</if>
+            <if test="payMethod != null">pay_method,</if>
+            <if test="payMethodName != null">pay_method_name,</if>
+            <if test="archiveFiles != null">archive_files,</if>
+            <if test="manageCompany != null">manage_company,</if>
+            <if test="manageCompanyName != null">manage_company_name,</if>
+            <if test="manageDeptment != null">manage_deptment,</if>
+            <if test="manageDeptmentName != null">manage_deptment_name,</if>
+            <if test="manageUser != null">manage_user,</if>
+            <if test="manageUserName != null">manage_user_name,</if>
+            <if test="originalId != null">original_id,</if>
+            <if test="status != null">status,</if>
+            <if test="statusPs != null">status_ps,</if>
+            <if test="contractScanningFile != null">contract_scanning_file,</if>
+            <if test="receiveAmount != null">receive_amount,</if>
+            <if test="contractApprovalFile != null">contract_approval_file,</if>
+            <if test="outstandingAmount != null">outstanding_amount,</if>
+            <if test="writeOffAmount != null">write_off_amount,</if>
+            <if test="otherFiles != null">other_files,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="instanceId != null">instance_id,</if>
+            <if test="isVirtual != null">is_virtual,</if>
+            <if test="isArchive != null">is_archive,</if>
+            <if test="isOldCon != null and isOldCon!=0 ">isOldCon,</if>
+            <if test="contractNo1 != null">contract_no1,</if>
+            <if test="contractNo2 != null">contract_no2,</if>
+            <if test="contractNo3 != null">contract_no3,</if>
+            <if test="contractNo4 != null">contract_no4,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="projectCategory != null">#{projectCategory},</if>
+            <if test="projectCategoryName != null">#{projectCategoryName},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectNo != null">#{projectNo},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="month != null">#{month},</if>
+            <if test="contractCategory != null">#{contractCategory},</if>
+            <if test="contractCategoryName != null">#{contractCategoryName},</if>
+            <if test="oppositeName != null">#{oppositeName},</if>
+            <if test="oppositeBank != null">#{oppositeBank},</if>
+            <if test="oppositeBankId != null">#{oppositeBankId},</if>
+            <if test="oppositeContacts != null">#{oppositeContacts},</if>
+            <if test="oppositePhone != null">#{oppositePhone},</if>
+            <if test="oppositeAddress != null">#{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">#{oppositeCreditCode},</if>
+            <if test="ourName != null">#{ourName},</if>
+            <if test="ourContacts != null">#{ourContacts},</if>
+            <if test="ourPhone != null">#{ourPhone},</if>
+            <if test="ourBank != null">#{ourBank},</if>
+            <if test="ourBankId != null">#{ourBankId},</if>
+            <if test="ourAddress != null">#{ourAddress},</if>
+            <if test="starttime != null">#{starttime},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="contractServeStart != null">#{contractServeStart},</if>
+            <if test="serviceTerm != null">#{serviceTerm},</if>
+            <if test="contractServeEnd != null">#{contractServeEnd},</if>
+            <if test="totalMoney != null">#{totalMoney},</if>
+            <if test="taxrate != null">#{taxrate},</if>
+            <if test="notTaxMoney != null">#{notTaxMoney},</if>
+            <if test="payMethod != null">#{payMethod},</if>
+            <if test="payMethodName != null">#{payMethodName},</if>
+            <if test="archiveFiles != null">#{archiveFiles},</if>
+            <if test="manageCompany != null">#{manageCompany},</if>
+            <if test="manageCompanyName != null">#{manageCompanyName},</if>
+            <if test="manageDeptment != null">#{manageDeptment},</if>
+            <if test="manageDeptmentName != null">#{manageDeptmentName},</if>
+            <if test="manageUser != null">#{manageUser},</if>
+            <if test="manageUserName != null">#{manageUserName},</if>
+            <if test="originalId != null">#{originalId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusPs != null">#{statusPs},</if>
+            <if test="contractScanningFile != null">#{contractScanningFile},</if>
+            <if test="receiveAmount != null">#{receiveAmount},</if>
+            <if test="contractApprovalFile != null">#{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">#{outstandingAmount},</if>
+            <if test="writeOffAmount != null">#{writeOffAmount},</if>
+            <if test="otherFiles != null">#{otherFiles},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="nwriteOffAmount != null">#{nwriteOffAmount},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="instanceId != null">#{instanceId},</if>
+            <if test="isVirtual != null">#{isVirtual},</if>
+            <if test="isArchive != null">#{isArchive},</if>
+            <if test="isOldCon != null and isOldCon!=0 ">#{isOldCon},</if>
+            <if test="contractNo1 != null">#{contractNo1},</if>
+            <if test="contractNo2 != null">#{contractNo2},</if>
+            <if test="contractNo3 != null">#{contractNo3},</if>
+            <if test="contractNo4 != null">#{contractNo4},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtBuContract" parameterType="CtBuContract">
+        update ct_bu_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectCategory != null">project_category = #{projectCategory},</if>
+            <if test="projectCategoryName != null">project_category_name = #{projectCategoryName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectNo != null">project_no = #{projectNo},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code = #{oppositeCreditCode},</if>
+            <if test="ourName != null">our_name = #{ourName},</if>
+            <if test="ourContacts != null">our_contacts = #{ourContacts},</if>
+            <if test="ourPhone != null">our_phone = #{ourPhone},</if>
+            <if test="ourBank != null">our_bank = #{ourBank},</if>
+            <if test="ourBankId != null">our_bank_id = #{ourBankId},</if>
+            <if test="ourAddress != null">our_address = #{ourAddress},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="contractServeStart != null">contract_serve_start = #{contractServeStart},</if>
+            <if test="serviceTerm != null">service_term = #{serviceTerm},</if>
+            <if test="contractServeEnd != null">contract_serve_end = #{contractServeEnd},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="taxrate != null">taxrate = #{taxrate},</if>
+            <if test="notTaxMoney != null">not_tax_money = #{notTaxMoney},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payMethodName != null">pay_method_name = #{payMethodName},</if>
+            <if test="archiveFiles != null">archive_files = #{archiveFiles},</if>
+            <if test="manageCompany != null">manage_company = #{manageCompany},</if>
+            <if test="manageCompanyName != null">manage_company_name = #{manageCompanyName},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageDeptmentName != null">manage_deptment_name = #{manageDeptmentName},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="manageUserName != null">manage_user_name = #{manageUserName},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusPs != null">status_ps = #{statusPs},</if>
+            <if test="contractScanningFile != null">contract_scanning_file = #{contractScanningFile},</if>
+            <if test="receiveAmount != null">receive_amount = #{receiveAmount},</if>
+            <if test="contractApprovalFile != null">contract_approval_file = #{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">outstanding_amount = #{outstandingAmount},</if>
+            <if test="writeOffAmount != null">write_off_amount = #{writeOffAmount},</if>
+            <if test="otherFiles != null">other_files = #{otherFiles},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount = #{nwriteOffAmount},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+            <if test="isArchive != null">is_archive = #{isArchive},</if>
+            <if test="finalArchiveFile != null">final_archive_file = #{finalArchiveFile},</if>
+            <if test="unfinishedArchiveCause != null">unfinished_archive_cause = #{unfinishedArchiveCause},</if>
+            <if test="isVirtual != null">is_virtual = #{isVirtual},</if>
+            <if test="isOldCon != null and isOldCon!=0 ">isOldCon = #{isOldCon},</if>
+            <if test="contractNo1 != null">contract_no1 = #{contractNo1},</if>
+            <if test="contractNo2 != null">contract_no2 = #{contractNo2},</if>
+            <if test="contractNo3 != null">contract_no3 = #{contractNo3},</if>
+            <if test="contractNo4 != null">contract_no4 = #{contractNo4},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateAddCtBuContract" parameterType="CtBuContract">
+        update ct_bu_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectCategory != null">project_category = #{projectCategory},</if>
+            <if test="projectCategoryName != null">project_category_name = #{projectCategoryName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectNo != null">project_no = #{projectNo},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code = #{oppositeCreditCode},</if>
+            <if test="ourName != null">our_name = #{ourName},</if>
+            <if test="ourContacts != null">our_contacts = #{ourContacts},</if>
+            <if test="ourPhone != null">our_phone = #{ourPhone},</if>
+            <if test="ourBank != null">our_bank = #{ourBank},</if>
+            <if test="ourBankId != null">our_bank_id = #{ourBankId},</if>
+            <if test="ourAddress != null">our_address = #{ourAddress},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="contractServeStart != null">contract_serve_start = #{contractServeStart},</if>
+            <if test="serviceTerm != null">service_term = #{serviceTerm},</if>
+            <if test="contractServeEnd != null">contract_serve_end = #{contractServeEnd},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="taxrate != null">taxrate = #{taxrate},</if>
+            <if test="notTaxMoney != null">not_tax_money = #{notTaxMoney},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payMethodName != null">pay_method_name = #{payMethodName},</if>
+            <if test="archiveFiles != null">archive_files = #{archiveFiles},</if>
+            <if test="manageCompany != null">manage_company = #{manageCompany},</if>
+            <if test="manageCompanyName != null">manage_company_name = #{manageCompanyName},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageDeptmentName != null">manage_deptment_name = #{manageDeptmentName},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="manageUserName != null">manage_user_name = #{manageUserName},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusPs != null">status_ps = #{statusPs},</if>
+            <if test="contractScanningFile != null">contract_scanning_file = #{contractScanningFile},</if>
+            <if test="receiveAmount != null">receive_amount = if(receive_amount is null,0,receive_amount)+#{receiveAmount},
+                outstanding_amount = total_money-(receive_amount),</if>
+            <if test="contractApprovalFile != null">contract_approval_file = #{contractApprovalFile},
+                </if>
+            <if test="writeOffAmount != null">write_off_amount = if(write_off_amount is null,0,write_off_amount)+#{writeOffAmount},
+                nwrite_off_amount = total_money-(write_off_amount),
+            </if>
+            <if test="otherFiles != null">other_files = #{otherFiles},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+            <if test="isVirtual != null">is_virtual = #{isVirtual},</if>
+            <if test="isOldCon != null and isOldCon!=0 ">isOldCon = #{isOldCon},</if>
+            <if test="contractNo1 != null">contract_no1 = #{contractNo1},</if>
+            <if test="contractNo2 != null">contract_no2 = #{contractNo2},</if>
+            <if test="contractNo3 != null">contract_no3 = #{contractNo3},</if>
+            <if test="contractNo4 != null">contract_no4 = #{contractNo4},</if>
+        </trim>
+        where (id = (SELECT contract_id FROM ct_bu_receipt_info i WHERE i.id=#{id})) or (id=#{id})
+    </update>
+
+    <update id="updateCtBuContractByInstanceId" parameterType="CtBuContract">
+        update ct_bu_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectCategory != null">project_category = #{projectCategory},</if>
+            <if test="projectCategoryName != null">project_category_name = #{projectCategoryName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectNo != null">project_no = #{projectNo},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code = #{oppositeCreditCode},</if>
+            <if test="ourName != null">our_name = #{ourName},</if>
+            <if test="ourContacts != null">our_contacts = #{ourContacts},</if>
+            <if test="ourPhone != null">our_phone = #{ourPhone},</if>
+            <if test="ourBank != null">our_bank = #{ourBank},</if>
+            <if test="ourBankId != null">our_bank_id = #{ourBankId},</if>
+            <if test="ourAddress != null">our_address = #{ourAddress},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="contractServeStart != null">contract_serve_start = #{contractServeStart},</if>
+            <if test="serviceTerm != null">service_term = #{serviceTerm},</if>
+            <if test="contractServeEnd != null">contract_serve_end = #{contractServeEnd},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="taxrate != null">taxrate = #{taxrate},</if>
+            <if test="notTaxMoney != null">not_tax_money = #{notTaxMoney},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payMethodName != null">pay_method_name = #{payMethodName},</if>
+            <if test="archiveFiles != null">archive_files = #{archiveFiles},</if>
+            <if test="manageCompany != null">manage_company = #{manageCompany},</if>
+            <if test="manageCompanyName != null">manage_company_name = #{manageCompanyName},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageDeptmentName != null">manage_deptment_name = #{manageDeptmentName},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="manageUserName != null">manage_user_name = #{manageUserName},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusPs != null">status_ps = #{statusPs},</if>
+            <if test="contractScanningFile != null">contract_scanning_file = #{contractScanningFile},</if>
+            <if test="receiveAmount != null">receive_amount = #{receiveAmount},</if>
+            <if test="contractApprovalFile != null">contract_approval_file = #{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">outstanding_amount = #{outstandingAmount},</if>
+            <if test="writeOffAmount != null">write_off_amount = #{writeOffAmount},</if>
+            <if test="otherFiles != null">other_files = #{otherFiles},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount = #{nwriteOffAmount},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+            <if test="expiryDate != null">expiry_date = #{expiryDate},</if>
+            <if test="isVirtual != null">is_virtual = #{isVirtual},</if>
+            <if test="isOldCon != null and isOldCon!=0 ">isOldCon = #{isOldCon},</if>
+            <if test="contractNo1 != null">contract_no1 = #{contractNo1},</if>
+            <if test="contractNo2 != null">contract_no2 = #{contractNo2},</if>
+            <if test="contractNo3 != null">contract_no3 = #{contractNo3},</if>
+            <if test="contractNo4 != null">contract_no4 = #{contractNo4},</if>
+        </trim>
+        where instance_id = #{instanceId}
+    </update>
+
+    <delete id="deleteCtBuContractById" parameterType="String">
+        delete from ct_bu_contract where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuContractByIds" parameterType="String">
+        delete from ct_bu_contract where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countContract" parameterType="String" resultType="int">
+        SELECT count(1) FROM ct_bu_contract
+        where contract_no like concat(#{contractNo},'%')
+    </select>
+
+    <select id="newestContractNo" parameterType="String" resultType="String">
+        SELECT contract_no
+        FROM ct_bu_contract
+        where contract_no like concat(#{contractNo},'%')
+        ORDER BY contract_no DESC limit 0,1
+    </select>
+
+
+    <update id="updateCtBuContractByIds" parameterType="String">
+        update ct_bu_contract set del_flag= '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateCtBuContractById" parameterType="String">
+        update ct_bu_contract set del_flag= '2' where id = #{id}
+    </update>
+
+
+    <select id="selectWarning" parameterType="Date" resultType="com.ruoyi.contract.contractInfo.domain.CtBuContract">
+        SELECT cbc.id,
+               cbc.contract_no AS contractNo,
+               cbc.contract_name AS contractName,
+               cbc.manage_deptment AS manageDeptment,
+               cbc.manage_user AS manageUser,
+               cbc.del_flag AS delFlag,
+               cbcp.id AS cbcpId,
+               cbcp.contract_id AS contractId,
+               cbcp.estimate_time AS estimateTime,
+               cbcp.estimate_money AS estimateMoney,
+               cbcp.actual_money AS actualMoney
+        FROM ct_bu_contract_payinfo cbcp
+        LEFT JOIN ct_bu_contract cbc ON cbcp.contract_id = cbc.contract_no
+        WHERE cbcp.estimate_time = #{WarningDate} AND cbc.del_flag = 1 AND cbc.contract_category = '1' AND cbcp.estimate_money > cbcp.actual_money AND cbcp.is_warning = 1
+
+    </select>
+
+
+    <!--签订合同数量-->
+    <select id="countContractByCompany" parameterType="Long" resultType="int">
+        SELECT count(1) FROM ct_bu_contract WHERE manage_company = #{company} AND del_flag = 1
+    </select>
+
+    <!--进行中合同数量-->
+    <select id="countContractUnderwayByCompany" parameterType="Long" resultType="int">
+        SELECT count(1) FROM ct_bu_contract
+        <![CDATA[ WHERE manage_company = #{company} AND del_flag = 1 AND contract_serve_start <= now() <= contract_serve_end
+        ]]>
+    </select>
+
+    <!--未启动合同数量-->
+    <select id="countContractUnStartByCompany" parameterType="Long" resultType="int">
+        SELECT count(1) FROM ct_bu_contract
+        <![CDATA[ WHERE manage_company = #{company} AND del_flag = 1 AND starttime <= now() <= contract_serve_start
+        ]]>
+    </select>
+
+    <!--完成合同数量-->
+    <select id="countContractAccomplishByCompany" parameterType="Long" resultType="int">
+        SELECT count(1) FROM ct_bu_contract
+        <![CDATA[ WHERE manage_company = #{company} AND del_flag = 1 AND contract_serve_end <= now()
+        ]]>
+    </select>
+
+
+    <resultMap type="HashMap" id="contractCount">
+        <result property="countContract" column="countContract"/>
+        <result property="countContractUnderway" column="countContractUnderway"/>
+        <result property="countContractUnStart" column="countContractUnStart"/>
+        <result property="countContractAccomplish" column="countContractAccomplish"/>
+    </resultMap>
+
+    <select id="contractCount" resultMap="contractCount">
+        SELECT  count(1) AS countContract,
+                COALESCE( SUM(IF(CURDATE() BETWEEN contract_serve_start AND contract_serve_end,1,0 )),0) AS countContractUnderway,
+                COALESCE(SUM(IF(CURDATE() BETWEEN starttime AND contract_serve_start,1,0 )),0) AS countContractUnStart,
+                COALESCE(SUM(IF(<![CDATA[ contract_serve_end <= CURDATE() ]]>,1,0 )),0) AS countContractAccomplish
+        FROM ct_bu_contract
+        WHERE manage_company = #{companyId} AND del_flag = 1 AND status = 2
+        <if test="beginTime != null "><!-- 开始时间检索 -->
+            and date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null "><!-- 结束时间检索 -->
+            and date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+    </select>
+
+<!--    <select id="contractCount" resultMap="contractCount">-->
+<!--        SELECT  count(1) AS countContract,-->
+<!--                COALESCE( SUM(IF(CURDATE() BETWEEN contract_serve_start AND contract_serve_end,1,0 )),0) AS countContractUnderway,-->
+<!--                COALESCE(SUM(IF(CURDATE() BETWEEN starttime AND contract_serve_start,1,0 )),0) AS countContractUnStart,-->
+<!--                COALESCE(SUM(IF(<![CDATA[ contract_serve_end <= CURDATE() ]]>,1,0 )),0) AS countContractAccomplish-->
+<!--        FROM ct_bu_contract cbc-->
+<!--        LEFT JOIN sys_user u ON u.user_id = cbc.create_by-->
+<!--        LEFT JOIN sys_dept d ON d.dept_id = cbc.manage_deptment-->
+<!--        WHERE del_flag = 1 AND status = 2 AND d.parent_id = 200-->
+<!--        GROUP BY d.dept_id-->
+<!--    </select>-->
+
+    <select id="contractStatisticsList" resultMap="CtBuContractResult">
+        <include refid="selectCtBuContractVo"/>
+        <where>
+            manage_company = #{companyId} AND del_flag = 1 AND status = 2
+            <if test="type != null  and type != '' and type == 1 ">
+                AND (CURDATE() BETWEEN contract_serve_start AND contract_serve_end)
+            </if>
+            <if test="type != null  and type != '' and type == 2 ">
+                AND (CURDATE() BETWEEN starttime AND contract_serve_start)
+            </if>
+            <if test="type != null  and type != '' and type == 3 ">
+                <![CDATA[ AND contract_serve_end <= CURDATE()  ]]>
+            </if>
+        </where>
+        ORDER BY contract_no DESC
+    </select>
+
+
+    <resultMap type="HashMap" id="CtBuContractResult1">
+        <result property="id" column="id"/>
+        <result property="projectId" column="projectId"/>
+        <result property="projectNo" column="projectNo"/>
+        <result property="projectName" column="projectName"/>
+        <result property="contractNo" column="contractNo"/>
+        <result property="contractName" column="contractName"/>
+        <result property="estimateMoney" column="estimateMoney"/>
+        <result property="oppositeName" column="oppositeName"/>
+        <result property="incomeType" column="incomeType"/>
+    </resultMap>
+
+    <select id="contractWarningList" resultMap="CtBuContractResult1">
+        SELECT cbc.id AS id, cbc.project_id AS projectId, cbc.project_no AS projectNo, cbc.project_name AS projectName, cbc.contract_no AS contractNo, cbc.contract_name AS contractName,cbcp.estimate_money AS estimateMoney,cbc.opposite_name AS oppositeName,cbc.income_type AS incomeType
+        FROM ct_bu_contract cbc
+        LEFT JOIN ct_bu_receipt_info cbri ON cbc.id = cbri.contract_id
+        LEFT JOIN ct_bu_contract_payinfo cbcp ON cbc.id = cbcp.contract_id
+        WHERE cbc.status = 2 AND cbc.del_flag = 1 AND cbc.contract_category = 1 AND cbc.income_type = 1 AND cbri.contract_id is null AND date_format(CURDATE(),'%y%m') = date_format(cbcp.estimate_time,'%y%m') AND date_format(cbc.endtime,'%y%m%d') >= date_format(CURDATE(),'%y%m%d')
+        UNION ALL
+        SELECT cbc.id AS id, cbc.project_id AS projectId, cbc.project_no AS projectNo, cbc.project_name AS projectName, cbc.contract_no AS contractNo, cbc.contract_name AS contractName,(total_money / service_term) AS estimateMoney,cbc.opposite_name AS oppositeName,cbc.income_type AS incomeType
+        FROM ct_bu_contract cbc
+		WHERE cbc.status = 2 AND cbc.del_flag = 1 AND cbc.contract_category = 1 AND cbc.income_type = 2 AND date_format(cbc.endtime,'%y%m%d') >= date_format(CURDATE(),'%y%m%d')
+    </select>
+    <update id="updateCtBuContractAddReceiver" parameterType="CtBuContract">
+        update ct_bu_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectCategory != null">project_category = #{projectCategory},</if>
+            <if test="projectCategoryName != null">project_category_name = #{projectCategoryName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectNo != null">project_no = #{projectNo},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code = #{oppositeCreditCode},</if>
+            <if test="ourName != null">our_name = #{ourName},</if>
+            <if test="ourContacts != null">our_contacts = #{ourContacts},</if>
+            <if test="ourPhone != null">our_phone = #{ourPhone},</if>
+            <if test="ourBank != null">our_bank = #{ourBank},</if>
+            <if test="ourBankId != null">our_bank_id = #{ourBankId},</if>
+            <if test="ourAddress != null">our_address = #{ourAddress},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="contractServeStart != null">contract_serve_start = #{contractServeStart},</if>
+            <if test="serviceTerm != null">service_term = #{serviceTerm},</if>
+            <if test="contractServeEnd != null">contract_serve_end = #{contractServeEnd},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="taxrate != null">taxrate = #{taxrate},</if>
+            <if test="notTaxMoney != null">not_tax_money = #{notTaxMoney},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payMethodName != null">pay_method_name = #{payMethodName},</if>
+            <if test="archiveFiles != null">archive_files = #{archiveFiles},</if>
+            <if test="manageCompany != null">manage_company = #{manageCompany},</if>
+            <if test="manageCompanyName != null">manage_company_name = #{manageCompanyName},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageDeptmentName != null">manage_deptment_name = #{manageDeptmentName},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="manageUserName != null">manage_user_name = #{manageUserName},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusPs != null">status_ps = #{statusPs},</if>
+            <if test="contractScanningFile != null">contract_scanning_file = #{contractScanningFile},</if>
+            <if test="receiveAmount != null">receive_amount = #{receiveAmount},</if>
+            <if test="contractApprovalFile != null">contract_approval_file = #{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">outstanding_amount = #{outstandingAmount},</if>
+            <if test="writeOffAmount != null">write_off_amount = #{writeOffAmount},</if>
+            <if test="otherFiles != null">other_files = #{otherFiles},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount = #{nwriteOffAmount},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+            <if test="isVirtual != null">is_virtual = #{isVirtual},</if>
+            <if test="isOldCon != null and isOldCon!=0 ">isOldCon = #{isOldCon},</if>
+            <if test="contractNo1 != null">contract_no1 = #{contractNo1},</if>
+            <if test="contractNo2 != null">contract_no2 = #{contractNo2},</if>
+            <if test="contractNo3 != null">contract_no3 = #{contractNo3},</if>
+            <if test="contractNo4 != null">contract_no4 = #{contractNo4},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <resultMap type="HashMap" id="countContractIndex">
+        <result property="newContractCount" column="newContractCount"/>
+        <result property="expiryContractCount" column="expiryContractCount"/>
+        <result property="alterContractCount" column="alterContractCount"/>
+        <result property="accruedAssets" column="accruedAssets"/>
+    </resultMap>
+
+    <!--首页本月合同统计-->
+    <select id="countContractIndex" resultMap="countContractIndex">
+        SELECT  COALESCE(SUM(IF(date_format(CURDATE(),'%y%m') = date_format(cbc.create_time,'%y%m') AND cbc.status = 2 AND cbc.original_id IS NULL ,1,0 )),0) AS newContractCount,
+                COALESCE(SUM(IF(date_format(CURDATE(),'%y%m') = date_format(cbc.expiry_date,'%y%m') AND cbc.status = 6,1,0 )),0) AS expiryContractCount,
+                COALESCE(SUM(IF(date_format(CURDATE(),'%y%m') = date_format(cbc.create_time,'%y%m') AND cbc.status = 2 AND cbc.original_id IS NOT NULL ,1,0 )),0) AS alterContractCount,
+                COALESCE(SUM(IF(date_format(CURDATE(),'%y%m') >= date_format(cbc.contract_serve_start,'%y%m') AND date_format(cbc.contract_serve_end,'%y%m') >= date_format(CURDATE(),'%y%m') AND cbc.status = 2 AND cbc.service_term != 0 AND cbc.service_term IS NOT NULL ,cbc.total_money/cbc.service_term,0 )),0) AS accruedAssets
+        FROM ct_bu_contract cbc
+        LEFT JOIN sys_user u on u.user_id = cbc.create_by
+        LEFT JOIN sys_dept d on d.dept_id = cbc.manage_deptment
+        WHERE cbc.del_flag = 1
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+
+    <!--合同录入列表-->
+    <select id="selectCtBuContractList1" parameterType="CtBuContract" resultMap="CtBuContractResult">
+        (SELECT cbanId, cbanCreateBy, cbanCreateTime,cbanReqNo,cbanProName,cbanStatus,cbanDelFlag,cbanProType,
+                cbc.id, cbc.create_by,cbc.create_time, cbc.update_by, cbc.update_time, cbc.project_category,
+                cbc.project_category_name, cbc.project_id, cbc.project_no, cbc.project_name, cbc.contract_no, cbc.contract_name,
+                cbc.contract_category, cbc.contract_category_name, cbc.income_type, cbc.opposite_name,
+                cbc.our_name, cbc.starttime,
+                cbc.endtime, cbc.contract_serve_start, cbc.service_term, cbc.contract_serve_end, cbc.total_money, cbc.taxrate,
+                cbc.not_tax_money,cbc.pay_method, cbc.pay_method_name, cbc.manage_company,
+                cbc.manage_company_name, cbc.manage_deptment, cbc.manage_deptment_name, cbc.manage_user, cbc.manage_user_name,
+                cbc.original_id, cbc.status, cbc.status_ps,cbc.del_flag,
+                cbc.nwrite_off_amount, cbc.remarks, cbc.instance_id, cbc.opposite_credit_code
+        FROM
+        ((SELECT cban.id AS cbanId, cban.create_by AS cbanCreateBy, cban.create_time AS cbanCreateTime,cban.req_no AS cbanReqNo,cban.pro_name AS cbanProName,cban.status AS cbanStatus,cban.del_flag AS cbanDelFlag,cban.pro_type AS cbanProType
+        FROM ct_bu_approval_ng cban
+        LEFT JOIN sys_user u ON u.user_id = cban.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cban.belong_deptid
+        WHERE cban.del_flag = '1' AND cban.status = 2
+        <!-- 数据范围过滤 -->
+        ${params.dataScope})
+        UNION
+        (SELECT cban.id AS cbanId, cban.create_by AS cbanCreateBy, cban.create_time AS cbanCreateTime,cban.req_no AS cbanReqNo,cban.pro_name AS cbanProName,cban.status AS cbanStatus,cban.del_flag AS cbanDelFlag,cban.pro_type AS cbanProType
+        FROM ct_bu_approval_ngc cban
+        LEFT JOIN sys_user u ON u.user_id = cban.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cban.belong_deptid
+        WHERE cban.del_flag = '1' AND cban.status = 2
+        <!-- 数据范围过滤 -->
+        ${params.dataScope})
+        ORDER BY cbanReqNo DESC) a
+        LEFT JOIN ct_bu_contract cbc ON a.cbanId = cbc.project_id
+        LEFT JOIN sys_user u on u.user_id = cbc.create_by
+        LEFT JOIN sys_dept d on d.dept_id = cbc.manage_deptment
+        WHERE (cbc.del_flag IS NULL OR cbc.del_flag = 1)
+        <if test="projectNo != null  and projectNo != ''">and cbanReqNo = #{projectNo}</if>
+        <if test="projectName != null  and projectName != ''">and cbanProName like concat('%', #{projectName},
+            '%')
+        </if>
+        <if test="contractNo != null  and contractNo != ''">and cbc.contract_no = #{contractNo}</if>
+        <if test="contractName != null  and contractName != ''">and cbc.contract_name like concat('%', #{contractName},
+            '%')
+        </if>
+        <if test="contractCategory != null  and contractCategory != ''">and cbc.contract_category =
+            #{contractCategory}
+        </if>
+        <if test="oppositeName != null  and oppositeName != ''">and cbc.opposite_name like concat('%', #{oppositeName},
+            '%')
+        </if>
+        <if test="ourName != null  and ourName != ''">and cbc.our_name like concat('%', #{ourName}, '%')</if>
+        <if test="payMethod != null ">and cbc.pay_method = #{payMethod}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(cbc.starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            and date_format(cbc.starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="endtime1 != null ">
+            and date_format(cbc.endtime,'%y%m%d') &gt;= date_format(#{endtime1},'%y%m%d')
+        </if>
+        <if test="endtime2 != null ">
+            and date_format(cbc.endtime,'%y%m%d') &lt;= date_format(#{endtime2},'%y%m%d')
+        </if>
+        <if test="contractServeStart1 != null ">
+            and date_format(cbc.contract_serve_start,'%y%m%d') &gt;= date_format(#{contractServeStart1},'%y%m%d')
+        </if>
+        <if test="contractServeStart2 != null ">
+            and date_format(cbc.contract_serve_start,'%y%m%d') &lt;= date_format(#{contractServeStart2},'%y%m%d')
+        </if>
+        <if test="contractServeEnd1 != null ">
+            and date_format(cbc.contract_serve_end,'%y%m%d') &gt;= date_format(#{contractServeEnd1},'%y%m%d')
+        </if>
+        <if test="contractServeEnd2 != null ">
+            and date_format(cbc.contract_serve_end,'%y%m%d') &lt;= date_format(#{contractServeEnd2},'%y%m%d')
+        </if>
+        )
+
+        UNION
+
+        (SELECT cbanId, cbanCreateBy, cbanCreateTime,cbanReqNo,cbanProName,cbanStatus,cbanDelFlag,cbanProType,
+                cbc.id, cbc.create_by,cbc.create_time, cbc.update_by, cbc.update_time, cbc.project_category,
+                cbc.project_category_name, cbc.project_id, cbc.project_no, cbc.project_name, cbc.contract_no, cbc.contract_name,
+                cbc.contract_category, cbc.contract_category_name, cbc.income_type, cbc.opposite_name,
+                cbc.our_name, cbc.starttime,
+                cbc.endtime, cbc.contract_serve_start, cbc.service_term, cbc.contract_serve_end, cbc.total_money, cbc.taxrate,
+                cbc.not_tax_money,cbc.pay_method, cbc.pay_method_name, cbc.manage_company,
+                cbc.manage_company_name, cbc.manage_deptment, cbc.manage_deptment_name, cbc.manage_user, cbc.manage_user_name,
+                cbc.original_id, cbc.status, cbc.status_ps,cbc.del_flag,
+                cbc.nwrite_off_amount, cbc.remarks, cbc.instance_id, cbc.opposite_credit_code
+        FROM
+        ((SELECT cban.id AS cbanId, cban.create_by AS cbanCreateBy, cban.create_time AS cbanCreateTime,cban.req_no AS cbanReqNo,cban.pro_name AS cbanProName,cban.status AS cbanStatus,cban.del_flag AS cbanDelFlag,cban.pro_type AS cbanProType
+        FROM ct_bu_approval_ng cban
+        LEFT JOIN sys_user u ON u.user_id = cban.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cban.belong_deptid
+        WHERE cban.del_flag = '1' AND cban.status = 2
+        <!-- 数据范围过滤 -->
+        ${params.dataScope})
+        UNION
+        (SELECT cban.id AS cbanId, cban.create_by AS cbanCreateBy, cban.create_time AS cbanCreateTime,cban.req_no AS cbanReqNo,cban.pro_name AS cbanProName,cban.status AS cbanStatus,cban.del_flag AS cbanDelFlag,cban.pro_type AS cbanProType
+        FROM ct_bu_approval_ngc cban
+        LEFT JOIN sys_user u ON u.user_id = cban.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cban.belong_deptid
+        WHERE cban.del_flag = '1' AND cban.status = 2
+        <!-- 数据范围过滤 -->
+        ${params.dataScope})
+        ORDER BY cbanReqNo DESC) a
+        RIGHT JOIN ct_bu_contract cbc ON a.cbanId = cbc.project_id
+        LEFT JOIN sys_user u on u.user_id = cbc.create_by
+        LEFT JOIN sys_dept d on d.dept_id = cbc.manage_deptment
+        WHERE (cbc.del_flag IS NULL OR cbc.del_flag = 1)
+        <if test="projectNo != null  and projectNo != ''">and cbc.project_no = #{projectNo}</if>
+        <if test="projectName != null  and projectName != ''">and cbc.project_name like concat('%', #{projectName},
+            '%')
+        </if>
+        <if test="contractNo != null  and contractNo != ''">and cbc.contract_no = #{contractNo}</if>
+        <if test="contractName != null  and contractName != ''">and cbc.contract_name like concat('%', #{contractName},
+            '%')
+        </if>
+        <if test="contractCategory != null  and contractCategory != ''">and cbc.contract_category =
+            #{contractCategory}
+        </if>
+        <if test="oppositeName != null  and oppositeName != ''">and cbc.opposite_name like concat('%', #{oppositeName},
+            '%')
+        </if>
+        <if test="ourName != null  and ourName != ''">and cbc.our_name like concat('%', #{ourName}, '%')</if>
+        <if test="payMethod != null ">and cbc.pay_method = #{payMethod}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(cbc.starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            and date_format(cbc.starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="endtime1 != null ">
+            and date_format(cbc.endtime,'%y%m%d') &gt;= date_format(#{endtime1},'%y%m%d')
+        </if>
+        <if test="endtime2 != null ">
+            and date_format(cbc.endtime,'%y%m%d') &lt;= date_format(#{endtime2},'%y%m%d')
+        </if>
+        <if test="contractServeStart1 != null ">
+            and date_format(cbc.contract_serve_start,'%y%m%d') &gt;= date_format(#{contractServeStart1},'%y%m%d')
+        </if>
+        <if test="contractServeStart2 != null ">
+            and date_format(cbc.contract_serve_start,'%y%m%d') &lt;= date_format(#{contractServeStart2},'%y%m%d')
+        </if>
+        <if test="contractServeEnd1 != null ">
+            and date_format(cbc.contract_serve_end,'%y%m%d') &gt;= date_format(#{contractServeEnd1},'%y%m%d')
+        </if>
+        <if test="contractServeEnd2 != null ">
+            and date_format(cbc.contract_serve_end,'%y%m%d') &lt;= date_format(#{contractServeEnd2},'%y%m%d')
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        )
+    </select>
+
+    <resultMap type="HashMap" id="notReceivedWarningMap">
+        <result property="abcId" column="abcId"/>
+        <result property="cbcProjectId" column="cbcProjectId"/>
+        <result property="cbcProjectNo" column="cbcProjectNo"/>
+        <result property="cbcProjectName" column="cbcProjectName"/>
+        <result property="cbcContractNo" column="cbcContractNo"/>
+        <result property="cbcContractName" column="cbcContractName"/>
+        <result property="estimateTime" column="estimate_time"/>
+        <result property="estimateMoney" column="estimate_money"/>
+        <result property="actualMoney" column="actualMoney"/>
+    </resultMap>
+
+    <select id="notReceivedWarning" parameterType="CtBuContract" resultMap="notReceivedWarningMap">
+        SELECT cbc.id AS abcId, cbc.create_by AS cbcCreateBy,
+        cbc.project_id AS cbcProjectId, cbc.project_no AS cbcProjectNo, cbc.project_name AS cbcProjectName, cbc.contract_no AS cbcContractNo, cbc.contract_name AS cbcContractName,
+        cbc.manage_company_name, cbc.manage_deptment, cbc.manage_deptment_name, cbc.manage_user, cbc.manage_user_name,
+        cbc.status,
+        cbcp.id AS cbcpId,date_format(cbcp.estimate_time,'%Y-%m-%d') AS estimate_time,cbcp.estimate_money,cbcp.del_flag,
+        (SELECT IFNULL(sum(invoice_amount_tax),0) FROM ct_bu_invoice_info WHERE payinfoid = cbcp.id) AS actualMoney
+        FROM ct_bu_contract_payinfo cbcp
+        LEFT JOIN ct_bu_contract cbc ON cbcp.contract_id = cbc.id
+        LEFT JOIN sys_user u ON u.user_id = cbc.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cbc.manage_deptment
+        WHERE cbcp.del_flag = 1 AND cbc.del_flag = 1 AND cbc.status = 2 AND date_format(DATE_SUB(cbcp.estimate_time, INTERVAL 1 MONTH),'%Y-%m-%d') >= date_format(curdate(),'%Y-%m-%d')
+        AND cbcp.estimate_money > (SELECT IFNULL(sum(invoice_amount_tax),0) FROM ct_bu_invoice_info WHERE payinfoid = cbcp.id)
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+
+    <!--修改归档状态-->
+    <update id="updateIsArchiveById">
+        update ct_bu_contract set is_archive= #{isArchive} where id = #{id}
+    </update>
+
+
+
+
+
+
+
+</mapper>

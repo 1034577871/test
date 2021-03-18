@@ -1,0 +1,107 @@
+package com.ruoyi.dictionary.taxrate.service.impl;
+
+import java.util.List;
+
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.dictionary.taxrate.domain.CtDicTaxrate;
+import com.ruoyi.dictionary.taxrate.mapper.CtDicTaxrateMapper;
+import com.ruoyi.dictionary.taxrate.service.ICtDicTaxrateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+/**
+ * 税率字典Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+@Service
+public class CtDicTaxrateServiceImpl implements ICtDicTaxrateService {
+    @Autowired
+    private CtDicTaxrateMapper ctDicTaxrateMapper;
+
+    /**
+     * 查询税率字典
+     *
+     * @param id 税率字典ID
+     * @return 税率字典
+     */
+    @Override
+    public CtDicTaxrate selectCtDicTaxrateById(String id) {
+        return ctDicTaxrateMapper.selectCtDicTaxrateById(id);
+    }
+
+    /**
+     * 查询税率字典列表
+     *
+     * @param ctDicTaxrate 税率字典
+     * @return 税率字典
+     */
+    @Override
+    public List<CtDicTaxrate> selectCtDicTaxrateList(CtDicTaxrate ctDicTaxrate) {
+        return ctDicTaxrateMapper.selectCtDicTaxrateList(ctDicTaxrate);
+    }
+
+    /**
+     * 新增税率字典
+     *
+     * @param ctDicTaxrate 税率字典
+     * @return 结果
+     */
+    @Override
+    public int insertCtDicTaxrate(CtDicTaxrate ctDicTaxrate) {
+        ctDicTaxrate.setCreateTime(DateUtils.getNowDate());
+        String s = IdUtils.fastSimpleUUID();
+        ctDicTaxrate.setId(s);
+        ctDicTaxrate.setDelFlag(1L);
+        return ctDicTaxrateMapper.insertCtDicTaxrate(ctDicTaxrate);
+    }
+
+    /**
+     * 修改税率字典
+     *
+     * @param ctDicTaxrate 税率字典
+     * @return 结果
+     */
+    @Override
+    public int updateCtDicTaxrate(CtDicTaxrate ctDicTaxrate) {
+        ctDicTaxrate.setUpdateTime(DateUtils.getNowDate());
+        return ctDicTaxrateMapper.updateCtDicTaxrate(ctDicTaxrate);
+    }
+
+    /**
+     * 批量删除税率字典
+     *
+     * @param ids 需要删除的税率字典ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtDicTaxrateByIds(String[] ids) {
+        return ctDicTaxrateMapper.deleteCtDicTaxrateByIds(ids);
+    }
+
+    /**
+     * 删除税率字典信息
+     *
+     * @param id 税率字典ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtDicTaxrateById(String id) {
+        return ctDicTaxrateMapper.deleteCtDicTaxrateById(id);
+    }
+
+
+    /**
+     * 批量逻辑删除税率字典
+     *
+     * @param ids 需要删除的税率字典ID
+     * @return 结果
+     */
+    @Override
+    public int updateCtDicTaxrateByIds(String[] ids) {
+        return ctDicTaxrateMapper.updateCtDicTaxrateByIds(ids);
+    }
+}

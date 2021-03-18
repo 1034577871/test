@@ -1,0 +1,1980 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams"
+    ref="queryForm"
+    v-show="showSearch"
+    label-width="90px">
+   <el-row :gutter="15">
+      <el-col :span="6">
+        <el-form-item label="项目编号" prop="proNo">
+          <el-input
+            v-model="queryParams.proNo"
+            placeholder="请输入项目"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
+          />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="项目名称" prop="proName">
+            <el-input
+              v-model="queryParams.proName"
+              placeholder="请输入项目名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="合同编号" prop="contractNo">
+            <el-input
+              v-model="queryParams.contractNo"
+              placeholder="请输入合同编号"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="合同名称" prop="contractName">
+            <el-input
+              v-model="queryParams.contractName"
+              placeholder="请输入合同名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <el-form-item label="发票种类" prop="invoiceType">
+            <el-select
+              v-model="queryParams.invoiceType"
+              placeholder="发票类型"
+            >
+              <el-option
+                v-for="dict in billTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="姓名" prop="reqUsername">
+              <el-input
+                v-model="queryParams.reqUsername"
+                placeholder="请输入申请人姓名"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+         </el-col>
+         <el-col :span="6">
+          <el-form-item label="申请日期" prop="reqDate">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          :disabled="single"
+          @click="handleAdd"
+          v-hasPermi="['collection:collection:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['collection:collection:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['collection:collection:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['collection:collection:export']"
+        >导出</el-button>
+      </el-col>
+	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" ref="itsmDataTable" border :data="collectionList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+      <el-table-column label="唯一ID" align="center" prop="ifysk" v-if="show" />
+       <el-table-column label="唯一ID" align="center" prop="invoiceAmountTax" v-if="show" />
+        <el-table-column label="唯一ID" align="center" prop="invoiceAmountNtax" v-if="show" />
+      <el-table-column label="项目编号" align="center" prop="proNo" :show-overflow-tooltip="true"/>
+      <el-table-column label="项目名称" align="center" prop="proName" :show-overflow-tooltip="true"/>
+      <el-table-column label="合同编号" align="center" prop="contractNo" :show-overflow-tooltip="true"/>
+      <el-table-column label="合同名称" align="center" prop="contractName" :show-overflow-tooltip="true"/>
+      <el-table-column label="合同金额(元)" align="center" prop="totalMoney" :show-overflow-tooltip="true"/>
+      <el-table-column label="是否虚拟合同" align="center" prop="isVirtual" v-if="show" :show-overflow-tooltip="true" />
+      <el-table-column label="是否老合同" align="center" prop="isOldCon"  v-if="show" :show-overflow-tooltip="true" />
+
+      <el-table-column label="是否虚拟合同" align="center" prop="isVirtuals"  :show-overflow-tooltip="true" >
+        <template slot-scope="s">
+          <p v-if="s.row.isVirtual == 1">是</p >
+          <p v-if="s.row.isVirtual == 2">否</p >
+        </template>
+      </el-table-column>
+      <el-table-column label="发票种类" align="center" prop="invoiceType" :show-overflow-tooltip="true">
+        <template slot-scope="s">
+         <p v-if="s.row.invoiceType == 1">增值税专票</p >
+         <p v-if="s.row.invoiceType == 2">增值税普票</p >
+        </template>
+      </el-table-column>
+      <el-table-column label="申请部门" align="center" prop="reqDeptname" />
+      <el-table-column label="申请人" align="center" prop="reqUsername"  width="110"/>
+      <el-table-column label="申请日期" align="center" prop="reqDate" width="130">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.reqDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="90px" align="center">
+            <template slot-scope="s">
+             <p v-if="s.row.status == 0">保存</p >
+             <p v-if="s.row.status == 1">审核中</p >
+             <p v-if="s.row.status == 2">审核通过</p >
+             <p v-if="s.row.status == 3">审核驳回</p >
+<!--             <p v-if="s.row.status == 4">待确认</p >-->
+              <p v-if="s.row.status == 6">已终止</p >
+            </template>
+           </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status ==0">
+             <el-button
+               size="mini"
+               type="text"
+               icon="el-icon-edit"
+               @click="handleUpdate(scope.row)"
+               v-hasPermi="['collection:collection:edit']"
+             >修改</el-button>
+             <el-button
+               size="mini"
+               type="text"
+               icon="el-icon-delete"
+               @click="handleDelete(scope.row)"
+               v-hasPermi="['collection:collection:remove']"
+             >删除</el-button>
+          </div >
+          <div v-if="scope.row.status >0">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-view"
+                @click="addOrUpdateHandle(scope.row)"
+              >详情
+              </el-button>
+
+              <collctionDetail v-if='showcom'></collctionDetail>
+               <el-button
+                 size="mini"
+                 type="text"
+                 icon="el-icon-view"
+                 @click="examineAndApproves (scope.row)"
+               >查看流程图
+               </el-button>
+            <div v-if="scope.row.status !=6 && scope.row.status !=4&& scope.row.status !=2&& scope.row.status !=3">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-error"
+              @click="exitFlow (scope.row)"
+            >终止
+            </el-button>
+            </div>
+<!--               <div v-if="scope.row.status ==4">-->
+<!--                 <el-button-->
+<!--                   size="mini"-->
+<!--                   type="text"-->
+<!--                   icon="el-icon-edit"-->
+<!--                  @click="handleConfirm(scope.row)"-->
+<!--                 >确认</el-button>-->
+<!--               </div>-->
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <el-dialog title="发票申请" :visible.sync="open" width="80%">
+    <el-form ref="form" :model="form"   :rules="rules"  label-width="100px">
+      <el-row :gutter="15">
+        <el-col :span="24" style="margin-top: 0;">
+          <el-divider content-position="center" ><el-link type="primary"><b>申请信息</b></el-link></el-divider>
+        </el-col>
+      </el-row>
+
+
+
+      <el-row :gutter="15">
+        <el-col :span="8">
+          <el-form-item label="项目类型" prop="approvalType">
+            <el-select v-model="form.approvalType" placeholder="请选择项目类型"
+            :typeNumber="form.approvalType"
+
+            style="width: 100%;">
+              <el-option
+                v-for="dict in projectCategoryTypeList"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="show">
+
+          <el-form-item label="项目编号" prop="proNo">
+            <el-input v-model="form.proNo" ::readonly="true"   />
+          </el-form-item>
+         </el-col>
+         <el-col :span="8">
+          <el-form-item label="项目名称" prop="proName">
+            <el-input v-model="form.proName"    :readonly="true"    placeholder="请输入项目名称"  />
+          </el-form-item>
+        </el-col>
+
+         <el-col :span="8" v-if="show">
+           <el-form-item label="事前审批表ID 关联事前审批表ID" prop="contractId" v-if="show">
+              <el-input v-model="form.contractId" placeholder="" />
+              <el-input v-model="form.contractCategory" placeholder="" />
+              <el-input v-model="form.contractCategoryName" placeholder="" />
+           </el-form-item>
+          <el-form-item label="合同编号"   :readonly="true"    prop="contractNo">
+              <el-input v-model="form.contractNo"   placeholder="请输入合同编号" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="合同名称"   :readonly="true"   prop="contractName">
+            <el-input
+              placeholder="请选择合同"
+              v-model="form.contractName" :readonly="true"
+            >
+<!--              <el-button-->
+<!--                slot="append"-->
+<!--                icon="el-icon-search"-->
+<!--                @click="getContractList"-->
+<!--              ></el-button>-->
+            </el-input>
+            <!--弹框-->
+                  <el-dialog
+                        width="50%"
+                        height="70%"
+                        title="合同信息"
+                        :visible.sync="innerhtVisible"
+                        append-to-body>
+                        <el-form
+                          :model="queryParams"
+                          ref="queryhtForm"
+                          v-show="showSearch"
+                          label-width="90px"
+                        >
+                          <el-row >
+
+                            <el-col :span="10">
+                              <el-form-item label="合同编号" prop="contractNo">
+                                <el-input
+                                  v-model="queryParams.contractNo"
+                                  placeholder="请输入合同编号"
+                                  clearable
+                                  size="small"
+                                  @keyup.enter.native="handlehtQuery"
+                                />
+                              </el-form-item>
+                            </el-col>
+                            <el-col :span="10">
+                              <el-form-item label="合同名称" prop="contractName" >
+                                <el-input
+                                  v-model="queryParams.contractName"
+                                  placeholder="请输入项目名称"
+                                  clearable
+                                  size="small"
+                                  @keyup.enter.native="handlesQuery"
+                                />
+                              </el-form-item>
+                            </el-col>
+                            <el-col :span="4" style="padding-left: 10px; line-height: 36px;">
+                                <el-button
+                                  type="cyan"
+                                  icon="el-icon-search"
+                                  size="mini"
+                                  @click="handlehtQuery"
+                                  >搜索</el-button
+                                >
+                            </el-col>
+                          </el-row>
+                        </el-form>
+                        <el-table  ref="htTable" border v-loading="htloading" :data="contractList" @selection-change="handleXmSelectionChange">
+                           <el-table-column type="selection" width="55" align="center" v-if="show"/>
+                          <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+                          <el-table-column label="唯一ID" align="center" prop="taxrate" v-if="show"/>
+                          <el-table-column label="项目编号" align="center" prop="projectNo" />
+                          <el-table-column label="项目名称" align="center" prop="projectName" />
+                          <el-table-column label="合同编号" align="center" prop="contractNo" />
+                          <el-table-column label="合同名称" align="center" prop="contractName" />
+                          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                          <!-- 单位信息 -->
+                          <el-table-column label="单位名称" align="center" prop="oppositeName" v-if="show"/>
+                          <el-table-column label="单位地址" align="center" prop="oppositeAddress" v-if="show"/>
+                          <el-table-column label="纳税人识别号" align="center" prop="oppositeCreditCode" v-if="show"/>
+                          <el-table-column label="单位电话" align="center" prop="oppositePhone" v-if="show"/>
+                          <el-table-column label="单位开户行" align="center" prop="oppositeBank" v-if="show"/>
+                          <el-table-column label="项目类型" align="center" prop="projectCategory" v-if="show"/>
+                          <el-table-column label="合同类别" align="center" prop="contractCategory" v-if="show"/>
+                          <el-table-column label="合同类别名称" align="center" prop="contractCategoryName" v-if="show"/>
+
+
+                          <el-table-column label="单位账号" align="center" prop="oppositeBankId" v-if="show"/>
+                                  <template slot-scope="scope">
+                                    <el-button
+                                      size="mini"
+                                      type="text"
+                                      icon="el-icon-edit"
+                                      @click="submithtForm(scope.row)"
+
+                                    >选择</el-button>
+
+                                  </template>
+                                </el-table-column>
+                        </el-table>
+                        <pagination
+                              v-show="total>0"
+                              :total="total"
+                              :page.sync="queryParams.pageNum"
+                              :limit.sync="queryParams.pageSize"
+                              @pagination="contractList"
+                            />
+                    <div slot="footer" class="dialog-footer">
+                      <!-- <el-button type="primary" @click="submithtForm">确 定</el-button> -->
+                      <el-button @click="innerhtVisible=false">取 消</el-button>
+                    </div>
+
+                    </el-dialog>
+
+          </el-form-item>
+        </el-col>
+        </el-row>
+        <el-row :gutter="15">
+        <el-col :span="8">
+          <el-form-item label="发票种类" prop="invoiceType" >
+           <el-select :style="{ width: '100%' }"
+             v-model="form.invoiceType"
+             placeholder="发票类型"
+           >
+             <el-option
+               v-for="dict in billTypeOptions"
+               :key="dict.dictValue"
+               :label="dict.dictLabel"
+               :value="dict.dictValue"
+             />
+           </el-select>
+          </el-form-item>
+         </el-col>
+         <el-col :span="8" v-if="show">
+          <el-form-item label="部门编号" prop="reqDeptid">
+            <el-input v-model="form.reqDeptid"    :readonly="true"    placeholder="请输入申请部门编号" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="部门名称" prop="reqDeptname">
+            <el-input v-model="form.reqDeptname"   :readonly="true"     placeholder="请输入申请部门名称" />
+          </el-form-item>
+        </el-col>
+            <el-col :span="8" v-if="show">
+              <el-form-item  label="申请人编号" prop="reqUserid">
+                <el-input v-model="form.reqUserid"   :readonly="true"     placeholder="请输入申请人编号" />
+              </el-form-item>
+            </el-col>
+             <el-col :span="8">
+              <el-form-item label="申请人姓名" prop="reqUsername">
+                <el-input v-model="form.reqUsername"   :readonly="true"     placeholder="请输入申请人姓名" />
+              </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="15">
+            <el-col :span="8">
+              <el-form-item label="申请日期" prop="reqDate">
+                <el-date-picker clearable size="small" :style="{ width: '100%' }"
+                  v-model="form.reqDate"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择申请日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+
+                <el-form-item
+                  label="系统录入记录" prop="record">
+                  <el-upload
+                    ref="field112"
+                    :file-list="record"
+                    :action="field111Action"
+                    :headers="token"
+                    :on-success="contractApprovalFileSuccess"
+                    :on-remove="removeContractApprovalFile"
+                    :auto-upload="autoUploadFalg"
+                    multiple
+                    :limit="20"
+                    :before-upload="field111BeforeUpload"
+                    :on-preview="handlePictureCardPreview"
+                  >
+                    <el-button slot="trigger"  size="small" type="primary">选取文件</el-button>
+                     <div slot="tip" class="el-upload__tip">
+                        只能上传jpg/png/pdf文件，且不超过20M
+                      </div>
+                  </el-upload>
+
+
+              </el-form-item>
+            </el-col>
+              <el-col :span="8">
+
+                <el-form-item label-width="150px"
+                  label="一般纳税人证明材料" prop="zmcl">
+                  <el-upload
+                    ref="field111"
+                    :file-list="zmcl"
+                    :action="field111Action"
+                    :headers="token"
+                    :on-success="zmclApprovalFileSuccess"
+                    :on-remove="removeZmclApprovalFile"
+                    :auto-upload="autoUploadFalg"
+                    multiple
+                    :limit="20"
+                    :before-upload="field111BeforeUpload"
+                    :on-preview="handlePictureCardPreview"
+                  >
+                    <el-button slot="trigger"  size="small" type="primary">选取文件</el-button>
+                    <div slot="tip" class="el-upload__tip">
+                      只能上传jpg/png/pdf文件，且不超过20M
+                    </div>
+                  </el-upload>
+
+
+                </el-form-item>
+              </el-col>
+            </el-row>
+      <el-row :gutter="15">
+        <el-col :span="8">
+        <el-form-item label="是否包含预收款" prop="ifysk" label-width="144px">
+          <!--            <el-radio v-model="ifysk" label="1" @change="selFp($event)">是</el-radio>-->
+          <!--            <el-radio v-model="ifysk" label="0" @change="selFp($event)">否</el-radio>-->
+          <el-radio v-model="radio" label="1" @change="rchange($event)">是</el-radio>
+          <el-radio v-model="radio" label="2" @change="rchange($event)">否</el-radio>
+          <!--            <el-radio v-model="form.ifysk" label="1" @change="getYfkList($event)" >是</el-radio>-->
+          <!--            <el-radio v-model="form.ifysk" label="0" @change="getYfkList($event)">否</el-radio>-->
+
+
+        </el-form-item>
+      </el-col>
+        <el-col :span="8" v-if="bysk">
+          <el-form-item label="选择预收款" prop="ifysk" label-width="86px">
+            <el-button type="primary" @click="getYfkList" >选择预收款</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="yfkshow">
+          <el-form-item label="" prop="yskamount" label-width="128px">
+            <!-- start-->
+
+            <el-input v-model="form.yskid" v-if="show" placeholder="收款单信息" />
+            <el-input v-model="form.yskamount"  v-if="show" :readonly="true"  placeholder="收款单信息" />
+
+            <el-input v-model="form.yskid_" v-if="show" placeholder="收款单信息" />
+            <el-input v-model="form.yskamount_"  v-if="show" :readonly="true"  placeholder="收款单信息" />
+
+            <!--弹框-->
+            <el-dialog
+              width="50%"
+              height="70%"
+              title="收款单信息"
+              :visible.sync="innerfpVisible"
+              append-to-body>
+              <el-form
+                :model="queryParams"
+                ref="queryhtForm"
+                v-show="showSearch"
+                label-width="90px"
+              >
+                <el-row >
+
+                  <el-col :span="10">
+                    <el-form-item label="合同编号" prop="contractNo">
+                      <el-input
+                        v-model="queryParams.contractNo"
+                        placeholder="请输入合同编号"
+                        clearable
+                        size="small"
+                        @keyup.enter.native="handlehtQuery"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="10">
+                    <el-form-item label="合同名称" prop="contractName" >
+                      <el-input
+                        v-model="queryParams.contractName"
+                        placeholder="请输入项目名称"
+                        clearable
+                        size="small"
+                        @keyup.enter.native="handlesQuery"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="4" style="padding-left: 10px; line-height: 36px;">
+                    <el-button
+                      type="cyan"
+                      icon="el-icon-search"
+                      size="mini"
+                      @click="handlehtQuery"
+                    >搜索</el-button
+                    >
+                  </el-col>
+                </el-row>
+              </el-form>
+              <el-table  ref="htTable" border v-loading="htloading" :data="yskList" @selection-change="handleXmSelectionChange">
+                <el-table-column type="selection" width="55"  v-if="show"/>
+                <el-table-column label="唯一ID"  prop="id" v-if="show" />
+                <el-table-column label="唯一ID"  prop="taxrate" v-if="show"/>
+                <el-table-column label="项目类型" align="center" prop="projectCategory" v-if="show"/>
+                <el-table-column label="项目编号" align="center" prop="proNo" />
+                <el-table-column label="项目名称" align="center" prop="proName" />
+                <el-table-column label="合同编号" align="center" prop="contractNo" />
+                <el-table-column label="合同名称" align="center" prop="contractName" />
+                <el-table-column label="回款金额(元)" align="center" prop="collectionAmount" />
+                <el-table-column label="回款方式" align="center" prop="paymentMethod" />
+                <el-table-column label="回款时间" align="center" prop="collectionTime" />
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                  <!-- 单位信息 -->
+                  <el-table-column label="单位名称" align="center" prop="oppositeName" v-if="show"/>
+                  <el-table-column label="单位地址" align="center" prop="oppositeAddress" v-if="show"/>
+                  <el-table-column label="纳税人识别号" align="center" prop="oppositeCreditCode" v-if="show"/>
+                  <el-table-column label="单位电话" align="center" prop="oppositePhone" v-if="show"/>
+                  <el-table-column label="单位开户行" align="center" prop="oppositeBank" v-if="show"/>
+                  <el-table-column label="项目类型" align="center" prop="projectCategory" v-if="show"/>
+                  <el-table-column label="合同类别" align="center" prop="contractCategory" v-if="show"/>
+                  <el-table-column label="合同类别名称" align="center" prop="contractCategoryName" v-if="show"/>
+
+
+                  <el-table-column label="单位账号" align="center" prop="oppositeBankId" v-if="show"/>
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="text"
+                      icon="el-icon-edit"
+                      @click="submitFpForm(scope.row)"
+
+                    >选择</el-button>
+
+                  </template>
+                </el-table-column>
+              </el-table>
+              <pagination
+                v-show="total>0"
+                :total="total"
+                :page.sync="queryParams.pageNum"
+                :limit.sync="queryParams.pageSize"
+                @pagination="yskList"
+              />
+              <div slot="footer" class="dialog-footer">
+                <!-- <el-button type="primary" @click="submithtForm">确 定</el-button> -->
+                <el-button @click="innerhtVisible=false">取 消</el-button>
+              </div>
+
+            </el-dialog>
+
+            <!--end-->
+          </el-form-item>
+        </el-col>
+
+
+
+      </el-row>
+            <el-row :gutter="15">
+              <el-col :span="24" style="margin-top: 0;">
+               <el-divider content-position="center" ><el-link type="primary"><b>单位信息</b></el-link></el-divider>
+              </el-col>
+            <el-col :span="8">
+              <el-form-item label="单位名称" prop="payerName">
+                <el-input v-model="form.payerName" placeholder="单位名称" :readonly="true"/>
+                <!-- <el-input v-model="form.payerName" placeholder="请选择我方名称" v-on:click.native="showOppositeName = true" /> -->
+                <!-- <selectCompany v-if="showOppositeName" ref='company'  :readonly="true"   @ok="companyOk" :companyType='"2"'/> -->
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="单位地址" label-width="87px" prop="payerAddress">
+                <el-input v-model="form.payerAddress"   :readonly="true"      placeholder="请输入付款单位地址" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="纳税人识别号" prop="creditCode" label-width="128px" >
+                <el-input v-model="form.creditCode" placeholder="请输入纳税人识别号"  :readonly="true" />
+              </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="15">
+            <el-col :span="8">
+              <el-form-item label="单位电话"  :readonly="true"    prop="payerPhone">
+                <el-input v-model="form.payerPhone"   placeholder="请输入付款单位电话" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="单位开户行"   :readonly="true"   prop="payerOpeningBank">
+                <el-input v-model="form.payerOpeningBank"   placeholder="请输入付款单位开户行" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="单位账号"  :readonly="true"    prop="payerAccount">
+                <el-input v-model="form.payerAccount"   placeholder="请输入付款单位账号" />
+              </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="15">
+            <el-col :span="8">
+              <el-form-item label="开票金额(含税)" label-width="137px"  prop="invoiceAmountTax">
+                <el-input v-model="form.invoiceAmountTax"  :readOnly="bysk"  placeholder="请输入开票金额"  @blur='takeAcc(this)' oninput="value=value.replace(/[^0-9.]/g,'')"/>
+                <el-input v-model="form.invoiceAmountTax_"  v-if="show"  placeholder="请输入开票金额"  />
+                <el-input v-model="form.invoiceAmountNtax_"  v-if="show" />
+
+
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="开票金额(不含税)"  label-width="137px"   prop="invoiceAmountNtax">
+                <el-input v-model="form.invoiceAmountNtax"  :readonly="true"   placeholder="请输入开票金额" />
+                <el-input v-model="form.invoiceTaxrate"  :readonly="true" v-if="show"  placeholder="请输入开票金额" />
+
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="预计回款时间" label-width="129px"  prop="expectedCollectionTime" >
+                <el-date-picker clearable size="small"
+                  v-model="form.expectedCollectionTime"
+                  type="date"  :style="{ width: '100%' }"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择预计回款时间">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+      <el-col :span="24" style="margin-top: 0;">
+       <el-divider content-position="center" ><el-link type="primary"><b>开票信息</b></el-link></el-divider>
+      </el-col>
+    <el-form ref="elForm" size="medium" label-width="100px">
+      <table class="curr-table">
+        <tbody>
+          <tr>
+            <th width="5%"></th>
+            <th width="20%"><font color="red" style="margin-right:5px">*</font>项目名称</th>
+            <th width="10%">规格</th>
+            <th width="10%">型号</th>
+            <!-- <th width="8%">单位</th> -->
+            <th width="10%"><font color="red" style="margin-right:5px">*</font>单价</th>
+            <th width="8%"><font color="red" style="margin-right:5px">*</font>数量</th>
+            <th width="12%"><font color="red" style="margin-right:5px">*</font>金额(含税)</th>
+            <th width="8%"><font color="red" style="margin-right:5px">*</font>税率</th>
+            <th width="15%"><font color="red" style="margin-right:5px">*</font>金额(不含税)</th>
+            <th >
+              <el-button
+                size="mini"
+                type="success"
+                @click="loadMore()"
+                style="margin: 10px;"
+                >新增</el-button
+              >
+            </th>
+          </tr>
+          <tr v-for="(value, index) in dataList" :key="index">
+            <td>
+              {{index+1}}
+            </td>
+            <td>
+
+              <el-input
+                v-model="value.invoiceProName"
+                :name="'appMateList[' + index + '].invoiceProName'"
+                :title="value.invoiceProName"
+              />
+
+
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoiceSpec"
+                :name="'appMateList[' + index + '].invoiceSpec'"
+                :title="value.invoiceSpec"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoiceType"
+                :name="'appMateList[' + index + '].invoiceType'"
+                :title="value.invoiceType"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoicePrice"
+                :name="'appMateList[' + index + '].invoicePrice'"
+                v-on:input="changeNum(index)" oninput="value=value.replace(/[^0-9.]/g,'')"
+                :title="value.invoicePrice"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoiceMount"
+                :name="'appMateList[' + index + '].invoiceMount'"
+                v-on:input="changeNum(index)" oninput="value=value.replace(/[^0-9.]/g,'')"
+                :title="value.invoiceMount"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoiceAmountTax"
+                :name="'appMateList[' + index + '].invoiceAmountTax'"
+                :title="value.invoiceAmountTax"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoiceTaxrate"
+                :name="'appMateList[' + index + '].invoiceTaxrate'"
+                v-on:input="changeNum(index)"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+                :title="value.invoiceTaxrate"
+              />
+            </td>
+            <td>
+              <el-input
+                v-model="value.invoiceAmountNtax"
+                :name="'appMateList[' + index + '].invoiceAmountNtax'"
+                :title="value.invoiceAmountNtax"
+              />
+            </td>
+            <td >
+              <el-button style="margin-top: 10px;"
+                size="mini"
+                type="warning"
+                @click.prevent="removeTodo(index)"
+                >删除</el-button
+              >
+              <el-input
+                type="hidden"
+                v-model="value.id"
+                :name="'appMateList[' + index + '].id'"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </el-form>
+      <el-col :span="24" style="margin-top: 0;">
+        <el-divider content-position="center" ><el-link type="primary"><b>合同收款信息</b></el-link></el-divider>
+      </el-col>
+      <el-input v-model="form.payinfoid"  v-if="show" />
+      <el-input v-model="form.paymentPeriod"  v-if="show" />
+
+      <el-table border v-loading="loading" border ref="itsmDataTables"  :data="ticketRecordList" @selection-change="handleXmSelectionChangeTick">
+        <el-table-column type="selection" width="50" align="center" />
+        <el-table-column label="预计付款时间" align="center" prop="id" v-if="show"/>
+        <el-table-column label="预计付款时间" align="center" prop="moneyPid" v-if="show"/>
+        <el-table-column label="预计付款时间" align="center" prop="estimateTime" />
+        <el-table-column label="付款比例" width="100" align="center" prop="paymentRatio" />
+        <el-table-column label="应付金额(元)" align="center" prop="estimateMoney" />
+<!--        <el-table-column label="实际付款时间" align="center" prop="contractName" />-->
+        <el-table-column label="实际付款金额(元)" align="center" prop="invoiceMoney" />
+        <el-table-column label="发票代码" align="center" prop="invoiceCode" />
+        <el-table-column label="发票号码" align="center" prop="invoiceNo" />
+        <el-table-column label="开具时间" align="center" prop="startDate" />
+      </el-table>
+
+    </el-form>
+     <span slot="footer" class="dialog-footer">
+       <el-button type="success" @click="submitForm('0')" :disabled="saveBtn">保 存</el-button>
+       <el-button type="primary" @click="submitForm('1')" :disabled="saveBtn">提 交</el-button>
+       <el-button @click="open = false">取消</el-button>
+     </span>
+  </el-dialog>
+  <AddorUpdate v-if="addOrUpdateVisible" ref="addOrUpdate"></AddorUpdate>
+
+  </div>
+
+</template>
+
+<script>
+import { getUserInfoCon ,sklistCollection ,delDeatilCollection,updateAct,confrimCollection ,listCollection, getCollection, delCollection, addCollection, updateCollection, exportCollection } from "@/api/collection/collection";
+import { findYfk ,dwonLoadFile,listApplyCollection,detailNgcApproval,findContract,detailhtCon,getUserInfo  } from "@/api/collection/common";
+import {showDiagram ,findProcessPic,selectBuessKeyByExe ,listTasks_,listTask, formDataShow, formDataSave} from "@/api/activiti/task";
+import { findProjectType, findBranchOffice,findFileListByPidPtype,delFileById } from "@/api/utils";
+import { getToken } from "@/utils/auth";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import billInfo from './billInfo.vue'
+import applyBill from './applyBill.vue'
+import selectCompany from './selectCompany';
+import AddorUpdate from './detail.vue';
+import {
+  exitFlow
+} from "@/api/projectApproval/collectProject";
+
+
+export default {
+  name: "Collection",
+  components: {
+    Treeselect,
+    billInfo,
+    applyBill,
+    selectCompany,
+    AddorUpdate
+  },
+
+  data() {
+    return {
+      isOldCon:null,
+      zt:null,
+      saveBtn:false,
+      bysk:false,
+      radio: '2',
+      jsze:0,
+      ticketRecordList:[],
+      yfkshow:false,
+      ifysk: '0',
+      record:[],
+      zmcl:[],
+      autoUploadFalg: true,
+      token: {},
+      field111Action: this.$fieldPathAction,
+      dataList: [],  //动态添加行的数据集合
+      taxrate:0,
+      showOppositeName:false,
+      //项目类型
+      addOrUpdateVisible:false,
+      projectCategoryTypeList:[],
+      dialogVisibles: false,
+      dialogVisible: false,
+      innerVisible: false,
+      innerhtVisible: false,
+      innerfpVisible: false,
+      show: false,
+      // 遮罩层
+      loading: true,
+      loadings: true,
+      htloading:true,
+      apptype:'',
+      // 选中数组
+      ids: [],
+      reqNo:[],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      show:false,
+      showcom:false,
+      // 项目信息列表
+      contractList: [],
+      yskList:[],
+      // 项目信息列表
+      projectList: [],
+      // 发票申请表格数据
+      collectionList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      dateRange: [],
+      formDatas:[],
+      elForm:[],
+      // 查询参数
+      queryParams: {
+        record: null,
+        zmcl:null,
+        pageNum: 1,
+        pageSize: 10,
+        approvalType: null,
+        approvalId: null,
+        proNo: null,
+        proName: null,
+        contractId: null,
+        contractNo: null,
+        contractName: null,
+        invoiceType: null,
+        reqDeptid: null,
+        reqDeptname: null,
+        reqUserid: null,
+        reqUsername: null,
+        reqDate: null,
+        payerName: null,
+        creditCode: null,
+        payerAddress: null,
+        payerPhone: null,
+        payerOpeningBank: null,
+        payerAccount: null,
+        invoiceAmountTax: null,
+        invoiceAmountNtax: null,
+        expectedCollectionTime: null,
+        status: null,
+        statusps: null,
+      },
+      // 表单参数
+    form: {
+      isVirtual:null,
+      ifysk:'0',
+      projectCategory: null,
+      reqDate:new Date(),
+      payinfoid:null,
+      paymentPeriod:null
+     },
+     form_: {
+      },
+      // 表单校验
+     rules:{
+         invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
+         approvalType: [{ required: true, message: '请选择事前审批类型', trigger: 'change' }],
+         approvalId: [{ required: true, message: '请选择项目', trigger: 'blur' }],
+         proNo: [{ required: true, message: '项目编号不能为空', trigger: 'blur' }],
+         proName: [{ required: true, message: '项目名称不能为空', trigger: 'change' }],
+         // reqDeptid: [{ required: true, message: '申请部门编号不能为空', trigger: 'change' }],
+         // reqDeptname: [{ required: true, message: '申请部门名称不能为空', trigger: 'change' }],
+         // creditCode: [{ required: true, message: '纳税人识别号不能为空', trigger: 'change' }],
+         // payerAddress: [{ required: true, message: '付款单位地址不能为空', trigger: 'change' }],
+         // payerPhone: [{ required: true, message: '付款单位电话不能为空', trigger: 'change' }],
+         // payerOpeningBank: [{ required: true, message: '付款单位开户行不能为空', trigger: 'change' }],
+         // payerAccount: [{ required: true, message: '付款单位账号不能为空', trigger: 'change' }],
+         invoiceAmountTax: [{ required: true, message: '开票金额（含税）不能为空', trigger: 'blur' }],
+         invoiceAmountNtax: [{ required: true, message: '开票金额（不含税）不能为空', trigger: 'change' }],
+         expectedCollectionTime: [{ required: true, message: '预计回款时间不能为空', trigger: 'change' }],
+         reqUserid: [{ required: true, message: '申请人编号不能为空', trigger: 'change' }],
+         reqUsername: [{ required: true, message: '申请人姓名不能为空', trigger: 'change' }],
+         reqDate: [{ required: true, message: '申请日期不能为空', trigger: 'blur' }],
+         invoiceId: [{ required: true, message: '发票单号不能为空', trigger: 'change' }],
+         invoiceProName: [{ required: true, message: '开票项目名称不能为空', trigger: 'blur' }],
+       // invoiceSpec: [{ required: true, message: '规格不能为空', trigger: 'blur' }],
+       // invoiceTypes: [{ required: true, message: '型号不能为空', trigger: 'blur' }],
+        contractName: [{ required: true, message: '合同名称不能为空', trigger: 'change' }],
+        company: [{ required: true, message: '单位名称不能为空', trigger: 'change' }],
+
+       payerName:[{ required: true, message: '单位名称不能为空', trigger: 'change' }],
+     },
+     billTypeOptions: [],
+     approvalTypeOptions:[],
+    };
+  },
+ created() {
+   this.getList();
+   this.getDicts("bill_type").then((response) => {
+     this.billTypeOptions = response.data;
+   });
+   //项目类型列表
+   this.getDicts("project_category_type").then((response) => {
+     this.approvalTypeOptions = response.data;
+     this.projectCategoryTypeList = response.data;
+   });
+   //this.getContractPayList();
+ },
+ methods: {
+   /** 删除按钮操作 */
+   exitFlow(row) {
+     let instanceId = row.instanceId;
+     this.$confirm('是否确认终止本条数据?', "警告", {
+       confirmButtonText: "确定",
+       cancelButtonText: "取消",
+       type: "warning"
+     }).then((obj) => {
+       //exitFlow(instanceId);
+       exitFlow(instanceId,'fpsq').then(response => {
+         this.getList();
+         this.msgSuccess("终止成功");
+       });
+     })
+   },
+   // exitFlow(row) {
+   //   let instanceId = row.instanceId;
+   //   this.$confirm('是否确认终止本条数据?', "警告", {
+   //     confirmButtonText: "确定",
+   //     cancelButtonText: "取消",
+   //     type: "warning"
+   //   }).then(function() {
+   //     exitFlow(instanceId,'fpsq');
+   //   }).then((obj) => {
+   //     setTimeout(()=> {
+   //       this.getList();
+   //       this.msgSuccess("终止成功");
+   //     }, 2000);
+   //
+   //   })
+   // },
+   getContractPayList(){
+     sklistCollection(this.form).then(response => {
+       this.ticketRecordList = response;
+
+     });
+
+   },
+   selFp(obj){
+     if(obj==1){
+       this.yfkshow = true;
+     }else{
+       this.yfkshow = false;
+     }
+   },
+   // resetForm() {
+   //   //  this.form.resetFields();
+   //   /** 加入请求头 **/
+   //   this.token = { Authorization: getToken() };
+   // },
+   setProjectCategoryName(obj){
+        this.form.approvalType = this.projectCategoryTypeList[obj].dictLabel
+   },
+  //弹出详情
+  monitorFactor:function(index,row){
+    this.modalVisible = true;
+    this.$nextTick(()=>{
+      this.$refs.monitorFactor.init(row);
+    })
+  },
+  /** 添加行 **/
+  loadMore: function() {
+    this.dataList.push({
+      id: null,
+      invoiceProName: null,
+      invoiceSpec: null,
+      invoiceType: null,
+      unit: null,
+      invoicePrice: null,
+      invoiceMount: null,
+      invoiceAmountTaxs: null,
+
+      invoiceTaxrate: this.taxrate,
+      invoiceAmountNtax: null,
+    });
+  },
+  /** 删除行 **/
+  removeTodo: function(index) {
+    let id = this.dataList[index].id;
+    if(id!='' || id!=null){
+      this.$confirm('是否确认删除本条数据?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delDeatilCollection(id);
+      }).then((obj) => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
+    }
+     this.dataList.splice(index, 1);
+  },
+  changeNum(index){
+    //单价
+    let dj = this.dataList[index].invoicePrice;
+    //数量
+    let sl = this.dataList[index].invoiceMount
+    this.taxrate= this.dataList[index].invoiceTaxrate
+    if(dj != null && sl != null){
+      //获得不含税金额
+      this.dataList[index].invoiceAmountTax = (dj*sl).toFixed(2);
+      this.dataList[index].invoiceAmountNtax = ((dj*sl) / (this.taxrate * 0.01 + 1)).toFixed(2);
+    }
+  },
+  addOrUpdateHandle(id){
+    this.addOrUpdateVisible = true
+    this.$nextTick(() =>{
+     this.$refs.addOrUpdate.init(id);
+    })
+  },
+   //获取预付款信息
+   rchange(obj){
+     if(obj==2 || obj=='2'){
+       this.bysk = false;
+     }else{
+       this.bysk = true;
+       this.form.invoiceAmountTax = "";
+     }
+   },
+   getYfkList(obj) {
+
+      if(obj==0 || obj=='0'){
+        this.form.yskid='';
+        this.form.yskamount=0;
+        this.form.invoiceAmountTax = 0;
+        this.form.invoiceAmountNtax = 0;
+        //this.form.expectedCollectionTime = '';
+        return false;
+      }
+
+     if(this.form.contractName=='' || this.form.contractName==null){
+       this.msgError("请选择合同");
+       this.form.ifysk = 0+"";
+       this.form.ifysk = 0;
+       return false;
+     }
+     this.form_ = {};
+     findYfk(this.form_).then(response => {
+       this.yskList = response.rows;
+       this.total = response.total;
+       if(response.rows==null || response.rows.length<=0){
+         this.msgError("没有预付款信息");
+         this.form.ifysk="0";
+         this.form.yskid= this.form.yskid_;
+         this.form.yskamount= this.form.yskamount_;
+         this.form.invoiceAmountTax =  this.form.invoiceAmountTax_;
+         this.form.invoiceAmountNtax = this.form.invoiceAmountNtax_;
+       }else{
+         this.htloading = false;
+         this.innerfpVisible = true;
+         this.yfkshow = true;
+       }
+
+     });
+   },
+  //获取合同信息
+  getContractList() {
+
+    if(this.form.approvalType==null || this.form.approvalType==''){
+     this.msgError("请选择项目类型");
+     return false;
+   }
+    this.htloading = true;
+    this.innerhtVisible = true;
+    this.form_.projectCategory = this.form.approvalType;
+    this.form_.status=2;
+    this.form_.contractCategory=1;
+    findContract(this.form_).then(response => {
+      this.contractList = response.rows;
+      this.total = response.total;
+      this.htloading = false;
+      this.innerhtVisible = true;
+    });
+  },
+  /** 搜索按钮操作 */
+  handlesQuery() {
+    this.queryParams.pageNum = 1;
+    this.getApplyList();
+  },
+  /*选择对方单位弹出框 调用方法*/
+  companyOk(id, companyName, openingBank, openingAccount, linkMan, linkPhone, address,creditCode) {
+    if(companyName != ""){
+      this.form.payerName = companyName;
+      this.form.payerAddress = address;
+      this.form.payerPhone = linkPhone;
+      this.form.payerOpeningBank = openingBank;
+      this.form.payerAccount = openingAccount;
+       this.form.creditCode = creditCode;
+      this.$set(this.form,'oppositeName',companyName)
+    }
+
+    // this.$set(this.formObj,'vars',"xxxx")
+    this.showOppositeName = false
+  },
+ /** 查看流程图 */
+  examineAndApproves(row) {
+    this.reset();
+     let url = window.location.hostname;
+    if(url.indexOf("http")<0){
+      url = "http://"+url;
+    }
+     let hosturl = url+":9001/task/exportImage?processInstanceId="+row.instanceId;
+     window.open(hosturl,"_blank");
+  },
+  /** 搜索按钮操作 */
+  handlehtQuery() {
+    this.queryParams.pageNum = 1;
+    this.getContractList();
+  },
+  //获取项目信息
+  getApplyList() {
+    this.projectList = [];
+    this.loadings = true;
+    this.innerVisible = true;
+    this.queryParams.pageNum = 1;
+    this.apptype=this.form.approvalType;
+    listApplyCollection(this.form.approvalType,this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+       this.total = response.total;
+       if(this.total==0){
+         this.projectList = [];
+       }else{
+         this.projectList = response.rows;
+       }
+      this.loadings = false;
+      this.innerVisible = true;
+        this.title = "修改发票申请";
+        this.apptype=this.form.approvalType;
+    });
+  },
+  /** 查询发票申请列表 */
+  getList() {
+    this.loading = true;
+    listCollection(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      this.collectionList = response.rows;
+      this.total = response.total;
+      this.loading = false;
+    });
+  },
+  handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        },
+  czyFormat(row, column) {
+    return this.selectDictLabel(this.billTypeOptions, row.invoiceType);
+  },
+  //含税金额技术
+  takeAcc(obj){
+    if(this.form.invoiceAmountTax!=''){
+      this.form.invoiceAmountNtax = ((this.form.invoiceAmountTax)/(1+this.taxrate*0.01)).toFixed(2);
+    }
+
+  },
+  // 取消按钮
+  cancel() {
+    this.open = false;
+    this.reset();
+  },
+  cancelAppri() {
+    this.innerVisible = false;
+    this.form.reqNo = null;
+    this.form.proName = null;
+  },
+  // 表单重置
+  reset() {
+    this.isOldCon = null;
+    this.zt = null;
+    this.bysk = false;
+    this.radio= '2';
+    this.saveBtn = false;
+    this.form = {
+      isVirtual:null,
+      payinfoid:null,
+      paymentPeriod:null,
+      record: null,
+      zmcl:null,
+      id: null,
+      approvalType: null,
+      approvalId: null,
+      proNo: null,
+      proName: null,
+      contractId: null,
+      contractNo: null,
+      contractName: null,
+      invoiceType: null,
+      reqDeptid: null,
+      reqDeptname: null,
+      reqUserid: null,
+      reqUsername: null,
+      reqDate: null,
+      payerName: null,
+      creditCode: null,
+      payerAddress: null,
+      payerPhone: null,
+      payerOpeningBank: null,
+      payerAccount: null,
+      invoiceAmountTax: null,
+      invoiceAmountNtax: null,
+      expectedCollectionTime: null,
+      status: 0,
+      statusps: null,
+      delFlag: null,
+      remark: null,
+      createBy: null,
+      createTime: null,
+      updateBy: null,
+      updateTime: null,
+      yskid:null,
+      yskamount:null,
+      ifysk:0,
+    };
+    this.resetForm("form");
+    this.ticketRecordList=null;
+  },
+
+  /** 搜索按钮操作 */
+  handleQuery() {
+    this.queryParams.pageNum = 1;
+    this.getList();
+  },
+  /** 重置按钮操作 */
+  resetQuery() {
+    this.resetForm("queryForm");
+    this.handleQuery();
+  },
+  // 多选框选中数据
+  handleSelectionChange(selection) {
+    this.ids = selection.map(item => item.id)
+    this.single = selection.length!==1
+    this.multiple = !selection.length
+    this.reqNo =selection
+  },
+  // 多选框选中数据
+  handleXmSelectionChange(val) {
+     this.ids = val.map(item => item.id)
+     if (val.length > 1) {
+        this.$refs.Table.clearSelection()
+        this.$refs.Table.toggleRowSelection(val.pop())
+      } else {
+      }
+
+  },
+   handleXmSelectionChangeTick(val) {
+     this.jsze =0;
+     this.ids = val.map(item => item.id)
+     // this.form.payinfoid  = val.map(item => item.id)
+     // this.jsze = this.jsze+val.map(item => item.invoiceMoney)
+     // this.form.paymentPeriod  = val.map(item => item.paymentPeriod)
+     if (val.length > 1) {
+       this.$refs.itsmDataTables.clearSelection()
+       this.$refs.itsmDataTables.toggleRowSelection(val.pop())
+     } else {
+     }
+
+   },
+  currentChange(currentRow, oldCurrentRow) {
+    this.$refs.Table.toggleRowSelection(currentRow)
+  },
+
+  /** 新增按钮操作  elForm*/
+  handleAdd() {
+    this.reset();
+    this.zt = "1";
+    const _selectData = this.$refs.itsmDataTable.selection;
+    this.open = true;
+    this.token = { Authorization: getToken() };
+    this.$nextTick(() => {
+      this.$refs.field111.clearFiles();
+      this.$refs.field112.clearFiles();
+    })
+
+    //获取当前用户信息
+    getUserInfoCon(_selectData[0].contractId).then(response => {
+
+      console.log(response.data);
+      this.form.reqDate = new Date();
+      let user = response.data.user;
+      let con = response.data.contract;
+      this.form.reqDeptid=user.user.dept.deptId;
+      this.form.reqDeptname=user.user.dept.deptName;
+      this.form.reqUserid=user.user.userId
+      this.form.reqUsername=user.user.nickName
+      this.open = true;
+      this.title = "添加发票申请";
+      this.dataList=[];
+      this.isOldCon = _selectData[0].isOldCon;
+      this.submithtForm(con);
+
+    });
+  },
+  /** 修改按钮操作 */
+  handleUpdate(row) {
+    this.token = { Authorization: getToken() };
+    this.dataList=new Array();;
+    this.reset();
+    this.zt = "2";
+    const id = row.id || this.ids
+    if(id==''){
+      this.handleAdd();
+      return false;
+    }
+    getCollection(id).then(response => {
+      this.isOldCon = row.isOldCon;
+      this.form = response.data;
+      console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      console.log(response.data);
+      this.ticketRecordList = response.data.ctBuContractPayinfos;
+      this.form.yskid_ = response.data.yskid;
+      this.form.yskamount_ = response.data.yskamount;
+      this.form.invoiceAmountTax_ = response.data.invoiceAmountTax;
+      this.form.invoiceAmountNtax_ = response.data.invoiceAmountNtax;
+
+      this.form.approvalType = this.form.approvalType + '';
+      this.open = true;
+      this.title = "修改发票申请";
+      if(response.data.status>0 && response.data.status!=3){
+        let msg = "";
+        if(response.data.status==1){
+          msg = "记录已提交，不允许修改";
+        }
+        if(response.data.status==2){
+          msg = "记录已审核完成，不允许修改";
+        }
+        if(response.data.status==4){
+          msg = "记录处于待确认状态，不允许修改";
+        }
+        this.msgError(msg);
+        this.open = false;
+        return false;
+
+      }
+      if(response.data.ctBuInvoiceReqDetail!=null && response.data.ctBuInvoiceReqDetail.length>0){
+
+         for(let item of response.data.ctBuInvoiceReqDetail) {
+           this.taxrate =   item.invoiceTaxrate;
+          this.dataList.push({
+            id: item.id,
+            invoiceProName: item.invoiceProName,
+            invoiceSpec: item.invoiceSpec,
+            invoiceType: item.invoiceType,
+            invoicePrice: item.invoicePrice,
+            invoiceMount: item.invoiceMount,
+            invoiceAmountTax: item.invoiceAmountTax,
+            invoiceTaxrate: item.invoiceTaxrate,
+            invoiceAmountNtax: item.invoiceAmountNtax,
+          });
+        }
+      }
+
+
+
+
+      this.ticketRecordList.map(res=>{
+        console.log(this.ticketRecordList)
+        if(this.form.payinfoid == res.id){
+          this.$nextTick(()=>{
+            this.$refs.itsmDataTables.toggleRowSelection(res,true);
+          })
+        }
+      })
+
+    });
+
+    if(id!=null && id!=''){
+      findFileListByPidPtype(id,1).then(response => {
+        this.record= response.data;
+      });
+      findFileListByPidPtype(id,2).then(response => {
+        this.zmcl= response.data;
+      });
+    }else{
+      this.$nextTick(() => {
+        this.$refs.field111.clearFiles();
+      })
+    }
+  },
+
+  /** 审批详情*/
+  historyFory(row) {
+    this.showcom = true;
+  },
+  /** 修改按钮操作 */
+  submitsForm(row) {
+    const id = row.id || this.ids;
+    this.form.approvalId=row.id;
+    this.form.proNo=row.reqNo;
+    this.form.proName=row.proName;
+    this.innerVisible = false;
+  },
+   /** 选择合同 */
+   submitFpForm(row) {
+     const id = row.id || this.ids;
+     this.form.yskid=row.id;
+     this.form.yskamount=row.collectionAmount;
+     this.form.invoiceAmountTax = row.collectionAmount;
+     this.form.expectedCollectionTime = row.collectionTime;
+     if(this.form.contractName=='' || this.form.contractName==null){
+       this.msgError("请选择合同");
+       return false;
+     }
+     if(this.form.invoiceAmountTax!=''){
+       this.form.invoiceAmountNtax = ((this.form.invoiceAmountTax)/(1+this.taxrate*0.01)).toFixed(2);
+     }
+     this.innerfpVisible = false;
+   },
+  /** 选择合同 */
+  submithtForm(row) {
+    console.log(row);
+    const id = row.id || this.ids;
+    this.taxrate = row.taxrate;
+    this.form.contractId=row.id;
+    this.form.contractNo=row.contractNo;
+    this.form.contractName=row.contractName;
+    this.form.isVirtual = row.isVirtual;
+    //项目信息
+    this.form.approvalId=row.projectId;
+    this.form.proNo=row.projectNo;
+    this.form.proName=row.projectName;
+    // if( this.form.approvalType==''){
+    //   this.form.approvalType=row.projectCategory;
+    // }
+    this.form.payerName = row.oppositeName;
+    this.form.payerAddress = row.oppositeAddress;
+    this.form.creditCode = row.oppositeCreditCode;
+    this.form.payerPhone = row.oppositePhone;
+    this.form.payerOpeningBank = row.oppositeBank;
+    this.form.payerAccount = row.oppositeBankId;
+
+    this.form.approvalType = row.projectCategory+"";
+   // this.form.approvalType = row.projectCategory;
+    this.form.contractCategoryName = row.contractCategoryName;
+    this.form.contractCategory = row.contractCategory;
+    this.innerhtVisible = false;
+    if(row.isOldCon!=null && row.isOldCon!=0){
+      this.isOldCon = row.isOldCon;
+    }
+
+    this.getContractPayList();
+  },
+  // 提交按钮
+  submitForm(val) {
+
+    this.form.ifysk = (this.radio);
+    if(val==1){
+      if(this.ticketRecordList==null && (this.form.isVirtual!=1 && this.form.isVirtual!='1')){
+        this.msgError("请先维护合同收款信息（合同录入-收付款信息）");
+        this.saveBtn = false;
+        return false;
+      }
+    }
+    // if(this.form.payinfoid==null || this.form.payinfoid==''){
+    //   this.msgError("请选择合同收款信息");
+    //   return false;
+    // }
+
+    this.$refs["form"].validate(valid => {
+
+      this.form.ctBuInvoiceReqDetail = this.dataList;
+      //this.form.approvalType = this.form.projectCategory;
+      let zehs = parseFloat(this.form.invoiceAmountTax==null?0:this.form.invoiceAmountTax);
+      let zebhs = parseFloat(this.form.invoiceAmountNTax==null?0:this.form.invoiceAmountNTax);
+      let fehj = 0;
+      let bfehj = 0;
+      if(this.dataList!=null && this.dataList.length>0){
+        for(let item of this.dataList) {
+          if(item.invoiceProName=='' || item.invoiceProName==null){
+            this.msgError("开票信息中项目不能为空");
+            this.saveBtn = false;
+            return false;
+          }
+          // if(item.invoiceSpec=='' || item.invoiceSpec==null){
+          //   this.msgError("开票信息中规格不能为空");
+          //   this.saveBtn = false;
+          //   return false;
+          // }
+          // if(item.invoiceType=='' || item.invoiceType==null){
+          //   this.msgError("开票信息中型号不能为空");
+          //   this.saveBtn = false;
+          //   return false;
+          // }
+          if(item.invoicePrice=='' || item.invoicePrice==null){
+            this.msgError("开票信息中单价不能为空");
+            this.saveBtn = false;
+            return false;
+          }
+          if(item.invoiceMount=='' || item.invoiceMount==null){
+            this.msgError("开票信息中数量不能为空");
+            this.saveBtn = false;
+            return false;
+          }
+          if(item.invoiceAmountTax=='' || item.invoiceAmountTax==null){
+            this.msgError("开票信息中金额（含税）不能为空");
+            this.saveBtn = false;
+            return false;
+          }
+          if(item.invoiceAmountNtax=='' || item.invoiceAmountNtax==null){
+            this.msgError("开票信息中金额（不含税）不能为空");
+            this.saveBtn = false;
+            return false;
+          }
+          fehj = (fehj)+parseFloat(item.invoiceAmountTax);
+          bfehj = bfehj+parseFloat(item.invoiceAmountNtax);
+        }
+      }
+      if(zehs!=fehj){
+        this.msgError("开票信息中的总额与主信息中的金额不一致");
+        this.saveBtn = false;
+        return false;
+      }
+      this.form.invoiceTaxrate = this.taxrate;
+      const _selectData = this.$refs.itsmDataTables.selection;
+      if((_selectData==null || _selectData.length<=0)  && (this.form.isVirtual!=1 && this.form.isVirtual!='1')){
+        this.msgError("请选择合同收款信息");
+        this.saveBtn = false;
+           return false;
+      }
+      if(_selectData!=null && _selectData.length>0){
+      this.form.payinfoid = _selectData[0].id;
+      this.form.paymentPeriod = _selectData[0].estimateTime;
+      let money = _selectData[0].invoiceMoney;
+      let moneyPid = _selectData[0].moneyPid;
+      let ze = 0;
+      if(money!=null){
+        if(money.indexOf(",")>0){
+          let moneys = money.split(",");
+          for(let mon of moneys){
+            ze = ze+parseFloat(mon);
+          }
+        }else{
+          ze = money;
+        }
+        ze = ze+zehs;
+      }else{
+        ze = zehs;
+      }
+
+      let estimateMoney = parseFloat(_selectData[0].estimateMoney==null?0:_selectData[0].estimateMoney);
+      let totalMoney = parseFloat(_selectData[0].totalMoney==null?0:_selectData[0].totalMoney);
+      if(val==1){
+        if((this.form.isVirtual==1 || this.form.isVirtual=='1')){
+          if(estimateMoney!='' && estimateMoney!=0){
+            if(ze>estimateMoney ){
+              this.msgError("开票总金额不能大于合同收款金额");
+              this.saveBtn = false;
+              return false;
+            }
+          }else{
+            if(ze>totalMoney ){
+              this.msgError("开票总金额不能大于合同总金额");
+              this.saveBtn = false;
+              return false;
+            }
+          }
+
+        }else{
+          if(ze>estimateMoney ){
+            this.msgError("开票总金额不能大于合同收款金额");
+            this.saveBtn = false;
+            return false;
+          }
+        }
+
+      }
+      }
+      if (valid) {
+        this.saveBtn = true;
+
+        this.form.state = val;
+        let msg = "";
+        if(val=='1' || val==1){
+          msg = "提交成功";
+        }else{
+          msg = "修改成功";
+        }
+        this.form.isOldCon = this.isOldCon;
+
+        if(this.isOldCon==1 && val==1){
+          this.form.status = 2;
+          this.form.statusps="审核通过";
+          this.form.state = 2;
+        }
+        console.log("*****************************");
+        console.log(this.form);
+        if (this.form.id != null) {
+          updateCollection(this.form).then(response => {
+            this.msgSuccess(msg);
+            this.open = false;
+            this.saveBtn = false;
+            this.getList();
+             this.reset();
+          });
+        } else {
+          addCollection(this.form).then(response => {
+            this.msgSuccess("新增成功");
+            this.open = false;
+            this.saveBtn = false;
+            this.getList();
+             this.reset();
+          });
+        }
+      }else{
+        this.saveBtn = false;
+      }
+    });
+  },
+/** 经办人确认 */
+  handleConfirm(row) {
+    const ids = row.id || this.ids;
+    this.$confirm('是否确认本条发票的信息?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return confrimCollection(ids);
+      }).then(() => {
+        this.getList();
+        //增加一步流程记录
+        this.formDatas.businessKey = ids[0];
+        this.formDatas.formKey = "jbrqr";
+        this.formDatas.controlId = "jbrqr";
+        this.formDatas.controlName = "审批意见";
+        this.formDatas.controlValue = "已确认";
+        this.formDatas.taskNodeName = "经办人确认";
+
+        // updateAct(this.formDatas);
+         this.msgSuccess("确认成功");
+      })
+  },
+  /** 删除按钮操作 */
+  handleDelete(row) {
+    const ids = row.id || this.ids;
+    const _selectData = this.$refs.itsmDataTable.selection
+    let deleSta = 0;
+    if(_selectData!=''){
+            const flag = false;
+            for(let item of _selectData) {
+                if(item.status >0){
+                  deleSta = 1;
+                  break;
+                }
+            }
+            if(deleSta==1){
+               this.msgError("请删除未提交的数据");
+               return false;
+            }
+          }
+    this.$confirm('是否确认删除本条数据?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delCollection(ids);
+      }).then((obj) => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
+  },
+  /** 导出按钮操作 */
+  handleExport() {
+    const queryParams = this.queryParams;
+    this.$confirm('是否确认导出所有发票申请数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportCollection(queryParams);
+      }).then(response => {
+        this.download(response.msg);
+      })
+  }
+  ,
+   /** 文件上传检测 **/
+   field111BeforeUpload(file) {
+     let isRightSize = file.size / 1024 / 1024 < 20;
+     if (!isRightSize) {
+       this.$message.error('文件大小超过 20MB');
+     }
+     let testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+     if(isRightSize){
+       if(testmsg=='jpg' || testmsg=='JPG'|| testmsg=='PNG' || testmsg=='png' || testmsg=='gif' || testmsg=='GIF'
+         || testmsg=='jpeg' || testmsg=='JPEG' || testmsg=='pdf' || testmsg=='PDF'){
+
+       }else{
+         isRightSize = false;
+         this.$message.error('只允许上传图片和pdf');
+       }
+     }
+     return isRightSize;
+   },
+   /** 上传附件成功操作 **/
+   zmclApprovalFileSuccess(res, file, fileList) {
+     for (let index = 0; index < fileList.length; index++) {
+       const element = fileList[index];
+       if (element.uid == file.uid) {
+         element.uid = res.msg;
+       }
+     }
+     if (this.form.zmcl) {
+       this.form.zmcl += res.msg + ",";
+     } else {
+       this.form.zmcl = res.msg + ",";
+     }
+     this.uploadVal1 = true;
+   },
+   /** 上传附件成功操作 **/
+   contractApprovalFileSuccess(res, file, fileList) {
+     for (let index = 0; index < fileList.length; index++) {
+       const element = fileList[index];
+       if (element.uid == file.uid) {
+         element.uid = res.msg;
+       }
+     }
+     if (this.form.record) {
+       this.form.record += res.msg + ",";
+     } else {
+       this.form.record = res.msg + ",";
+     }
+     this.uploadVal1 = true;
+   },
+   /** 删除附件操作 **/
+   removeContractApprovalFile(file, fileList) {
+     delFileById(file.uid).then(response => {
+       if (response.code == 200) {
+         this.form.record = null;
+         for (let index = 0; index < fileList.length; index++) {
+           const element = fileList[index];
+           if (this.form.record) {
+             this.form.record += element.uid + ",";
+           } else {
+             this.form.record = element.uid + ",";
+           }
+         }
+       }
+     });
+   },
+   removeZmclApprovalFile(file, fileList) {
+     delFileById(file.uid).then(response => {
+       if (response.code == 200) {
+         this.form.zmcl = null;
+         for (let index = 0; index < fileList.length; index++) {
+           const element = fileList[index];
+           if (this.form.zmcl) {
+             this.form.zmcl += element.uid + ",";
+           } else {
+             this.form.zmcl = element.uid + ",";
+           }
+         }
+       }
+     });
+   },
+
+   /** 上传附件成功操作 **/
+   invoiceImgFileSuccess(res, file, fileList) {
+     for (let index = 0; index < fileList.length; index++) {
+       const element = fileList[index];
+       if (element.uid == file.uid) {
+         element.uid = res.msg;
+       }
+     }
+     if (this.form.invoiceImg) {
+       this.form.invoiceImg += res.msg + ",";
+     } else {
+       this.form.invoiceImg = res.msg + ",";
+     }
+     this.uploadVal = true;
+   },
+   /** 删除附件操作 **/
+   removeInvoiceImglFile(file, fileList) {
+     delFileById(file.uid).then(response => {
+       if (response.code == 200) {
+         this.form.invoiceImg = null;
+         for (let index = 0; index < fileList.length; index++) {
+           const element = fileList[index];
+           if (this.form.invoiceImg) {
+             this.form.invoiceImg += element.uid + ",";
+           } else {
+             this.form.invoiceImg = element.uid + ",";
+           }
+         }
+       }
+     });
+   },
+   handlePictureCardPreview(file) {//点击放大图片
+     if((file.url).indexOf("profile")>=0){
+       let files = (file.url).split("profile");
+       let url = window.location.hostname;
+       if(url.indexOf("http")<0){
+         url = "http://"+url;
+       }
+       // var url_ = url+":9001/profile"+files[1];
+
+       var url_ = url+":9001/profile"+files[1];
+       window.open(url_);
+       // window.open(url+":9001/dictionary/fileManage/dwonLoadFile/"+file.uid+'/'+file.ptype);
+     }
+   },
+
+
+   /*文件上传,重写文件上传方法,action的路径不会起作用*/
+   myUpload(file){
+     console.log(file);
+     this.fd = new FormData();
+     this.fd.form=this.form;//传文件
+     this.fd.file=file;//传其他参数
+     // fd.append('filename',file.name);//传其他参数
+     // uploadFiles(fd).then(function(res) {
+     //   console.log(res);
+     // });
+
+   },
+  }
+};
+</script>
+<style>
+  .curr-table {
+    text-align: center;
+    width: 100%;
+    vertical-align: middle;
+    border-spacing: 0px;
+    border-style: none;
+    border-collapse: collapse;
+  }
+  .curr-table td,th {
+    padding: 5px 10px;
+  }
+  .curr-table th {
+    font-weight: bold;
+    background-color: #eff3fa;
+    height: 40px;
+  }
+ .el-dialog__body {
+     padding: 0px 20px;
+     color: #606266;
+     font-size: 14px;
+     word-break: break-all;
+ }
+  .el-button--medium {
+    padding: 9px 13px;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+</style>

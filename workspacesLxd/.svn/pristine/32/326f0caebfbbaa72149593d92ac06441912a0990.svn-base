@@ -1,0 +1,187 @@
+package com.ruoyi.collection.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.collection.mapper.CtBuInvoiceInfoMapper;
+import com.ruoyi.collection.domain.CtBuInvoiceInfo;
+import com.ruoyi.collection.service.ICtBuInvoiceInfoService;
+
+/**
+ * 财务开票Service业务层处理
+ * 
+ * @author ruoyi
+ * @date 2020-12-11
+ */
+@Service
+public class CtBuInvoiceInfoServiceImpl implements ICtBuInvoiceInfoService 
+{
+    @Autowired
+    private CtBuInvoiceInfoMapper ctBuInvoiceInfoMapper;
+
+    /**
+     * 凭证号录入
+     *
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int updateVocherInfoByIds(String[] ids,String vocher)
+    {
+        Map map = new HashMap();
+        map.put("ids",ids);
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            map.put("voucherUserid",loginUser.getUser().getUserId());
+            map.put("voucherUsername",loginUser.getUser().getUserName());
+            map.put("voucherTime",DateUtils.getNowDate());
+            map.put("voucherNo",vocher);
+            map.put("status","4");
+
+        }else{
+            return 0;
+        }
+        return ctBuInvoiceInfoMapper.updateCtBuInvoiceInfoByIds(map);
+    }
+
+    /**
+     * 移交财务开票
+     *
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuInvoiceInfoByIds(String[] ids,String flag)
+    {
+        Map map = new HashMap();
+        map.put("ids",ids);
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            if("0".equals(flag)){
+                map.put("handoverUserid",loginUser.getUser().getUserId());
+                map.put("handoverUsername",loginUser.getUser().getUserName());
+                map.put("handoverTime",DateUtils.getNowDate());
+                map.put("status","2");
+            }else  if("100".equals(flag)){
+                map.put("handoverUserid",loginUser.getUser().getUserId());
+                map.put("handoverUsername",loginUser.getUser().getUserName());
+                map.put("handoverTime",DateUtils.getNowDate());
+                map.put("status","2");
+            }else{
+//                map.put("confirmerUserid",loginUser.getUser().getUserId());
+//                map.put("confirmerUsername",loginUser.getUser().getUserName());
+//                map.put("confirmerTime",DateUtils.getNowDate());
+                map.put("status","8");
+            }
+        }else{
+            return 0;
+        }
+        return ctBuInvoiceInfoMapper.updateCtBuInvoiceInfoByIds(map);
+    }
+
+
+    /**
+     * 凭证号录入
+     * 
+     * @param id 财务开票ID
+     * @return 财务开票
+     */
+    @Override
+    public CtBuInvoiceInfo selectCtBuInvoiceInfoById(String id)
+    {
+        return ctBuInvoiceInfoMapper.selectCtBuInvoiceInfoById(id);
+    }
+
+    /**
+ * 查询财务开票列表
+ *
+ * @param ctBuInvoiceInfo 财务开票
+ * @return 财务开票
+ */
+@Override
+public List<CtBuInvoiceInfo> selectCtBuInvoiceInfoList(CtBuInvoiceInfo ctBuInvoiceInfo)
+{
+    return ctBuInvoiceInfoMapper.selectCtBuInvoiceQrInfoandReqsList(ctBuInvoiceInfo);
+//    if(role==101){
+//            ctBuInvoiceInfo.setStatus(2);
+//        return ctBuInvoiceInfoMapper.selectCtBuInvoiceQrInfoList(ctBuInvoiceInfo);
+//    }else{
+//        return ctBuInvoiceInfoMapper.selectCtBuInvoiceInfoList(ctBuInvoiceInfo);
+//    }
+
+}
+
+
+
+    /**
+     * 新增财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    @Override
+    public int insertCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceInfo.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuInvoiceInfo.setDelFlag("1");
+        ctBuInvoiceInfo.setId(UUID.fastUUID().toString(true));
+        ctBuInvoiceInfo.setCreateTime(DateUtils.getNowDate());
+        return ctBuInvoiceInfoMapper.insertCtBuInvoiceInfo(ctBuInvoiceInfo);
+    }
+
+    /**
+     * 修改财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceInfo.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuInvoiceInfo.setUpdateTime(DateUtils.getNowDate());
+        return ctBuInvoiceInfoMapper.updateCtBuInvoiceInfo(ctBuInvoiceInfo);
+    }
+
+    /**
+     * 批量删除财务开票
+     * 
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuInvoiceInfoByIds(String[] ids)
+    {
+        return ctBuInvoiceInfoMapper.deleteCtBuInvoiceInfoByIds(ids);
+    }
+
+    /**
+     * 删除财务开票信息
+     * 
+     * @param id 财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuInvoiceInfoById(String id)
+    {
+        return ctBuInvoiceInfoMapper.deleteCtBuInvoiceInfoById(id);
+    }
+}

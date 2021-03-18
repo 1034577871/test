@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.dictionary.proType.mapper.CtDicProtypeMapper">
+	<resultMap type="CtDicProtype" id="CtDicProtypeResult">
+		<result property="id" column="id" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="typeName" column="type_name" />
+		<result property="pid" column="pid" />
+		<result property="delFlag" column="del_flag" />
+		<result property="remark" column="remark" />
+	</resultMap>
+
+	<sql id="selectCtDicProtypeVo">
+		select id, create_by, create_time, update_by, update_time, type_name, pid,
+		del_flag, remark from ct_dic_protype
+	</sql>
+
+	<select id="selectCtDicProtypeList" parameterType="CtDicProtype"
+		resultMap="CtDicProtypeResult">
+		<include refid="selectCtDicProtypeVo" />
+		<where>
+			<if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+			<if test="pid != null  and pid != ''"> and pid = #{pid}</if>
+		</where>
+	</select>
+	
+	<select id="findProjectType" parameterType="CtDicProtype" resultMap="CtDicProtypeResult">
+		SELECT id,type_name FROM ct_dic_protype
+		ORDER BY create_time ASC
+	</select>
+	
+	<select id="selectCtDicProtypeById" parameterType="String"
+		resultMap="CtDicProtypeResult">
+		<include refid="selectCtDicProtypeVo" />
+		where id = #{id}
+	</select>
+
+	<insert id="insertCtDicProtype" parameterType="CtDicProtype">
+		insert into ct_dic_protype
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="typeName != null">type_name,</if>
+			<if test="pid != null">pid,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="remark != null">remark,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="typeName != null">#{typeName},</if>
+			<if test="pid != null">#{pid},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="remark != null">#{remark},</if>
+		</trim>
+	</insert>
+
+	<update id="updateCtDicProtype" parameterType="CtDicProtype">
+		update ct_dic_protype
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="typeName != null">type_name = #{typeName},</if>
+			<if test="pid != null">pid = #{pid},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+			<if test="remark != null">remark = #{remark},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteCtDicProtypeById" parameterType="String">
+		delete from ct_dic_protype where id = #{id}
+	</delete>
+
+	<delete id="deleteCtDicProtypeByIds" parameterType="String">
+		delete from ct_dic_protype where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

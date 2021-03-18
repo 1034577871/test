@@ -1,0 +1,107 @@
+package com.ruoyi.paymentManagement.payinfo.mapper;
+
+import com.ruoyi.paymentManagement.payinfo.domain.CtBuPayinfo;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+
+/**
+ * 付款申请单主Mapper接口
+ * 
+ * @author ruoyi
+ * @date 2021-01-12
+ */
+public interface CtBuPayinfoMapper 
+{
+    /**
+     * 查询付款申请单主
+     * 
+     * @param id 付款申请单主ID
+     * @return 付款申请单主
+     */
+    public CtBuPayinfo selectCtBuPayinfoById(String id);
+
+    /**
+     * 查询付款申请单主列表
+     * 
+     * @param ctBuPayinfo 付款申请单主
+     * @return 付款申请单主集合
+     */
+    public List<CtBuPayinfo> selectCtBuPayinfoList(CtBuPayinfo ctBuPayinfo);
+
+    /**
+     * 新增付款申请单主
+     * 
+     * @param ctBuPayinfo 付款申请单主
+     * @return 结果
+     */
+    public int insertCtBuPayinfo(CtBuPayinfo ctBuPayinfo);
+
+    /**
+     * 修改付款申请单主
+     * 
+     * @param ctBuPayinfo 付款申请单主
+     * @return 结果
+     */
+    public int updateCtBuPayinfo(CtBuPayinfo ctBuPayinfo);
+
+    /**
+     * 修改付款申请单主
+     *
+     * @param ctBuPayinfo 付款申请单主
+     * @return 结果
+     */
+    public int updateCtBuPayinfoByInstanceId(CtBuPayinfo ctBuPayinfo);
+
+    /**
+     * 根据实例ID修改付款申请单主
+     *
+     * @param ctBuPayinfo 付款申请单主
+     * @return 结果
+     */
+    public int updateCtBuPayinfoBy(CtBuPayinfo ctBuPayinfo);
+
+    /**
+     * 删除付款申请单主
+     * 
+     * @param id 付款申请单主ID
+     * @return 结果
+     */
+    public int deleteCtBuPayinfoById(String id);
+
+    /**
+     * 批量删除付款申请单主
+     * 
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteCtBuPayinfoByIds(String[] ids);
+
+    /**
+     * 逻辑删除付款申请单主
+     *
+     * @param id 需要删除的数据ID
+     * @return 结果
+     */
+    public int updateCtBuPayinfoById(String id);
+
+
+    /**
+     * 根据实例ID查询
+     * @param instanceId
+     * @return
+     */
+    CtBuPayinfo selectCtBuPayinfoByInstanceId(String instanceId);
+
+
+    /**
+     * 查询付款申请单主列表
+     *
+     * @param ctBuPayinfo 付款申请单主
+     * @return 付款申请单主集合
+     */
+    public List<CtBuPayinfo> selectCtBuPayinfoList1(CtBuPayinfo ctBuPayinfo);
+
+    public String countAppliedAmountByContractIdPayment(String contractId);
+}

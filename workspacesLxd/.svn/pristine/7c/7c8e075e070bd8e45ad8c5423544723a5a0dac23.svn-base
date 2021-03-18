@@ -1,0 +1,40 @@
+package com.ruoyi.collection.utils;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
+import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
+import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.builders.TaskPayloadBuilder;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ActUtils {
+    @Autowired
+    private ProcessRuntime processRuntime;
+
+    @Autowired
+    private TaskRuntime taskRuntime;
+
+    //启动流程
+    public String startAct(String uuid, LoginUser loginUser){
+        ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
+                .start()
+                .withProcessDefinitionKey("invoiceApply")
+                .withName("开票申请")
+                .withBusinessKey(uuid)
+                .withVariable("billApply",loginUser.getUser().getUserName())
+                .build());
+        return (processInstance.getId());
+    }
+    //完成任务
+    public void commitTask(String taskID){
+
+        //查询到自己的任务，然后通过任务ID进行提交
+        Task task = taskRuntime.task(taskID);        //处理任务
+        taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(taskID)
+                .build());
+    }
+}

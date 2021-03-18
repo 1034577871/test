@@ -1,0 +1,962 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams"
+       ref="queryForm"
+       v-show="showSearch"
+       label-width="90px">
+
+         <el-row :gutter="15">
+           <el-col :span="6">
+              <el-form-item label="流程名称" prop="processInstanceName">
+                <el-input
+                  v-model="queryParams.processInstanceName"
+                  placeholder="请输入流程名称"
+                  clearable
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+           </el-col>
+           <el-col :span="6">
+             <el-form-item>
+               <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+             </el-form-item>
+           </el-col>
+         </el-row>
+       </el-form>
+    <el-table v-loading="loading" :data="tastList">
+      <el-table-column label="流程id" align="center" prop="id" v-if="show"/>
+      <el-table-column label="流程KEY" align="center" prop="definitionKey" v-if="show"/>
+      <el-table-column label="流程名称" align="center" prop="instanceName"/>
+      <el-table-column label="任务节点名称" align="center" prop="name"/>
+      <el-table-column label="任务状态" align="center" prop="statusName"/>
+      <el-table-column label="申请人" align="center" prop="applyName"/>
+<!--      <el-table-column label="办理人" align="center" prop="assignee"/>-->
+      <el-table-column label="创建时间" align="center" prop="createdDate"/>
+<!-- v-hasPermi="['workflow:leave:edit']" -->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <span v-if="(scope.row.definitionKey == 'fjkxmDown' || scope.row.definitionKey == 'fjkxmUp' ) && scope.row.name == '本部部门主任审核'
+           && scope.row.flag==true">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="getTask(scope.row)"
+              >转派
+              </el-button>
+          </span>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+           @click="examineAndApprove (scope.row)"
+          >审批
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="examineAndApproves (scope.row)"
+
+          >查看流程图
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 审批对话框 -->
+    <el-dialog :title="title" :visible.sync="open" v-if="open" width="80%" append-to-body>
+      <leaveHistoryForm :businessKey="businessKey"  v-if="audit"/>
+      <collectOrder :businessKey="businessKey"  v-if="collectAudit"/>
+      <contractInfo :businessKey="businessKey" v-if="contractAudit"/>
+      <ngcInfo :businessKey="businessKey"  v-if="ngcAudit"/>
+      <payInfo :businessKey="businessKey"  v-if="payInfo"/>
+      <ticketRecordInfo :businessKey="businessKey"  v-if="ticketRecordInfo"/>
+<!--      集客项目-->
+ <el-form :model="forms" ref="forms" label-width="100px" class="demo-dynamic">
+      <div v-if="ngAudit">
+
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="项目名称" prop="proName">
+              <el-input v-model="forms.id" placeholder="请输入项目名称" v-if="show"/>
+              <el-input v-model="forms.status" placeholder="请输入项目名称" v-if="show"/>
+              <el-input v-model="forms.proName" placeholder="请输入项目名称"  :disabled="disabled"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="预计投资金额" prop="expectAmount">
+              <el-input
+                v-model="forms.expectAmount"
+                clearable
+                placeholder="请输入预计投资金额"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+                :disabled="disabled"
+                @blur="onBsp($event)"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="企业是否垫资" prop="isAdvanceNeed">
+              <el-select
+                v-model="forms.isAdvanceNeed"
+                placeholder="请选择"
+                style="width: 100%;"
+                :disabled="disabled"
+              >
+                <el-option
+                  v-for="dict in isAdvanceNeedList"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="规划部是否确认" prop="isPlanConfirm">
+              <el-select
+                v-model="forms.isPlanConfirm"
+                placeholder="请选择"
+                style="width: 100%;"
+                :disabled="disabled"
+              >
+                <el-option
+                  v-for="dict in isPlanConfirmList"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+
+          <el-col :span="24">
+            <el-form-item label="涉及分公司" prop="selectComp">
+              <el-select
+                v-model="forms.selectComp"
+                multiple
+                placeholder="请选择"
+                @change="$forceUpdate()"
+                :style="{ width: '100%' }"
+                :disabled="disabled"
+              >
+                <el-option
+                  v-for="dict in belongCompanyNameList"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptName+'('+dict.deptId+')'"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="项目描述" prop="projectDescription">
+              <el-input
+                type="textarea"
+                :rows="3"
+                placeholder="请输入内容"
+                :disabled="disabled"
+                v-model="forms.projectDescription">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="项目效益说明" prop="benefitDescription">
+              <el-input
+                type="textarea"
+                :rows="3"
+                placeholder="请输入内容"
+                :disabled="disabled"
+                v-model="forms.benefitDescription">
+              </el-input>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row v-if="ghb">
+          <el-col :span="12">
+            <el-form-item label="实际投资金额" prop="actualAmount">
+              <el-input
+                v-model="forms.actualAmount"
+                clearable
+                placeholder="请输入实际投资金额"
+                oninput="value=value.replace(/[^0-9.]/g,'')"
+                :disabled="disabled"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+
+            <el-form-item
+              label="建设方案" prop="constructionPlan">
+              <el-upload
+                ref="field111"
+                :file-list="constructionPlan"
+                :action="field111Action"
+                :headers="token"
+                :on-success="contractApprovalFileSuccess"
+                :on-remove="removeContractApprovalFile"
+                :auto-upload="autoUploadFalg"
+                multiple
+                :limit="20"
+                :before-upload="field111BeforeUpload"
+                :on-preview="handlePictureCardPreview"
+              >
+                <el-button slot="trigger"  size="small" type="primary">选取文件</el-button>
+                <!-- <div slot="tip" class="el-upload__tip">  v-if="uploadVis"
+                    只能上传jpg/png文件，且不超过500kb
+                  </div> -->
+              </el-upload>
+
+
+            </el-form-item>
+
+
+
+          </el-col>
+        </el-row>
+        <el-row  v-if="showTable">
+          <el-col :span="24">
+            <table class="curr-table " border="1" style="border-color: #ddd;">
+              <tbody>
+              <tr>
+                <th width="10%">序号</th>
+                <th width="75%">已选分公司</th>
+                <th width="15%">操作</th>
+              </tr>
+              <tr v-for="(value, index) in forms.selectComp" :key="value">
+                <td align="center">
+                  {{ index+1 }}
+                </td>
+                <td align="center">
+                  {{value }}
+
+                </td>
+                <td align="center">
+                  <el-button
+                    size="mini"
+                    type="success"
+                    @click="openInfoWin(value)"
+                    style="margin: 10px;"
+                  >填写信息</el-button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 15px;" v-if="showTables">
+          <el-col :span="12">
+            <el-form-item label="事前审批表" prop="isPlanConfirm">
+              <el-button type="primary" size="small" plain @click="showApprovalInfo()">在线查看</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 事前审批窗口 -->
+        <el-dialog title="事前审批"
+                   :visible.sync="approvalInfoVisible"
+                   width="80%"
+                   append-to-body
+                   @close=""
+        >
+          <approvalInfo ref="approvalInfo" :approvalInfoDate="forms.appxNgReq" :appxNgName="forms.proName" :proType="forms.proType"></approvalInfo>
+          <div slot="footer" class="dialog-footer">
+            <el-button  @click="approvalInfoVisible = false">取 消</el-button>
+          </div>
+        </el-dialog>
+        <!-- 编辑分公司信息的内部嵌套窗口 -->
+        <el-dialog title="编辑信息"
+                   :visible.sync="editInfoVisible"
+                   width="80%"
+                   append-to-body
+                   @close="">
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="基本信息" name="base" prop="appNgBase">
+              <basicInfo
+                ref="basicInfo"
+                :baseInfoDate="forms.appNgBase"
+              ></basicInfo>
+            </el-tab-pane>
+            <el-tab-pane label="材料信息" name="second" prop="appNgMaterialList"
+            ><materialsInfo
+              ref="materialsInfo"
+              :materialsInfoDate="forms.appNgMaterialList"
+            ></materialsInfo
+            ></el-tab-pane>
+            <el-tab-pane label="施工费信息" name="third" prop="appNgConstList"
+            ><construcostInfo
+              ref="construcostInfo"
+              :construcostInfoDate="forms.appNgConstList"
+            ></construcostInfo
+            ></el-tab-pane>
+
+
+          </el-tabs>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="editInfoVisible = false">取 消</el-button>
+          </div>
+        </el-dialog>
+
+      </div>
+</el-form>
+<el-form :model="form" ref="form" label-width="100px" class="demo-dynamic">
+        <el-form-item
+          v-for="(domain, index) in form.formData"
+          :label="domain.controlLable"
+          :key="index"
+        >
+          <el-radio-group v-model="domain.controlValue" v-if="'radio'==domain.controlType">
+            <el-radio v-for="(defaults,indexd) in domain.controlDefault.split('--__--')"
+                      :label=indexd
+                      :key="indexd"
+                      >{{defaults}}
+
+            </el-radio>
+
+          </el-radio-group>
+          <el-input type="textarea" v-model="domain.controlValue" v-if="'textarea'==domain.controlType"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!--部门人员选中-->
+          <el-dialog
+                width="50%"
+                height="70%"
+                title="人员信息"
+                :visible.sync="innerhtVisible"
+                append-to-body>
+
+
+                <el-form
+                  :model="queryParams_"
+                  ref="queryhtForm"
+                  v-show="showSearch"
+                  label-width="90px"
+                >
+                  <el-row >
+
+                    <el-col :span="8">
+                      <el-form-item label="账号" prop="userName" width="60%">
+                        <el-input
+                          v-model="queryParams.userName"
+                          placeholder="请输入账号"
+                          clearable
+                          size="small"
+                          @keyup.enter.native="handlesQuery_"
+                        />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="姓名" prop="nickName"  width="60%">
+                        <el-input
+                          v-model="queryParams.nickName"
+                          placeholder="请输入项目名称"
+                          clearable
+                          size="small"
+                          @keyup.enter.native="handlesQuery_"
+                        />
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="3">
+                      <el-form-item>
+                        <el-button
+                          type="cyan"
+                          icon="el-icon-search"
+                          size="mini"
+                          @click="handlesQuery_"
+                          >搜索</el-button
+                        >
+
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="2">
+                      <el-form-item>
+                        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+                          >重置</el-button
+                        >
+                      </el-form-item>
+                    </el-col>
+
+                  </el-row>
+
+                </el-form>
+                <el-table  ref="htTable"  v-loading="htloading" :data="userList">
+                   <el-table-column type="selection" width="55" align="center" v-if="show"/>
+                  <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+                  <el-table-column label="账号" align="center" prop="userName" />
+                  <el-table-column label="姓名" align="center" prop="nickName" />
+                  <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                          <template slot-scope="scope">
+                            <el-button
+                              size="mini"
+                              type="text"
+                              icon="el-icon-edit"
+                              @click="submithtForm(scope.row)"
+
+                            >选择</el-button>
+
+                          </template>
+                        </el-table-column>
+                </el-table>
+                <pagination
+                      v-show="total>0"
+                      :total="total"
+                      :page.sync="queryParams_.pageNum"
+                      :limit.sync="queryParams_.pageSize"
+                      @pagination="userList"
+                    />
+
+            <div slot="footer" class="dialog-footer">
+              <!-- <el-button type="primary" @click="submithtForm">确 定</el-button> -->
+              <el-button @click="innerhtVisible=false">取 消</el-button>
+            </div>
+
+        </el-dialog>
+
+  </div>
+</template>
+
+<script>
+  import {
+    findProjectType,
+    findBranchOffice,
+    findLoginbyCompany,
+    findNextAppNo,
+    findDeptByBranchOffice
+  } from "@/api/utils";
+  import {confirmTransfer,getUserByRole,listTask, formDataShow, formDataSave} from "@/api/activiti/task"; //导入接口js文件
+  import leaveHistoryForm from './leaveHistoryForm.vue';  //导入自定义组件页面
+  import collectOrder  from './collectOrder.vue';  //导入自定义组件页面
+  import contractInfo  from './contractInfo.vue';  //导入自定义组件页面
+  import ngcInfo from './ngcInfo.vue';  //导入自定义组件页面
+  import { historyFromData,getCollection } from '@/api/activiti/historyFormdata'
+  import basicInfo from "./nginfo/basicInfo.vue";
+  import materialsInfo from "./nginfo/materialsInfo.vue";
+  import construcostInfo from "./nginfo/construcostInfo.vue";
+  import approvalInfo from "./nginfo/approvalInfo";
+  import payInfo from "./payInfo.vue";
+  import ticketRecordInfo from "./ticketRecordInfo.vue";
+
+import {listCollectProject,
+  getCollectProject,
+  delCollectProject,
+  addCollectProject,
+  updateCollectProject,
+  addCollectProject_,
+  updateCollectProject_,
+  exportCollectProject,
+  getFxCollectProject,
+  selectCtBuApprovalNgReqById,
+  getUserInfo} from "@/api/projectApproval/collectProject";
+  export default {
+    name: "Leave",
+    components: {leaveHistoryForm,collectOrder,contractInfo,ngcInfo,
+    basicInfo,
+    materialsInfo,
+    construcostInfo,
+    approvalInfo,
+    payInfo,
+    ticketRecordInfo},
+    data() {
+      return {
+        editInfoVisible:false,  //信息编辑窗口
+        approvalInfoVisible:false ,  //审批窗口
+        newProjectVisible:false,  //立项新增窗口
+        deptId_:null,
+        showTables:false,
+        showTable:true,
+        butVis:false,
+        ghb:false,
+        bc1:true,
+        collectProjectList: [],  // 表格数据
+        collectTypeOptions: [],  //状态
+        proTypeNameList: [],  //项目类型
+        belongCompanyNameList: [], //所属分公司
+        isPlanConfirmList:[],  // 是否经过规划确认
+        isAdvanceNeedList:[],  //公司是否垫资
+        disabled:null,
+ fromData:[],
+ tableDatas_:[],
+          activeName: "base",
+        //极客
+        ngAudit:false,
+        //非极客
+        ngcAudit:false,
+        payInfo:false,
+        show:false,
+        // 人员信息列表
+        userList: [],
+        htloading:true,
+        //部门人员选中
+        innerhtVisible:false,
+        audit:false,
+        //收款单
+        collectAudit:false,
+        //合同审核
+        contractAudit:false,
+        id:'',
+        definitionKey: '',
+        businessKey: '',
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 显示搜索条件
+        showSearch: true,
+        // 总条数
+        total: 0,
+        // 请假表格数据
+        tastList: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        // 查询参数
+        queryParams_: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        // 表单参数
+        form: {
+          formData:[]
+        },
+        // 表单参数
+        forms: {
+
+        },
+        // 表单校验
+        rules: {}
+      };
+    },
+    created() {
+      this.getList();
+      this.getUserList();
+
+      this.getDicts("collect_type").then(response => {
+        this.collectTypeOptions = response.data;
+      });
+      findProjectType().then(response => {
+        this.proTypeNameList = response.data;
+      });
+      findBranchOffice().then(response => {
+        this.belongCompanyNameList = response.data;
+      });
+      this.getDicts("sys_yes_no").then(response => {
+        this.isPlanConfirmList = response.data;
+        this.isAdvanceNeedList  = response.data;
+      });
+    },
+    methods: {
+      openInfoWin(val){
+        let value = val.indexOf("(")+1;
+        this.deptId_ = parseInt(
+          val.substring(value,val.length-1)
+        );
+        this.editInfoVisible = true;
+        let id = this.forms.id;
+        getFxCollectProject(id,this.deptId_).then(response => {
+          console.log(response);
+          let storage = (sessionStorage.getItem(this.deptId_));
+          let appBase = {};
+          let mateList = {};
+          if(storage!=null){
+            appBase = JSON.parse(storage);
+          }
+          /** 基本信息赋值 **/
+          if(response.data.appNgBase==null || response.data.appNgBase.id==null){
+            if(storage==null){
+              this.$refs.basicInfo.formData = {};
+            }else{
+              this.$refs.basicInfo.formData = appBase.appNgBase;
+              this.$refs.basicInfo.formData.projectTypeId = appBase.appNgBase.projectTypeId+"";
+            }
+          }else{
+            this.$refs.basicInfo.formData = response.data.appNgBase;
+            this.$refs.basicInfo.formData.projectTypeId = response.data.appNgBase.projectTypeId+"";
+          }
+          /** 材料信息 **/
+          if(response.data.appNgMaterialList==null || response.data.appNgMaterialList.length<=0){
+            if(storage==null){
+              this.$refs.materialsInfo.dataList = [];
+            }else{
+              this.$refs.materialsInfo.dataList = appBase.appNgMaterialList;
+            }
+            console.log(this.$refs.materialsInfo.dataList);
+          }else{
+            this.$refs.materialsInfo.dataList = response.data.appNgMaterialList;
+          }
+          /** 施工费信息 **/
+          if(response.data.appNgConstList==null || response.data.appNgConstList.length<=0){
+            if(storage==null){
+              this.$refs.construcostInfo.dataList = [];
+            }else{
+              this.$refs.construcostInfo.dataList = appBase.appNgConstList;
+            }
+          }else{
+            this.$refs.construcostInfo.dataList = response.data.appNgConstList;
+          }
+        });
+      },
+      showApprovalInfo(){
+        let id = this.forms.id;
+
+        this.$refs["forms"].validate(valid => {
+          if (valid) {
+            this.approvalInfoVisible = true;
+            selectCtBuApprovalNgReqById(id).then(response => {
+              console.log(response.data);
+
+              /** 事前审批 **/
+              if(response.data.approvalInfo==null){
+                this.$refs.approvalInfo.formData  = this.form.appxNgReq==null?{}:this.form.appxNgReq;
+              }else{
+                this.$refs.approvalInfo.formData = response.data.appxNgReq;
+              }
+
+              // this.$refs.approvalInfo.approvalInfoDate = response.data.appxNgReq;
+
+              /** 事前审批 **/
+              this.$refs.approvalInfo.formData = response.data.appxNgReq;
+
+              this.$refs.approvalInfo.formData.proType = "9f30ebd46d3c428cbc5e54f7175eb4f2";
+              this.$refs.approvalInfo.formData.appxNgNo = response.data.projectCode;
+              this.$refs.approvalInfo.formData.applyCompany = response.data.belongDeptName;
+
+              this.$refs.approvalInfo.formData.stuffcostmoney = response.data.cltotal;
+              this.$refs.approvalInfo.formData.buildcostmoney = response.data.sgtotal;
+            });
+          }
+        })
+
+
+      },
+      selectChanged(val){
+        let amount = this.form.expectAmount;
+        if(val=='N' && this.form.isAdvanceNeed=='Y'){
+          if(amount!=null && amount!=''){
+            this.ghb = true;
+          }
+        }
+        if(this.form.isAdvanceNeed=='Y' && val=='Y'){
+          // this.showTable = false;
+          this.showTables = false;
+        }
+      },
+      onBsp(val){
+        if(val!=null && val>0){
+          if(this.form.isAdvanceNeed=='Y' && this.form.isPlanConfirm=='N'){
+            this.ghb = true;
+          }
+        }
+      },
+      selectChangedNeed(val){
+        let amount = this.form.expectAmount;
+        if(val=='Y' && this.form.isPlanConfirm=='N'){
+          if(amount!=null && amount!=''){
+            this.ghb = true;
+          }
+        }
+        if(val=='Y' && this.form.isPlanConfirm=='Y'){
+          this.showTables = false;
+        }
+      },
+      historyFromData() {
+        historyFromData(this.businessKey).then(response => {
+          this.fromData = response.data
+          console.log(this.fromData);
+        })
+      },
+      getTask(row){
+        this.id = row.id;
+        this.innerhtVisible = true;
+      },
+      /** 搜索按钮操作 */
+      handlesQuery_() {
+        this.queryParams_.pageNum = 1;
+        this.getUserList();
+      },
+     //获取人员信息
+     getUserList() {
+       this.htloading = true;
+       getUserByRole(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+         console.log(response.rows);
+         this.userList = response.rows;
+         this.total = response.total;
+         this.htloading = false;
+       });
+     },
+     /** 选择人员 */
+     submithtForm(row) {
+       const id = this.id;
+       const userName = row.userName;
+       this.$confirm('是否确认转派'+userName+'进行审核?', "警告", {
+           confirmButtonText: "确定",
+           cancelButtonText: "取消",
+           type: "warning"
+         }).then(function() {
+           return confirmTransfer(id,userName);
+         }).then(() => {
+           this.getList();
+           this.msgSuccess("转派成功");
+           this.innerhtVisible = false;
+         })
+     },
+      /** 查询请假列表 */
+      getList() {
+        this.loading = true;
+        listTask(this.queryParams).then(response => {
+          this.tastList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getList();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+ /** 查看流程图 */
+      examineAndApproves(row) {
+        this.reset();
+        let url = window.location.hostname;
+        if(url.indexOf("http")<0){
+          url = "http://"+url;
+        }
+        let hosturl = url+":9001/task/exportImage?processInstanceId="+row.instanceId;
+        window.open(hosturl,"_blank");
+       },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.definitionKey = '',
+          this.businessKey = '',
+          this.form = {
+            formData:[],
+          };
+        this.disabled=false;
+        this.resetForm("form");
+      },
+
+      /** 审批按钮操作 */
+      examineAndApprove(row) {
+        console.log(row);
+        this.reset();
+        this.definitionKey = row.definitionKey;
+        this.businessKey = row.businessKey;
+        this.id=row.id;
+        formDataShow(row.id).then(response => {
+          let datas = response.data;
+          let formData = []
+          for (let i = 0; i < datas.length; i++) {
+            let strings = datas[i].split('--__!!')
+            let controlValue = null
+            let controlDefault = null
+            switch (strings[1]) {
+              case 'radio':
+                controlValue = 0;
+                controlDefault = strings[4]
+                break;
+              // default:
+            }
+            formData.push({
+              controlId: strings[0],
+              controlType: strings[1],
+              controlLable: strings[2],
+              controlIsParam: strings[3],
+              controlValue: controlValue,
+              controlDefault: controlDefault
+            })
+          }
+          this.getDioag(row.instanceName);
+          this.form.formData = formData;
+          this.open = true;
+          this.title = "审批详情";
+          //添加表单
+          if(this.ngAudit){
+            getCollectProject(this.businessKey).then(response1 => {
+              this.forms = response1.data;
+              let brans = response1.data.companyList;
+              let dpData = [];
+              if(brans!='' && brans.length>0){
+                let num=0;
+                for(let item of brans)
+                {
+                  let name = "";
+                  for(let it1 of this.belongCompanyNameList){
+                    if(item.branchInvolvedId==it1.deptId){
+                      name=it1.deptName+'('+it1.deptId+')';
+                      break;
+                    }
+                  }
+                  dpData.push(name);
+                  this.oldData = dpData;
+                  num++;
+                }
+                this.forms.selectComp = dpData;
+              }
+              this.forms.belongCompanyid = parseInt(this.forms.belongCompanyid);
+              this.title = "集客项目";
+              if(this.forms.isAdvanceNeed=='N' || (this.forms.isAdvanceNeed=='Y' && this.forms.isPlanConfirm=='N')){
+                if(response1.data.status==0 || response1.data.status==3 ){
+                  this.butVis = true;
+                }else{
+                  this.butVis = false;
+                }
+              }else{
+                this.bc3 = false;
+                this.tj3 = false;
+              }
+              this.showTables = true;
+              this.historyFromData();
+            });
+          }
+
+        });
+      },
+      getDioag(obj){
+        if(obj.indexOf("发票申请")>=0 || obj.indexOf("开票申请")>=0){
+          this.audit = true;
+          this.collectAudit = false;
+          this.contractAudit = false;
+          this.ngcAudit = false;
+          this.ngAudit = false;
+          this.payInfo = false;
+          this.ticketRecordInfo = false;
+        }
+        if(obj.indexOf("收款单审核")>=0){
+          this.collectAudit = true;
+           this.audit = false;
+           this.contractAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = false;
+           this.payInfo = false;
+           this.ticketRecordInfo = false;
+        }
+        if(obj.indexOf("合同审核")>=0){
+          this.contractAudit = true;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = false;
+           this.payInfo = false;
+           this.ticketRecordInfo = false;
+        }
+        if(obj.indexOf("非集客项目(10w限额以下的审批流程)")>=0 || obj.indexOf("非集客项目(10w限额以上的审批流程)")>=0){
+          this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = true;
+           this.ngAudit = false;
+           this.payInfo = false;
+           this.ticketRecordInfo = false;
+        }
+        if(obj.indexOf("三重一大项目(预算投资金额≥50万元)")>=0
+          || obj.indexOf("小集客业务(预计项目金额＜10万元 或 投资额＜5万元的项目)")>=0
+          || obj.indexOf("跨区项目(金额≥10万元 或 5万元≤投资额＜50万元)")>=0 ||
+          obj.indexOf("非跨区项目(项目金额≥10万元或5万元≤投资额＜50万元)")>=0
+          ||obj.indexOf("不涉及网络自主建设或技术平台建设及应用(项目金额≥10万元（非垫资）)")>=0
+        ){
+            this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = true;
+           this.payInfo = false;
+           this.ticketRecordInfo = false;
+        }
+        if(obj.indexOf("付款申请单审核")>=0){
+          this.payInfo = true;
+          this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = false;
+           this.ticketRecordInfo = false;
+        }
+        if(obj.indexOf("收票记录审核")>=0){
+          this.ticketRecordInfo = true;
+          this.payInfo = false;
+          this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = false;
+        }
+
+      },
+      /** 提交按钮 */
+      submitForm() {
+        formDataSave(this.id,this.form.formData).then(response => {
+          this.msgSuccess("审批成功");
+          this.open = false;
+          this.getList();
+        });
+      },
+    }
+  };
+</script>
+<style scoped lang="scss">
+  ::v-deep .el-input-group__append{
+    padding: 0 12px;
+  }
+  ::v-deep .el-dialog {
+    .el-dialog__body {
+      padding: 5px 20px;
+    }
+  }
+  .curr-table {
+    text-align: center;
+    width: 100%;
+    vertical-align: middle;
+    border-spacing: 0px;
+    border-style: none;
+    border-collapse: collapse;
+  }
+  .curr-table td,th {
+    padding: 5px 10px;
+  }
+  .curr-table th {
+    font-weight: bold;
+    background-color: #eff3fa;
+    height: 40px;
+  }
+</style>

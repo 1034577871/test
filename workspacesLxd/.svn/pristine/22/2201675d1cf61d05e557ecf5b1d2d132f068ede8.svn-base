@@ -1,0 +1,76 @@
+package com.ruoyi.collection.service;
+
+import java.util.Date;
+import java.util.List;
+import com.ruoyi.collection.domain.CtBuInvoiceInfo;
+
+/**
+ * 财务开票Service接口
+ * 
+ * @author ruoyi
+ * @date 2020-12-11
+ */
+public interface ICtBuInvoiceInfoService
+{
+    /**
+     * 凭证号录入
+     *
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    public int updateVocherInfoByIds(String[] ids,String vocher,Date date,String vodept);
+    /**
+     * 移交财务开票
+     *
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    public int updateCtBuInvoiceInfoByIds(String[] ids,String flag);
+    /**
+     * 查询财务开票
+     * 
+     * @param id 财务开票ID
+     * @return 财务开票
+     */
+    public CtBuInvoiceInfo selectCtBuInvoiceInfoById(String id);
+
+    /**
+     * 查询财务开票列表
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 财务开票集合
+     */
+    public List<CtBuInvoiceInfo> selectCtBuInvoiceInfoList(CtBuInvoiceInfo ctBuInvoiceInfo);
+
+    /**
+     * 新增财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    public int insertCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo);
+
+    /**
+     * 修改财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    public int updateCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo);
+
+    /**
+     * 批量删除财务开票
+     * 
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    public int deleteCtBuInvoiceInfoByIds(String[] ids);
+
+    /**
+     * 删除财务开票信息
+     * 
+     * @param id 财务开票ID
+     * @return 结果
+     */
+    public int deleteCtBuInvoiceInfoById(String id);
+}

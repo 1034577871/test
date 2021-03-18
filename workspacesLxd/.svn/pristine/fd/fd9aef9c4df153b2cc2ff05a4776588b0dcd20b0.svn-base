@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.paymentManagement.payinfo.mapper.CtBuPayinfoMapper">
+    
+    <resultMap type="CtBuPayinfo" id="CtBuPayinfoResult">
+        <result property="id"    column="id"    />
+        <result property="proNo"    column="pro_no"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="paytype"    column="paytype"    />
+        <result property="paymoney"    column="paymoney"    />
+        <result property="ntaxmoney"    column="ntaxmoney"    />
+        <result property="taxmoney"    column="taxmoney"    />
+        <result property="oppositeName"    column="opposite_name"    />
+        <result property="oppositeBank"    column="opposite_bank"    />
+        <result property="oppositeBankId"    column="opposite_bank_id"    />
+        <result property="oppositeContacts"    column="opposite_contacts"    />
+        <result property="oppositePhone"    column="opposite_phone"    />
+        <result property="oppositeAddress"    column="opposite_address"    />
+        <result property="imageData"    column="image_data"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="writeOffUserid"    column="write_off_userid"    />
+        <result property="writeOffUsername"    column="write_off_username"    />
+        <result property="writeOffTime"    column="write_off_time"    />
+        <result property="paymentTime"    column="payment_time"    />
+        <result property="paymentEvidence"    column="payment_evidence"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="appliedAmount"    column="applied_amount"    />
+        <result property="applicant"    column="applicant"    />
+        <result property="applicationTime"    column="application_time"    />
+        <result property="payer"    column="payer"    />
+    </resultMap>
+
+    <sql id="selectCtBuPayinfoVo">
+        select id, pro_no, pro_name, contract_id, contract_no, contract_name, paytype, paymoney, ntaxmoney, taxmoney, opposite_name, opposite_bank, opposite_bank_id, opposite_contacts, opposite_phone, opposite_address, image_data, status, statusPS, del_flag, remark, create_by, create_time, update_by, update_time, write_off_userid, write_off_username, write_off_time, payment_time, payment_evidence, instance_id, applied_amount, applicant, application_time, payer from ct_bu_payinfo
+    </sql>
+
+    <select id="selectCtBuPayinfoList" parameterType="CtBuPayinfo" resultMap="CtBuPayinfoResult">
+        <include refid="selectCtBuPayinfoVo"/>
+        <where>
+            del_flag = '1'
+            <if test="proNo != null  and proNo != ''"> and pro_no = #{proNo}</if>
+            <if test="proName != null  and proName != ''"> and pro_name like concat('%', #{proName}, '%')</if>
+            <if test="contractId != null  and contractId != ''"> and contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="paytype != null "> and paytype = #{paytype}</if>
+            <if test="paymoney != null "> and paymoney = #{paymoney}</if>
+            <if test="ntaxmoney != null "> and ntaxmoney = #{ntaxmoney}</if>
+            <if test="taxmoney != null "> and taxmoney = #{taxmoney}</if>
+            <if test="oppositeName != null  and oppositeName != ''"> and opposite_name like concat('%', #{oppositeName}, '%')</if>
+            <if test="oppositeBank != null  and oppositeBank != ''"> and opposite_bank = #{oppositeBank}</if>
+            <if test="oppositeBankId != null  and oppositeBankId != ''"> and opposite_bank_id = #{oppositeBankId}</if>
+            <if test="oppositeContacts != null  and oppositeContacts != ''"> and opposite_contacts = #{oppositeContacts}</if>
+            <if test="oppositePhone != null  and oppositePhone != ''"> and opposite_phone = #{oppositePhone}</if>
+            <if test="oppositeAddress != null  and oppositeAddress != ''"> and opposite_address = #{oppositeAddress}</if>
+            <if test="imageData != null  and imageData != ''"> and image_data = #{imageData}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and statusPS = #{statusps}</if>
+            <if test="writeOffUserid != null  and writeOffUserid != ''"> and write_off_userid = #{writeOffUserid}</if>
+            <if test="writeOffUsername != null  and writeOffUsername != ''"> and write_off_username like concat('%', #{writeOffUsername}, '%')</if>
+            <if test="instanceId != null  and instanceId != ''"> and instance_id = #{instanceId}</if>
+            <if test="writeOffTime != null  and writeOffTime != ''"> and write_off_time = #{writeOffTime}</if>
+            <if test="paymentTime != null  and paymentTime != ''"> and payment_time = #{paymentTime}</if>
+            <if test="paymentEvidence != null  and paymentEvidence != ''"> and payment_evidence = #{paymentEvidence}</if>
+            <if test="appliedAmount != null  and appliedAmount != ''"> and applied_amount = #{appliedAmount}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(application_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(application_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuPayinfoById" parameterType="String" resultMap="CtBuPayinfoResult">
+        <include refid="selectCtBuPayinfoVo"/>
+        where id = #{id} AND del_flag = '1'
+    </select>
+        
+    <insert id="insertCtBuPayinfo" parameterType="CtBuPayinfo">
+        insert into ct_bu_payinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="proNo != null">pro_no,</if>
+            <if test="proName != null">pro_name,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="paytype != null">paytype,</if>
+            <if test="paymoney != null">paymoney,</if>
+            <if test="ntaxmoney != null">ntaxmoney,</if>
+            <if test="taxmoney != null">taxmoney,</if>
+            <if test="oppositeName != null">opposite_name,</if>
+            <if test="oppositeBank != null">opposite_bank,</if>
+            <if test="oppositeBankId != null">opposite_bank_id,</if>
+            <if test="oppositeContacts != null">opposite_contacts,</if>
+            <if test="oppositePhone != null">opposite_phone,</if>
+            <if test="oppositeAddress != null">opposite_address,</if>
+            <if test="imageData != null">image_data,</if>
+            <if test="status != null">status,</if>
+            <if test="statusps != null">statusPS,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="writeOffUserid != null">write_off_userid,</if>
+            <if test="writeOffUsername != null">write_off_username,</if>
+            <if test="instanceId != null">instance_id,</if>
+            <if test="writeOffTime != null">write_off_time,</if>
+            <if test="paymentTime != null">payment_time,</if>
+            <if test="paymentEvidence != null">payment_evidence,</if>
+            <if test="appliedAmount != null">applied_amount,</if>
+            <if test="applicant != null">applicant,</if>
+            <if test="applicationTime != null">application_time,</if>
+            <if test="payer != null">payer,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="proNo != null">#{proNo},</if>
+            <if test="proName != null">#{proName},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="paytype != null">#{paytype},</if>
+            <if test="paymoney != null">#{paymoney},</if>
+            <if test="ntaxmoney != null">#{ntaxmoney},</if>
+            <if test="taxmoney != null">#{taxmoney},</if>
+            <if test="oppositeName != null">#{oppositeName},</if>
+            <if test="oppositeBank != null">#{oppositeBank},</if>
+            <if test="oppositeBankId != null">#{oppositeBankId},</if>
+            <if test="oppositeContacts != null">#{oppositeContacts},</if>
+            <if test="oppositePhone != null">#{oppositePhone},</if>
+            <if test="oppositeAddress != null">#{oppositeAddress},</if>
+            <if test="imageData != null">#{imageData},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusps != null">#{statusps},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="writeOffUserid != null">#{writeOffUserid},</if>
+            <if test="writeOffUsername != null">#{writeOffUsername},</if>
+            <if test="instanceId != null">#{instanceId},</if>
+            <if test="writeOffTime != null">#{writeOffTime},</if>
+            <if test="paymentTime != null">#{paymentTime},</if>
+            <if test="paymentEvidence != null">#{paymentEvidence},</if>
+            <if test="appliedAmount != null">#{appliedAmount},</if>
+            <if test="applicant != null">#{applicant},</if>
+            <if test="applicationTime != null">#{applicationTime},</if>
+            <if test="payer != null">#{payer},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuPayinfo" parameterType="CtBuPayinfo">
+        update ct_bu_payinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="paytype != null">paytype = #{paytype},</if>
+            <if test="paymoney != null">paymoney = #{paymoney},</if>
+            <if test="ntaxmoney != null">ntaxmoney = #{ntaxmoney},</if>
+            <if test="taxmoney != null">taxmoney = #{taxmoney},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="imageData != null">image_data = #{imageData},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="writeOffUserid != null">write_off_userid = #{writeOffUserid},</if>
+            <if test="writeOffUsername != null">write_off_username = #{writeOffUsername},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+            <if test="writeOffTime != null">write_off_time = #{writeOffTime},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="paymentEvidence != null">payment_evidence = #{paymentEvidence},</if>
+            <if test="appliedAmount != null">applied_amount = #{appliedAmount},</if>
+            <if test="applicant != null">applicant = #{applicant},</if>
+            <if test="applicationTime != null">application_time = #{applicationTime},</if>
+            <if test="payer != null">payer = #{payer},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateCtBuPayinfoByInstanceId" parameterType="CtBuPayinfo">
+        update ct_bu_payinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="paytype != null">paytype = #{paytype},</if>
+            <if test="paymoney != null">paymoney = #{paymoney},</if>
+            <if test="ntaxmoney != null">ntaxmoney = #{ntaxmoney},</if>
+            <if test="taxmoney != null">taxmoney = #{taxmoney},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="imageData != null">image_data = #{imageData},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="writeOffUserid != null">write_off_userid = #{writeOffUserid},</if>
+            <if test="writeOffUsername != null">write_off_username = #{writeOffUsername},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+            <if test="writeOffTime != null">write_off_time = #{writeOffTime},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="paymentEvidence != null">payment_evidence = #{paymentEvidence},</if>
+            <if test="appliedAmount != null">applied_amount = #{appliedAmount},</if>
+            <if test="applicant != null">applicant = #{applicant},</if>
+            <if test="applicationTime != null">application_time = #{applicationTime},</if>
+            <if test="payer != null">payer = #{payer},</if>
+        </trim>
+        where instance_id = #{instanceId}
+    </update>
+
+    <delete id="deleteCtBuPayinfoById" parameterType="String">
+        delete from ct_bu_payinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuPayinfoByIds" parameterType="String">
+        delete from ct_bu_payinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateCtBuPayinfoById" parameterType="String">
+        update ct_bu_payinfo set del_flag= '2' where id = #{id}
+    </update>
+
+    <select id="selectCtBuPayinfoByInstanceId" parameterType="String" resultMap="CtBuPayinfoResult">
+        <include refid="selectCtBuPayinfoVo"/>
+        where instance_id = #{instanceId}
+    </select>
+
+    <!--已付款金额-->
+    <select id="countAppliedAmountByContractIdPayment" resultType="String">
+        SELECT IFNULL(sum(applied_amount),0)
+        FROM ct_bu_payinfo
+        <where>
+            (status = 2 OR status = 4) AND contract_id = #{contractId} AND del_flag = '1'
+        </where>
+    </select>
+
+    <!--核销金额-->
+    <select id="countAppliedAmountByContractIdWriteOff" resultType="double">
+        SELECT IFNULL(sum(applied_amount),0)
+        FROM ct_bu_payinfo
+        <where>
+            contract_id = #{contractId} AND del_flag = '1' AND status = 3
+            <if test="startDate != null "> AND write_off_time >= #{startDate}</if>
+            <if test="endDate != null "> AND #{endDate} >= write_off_time </if>
+        </where>
+    </select>
+
+    <select id="selectCtBuPayinfoList1" parameterType="CtBuPayinfo" resultMap="CtBuPayinfoResult">
+        (SELECT cbc.id AS cbcId, cbc.create_by AS cbcCreateBy,cbc.create_time AS cbcCreateTime, cbc.project_category,
+        cbc.project_category_name, cbc.project_id, cbc.project_no AS projectNo, cbc.project_name AS projectName, cbc.contract_no AS cbcContractNo, cbc.contract_name AS cbcContractName,
+        cbc.del_flag AS cbcDelFlag,cbc.manage_user,cbc.manage_deptment,cbc.opposite_name AS cbcOppositeName,
+        cbp.id, cbp.pro_no, cbp.pro_name, cbp.contract_id, cbp.contract_no, cbp.contract_name, cbp.status, cbp.statusps, cbp.del_flag, cbp.create_by, cbp.create_time, cbp.instance_id, cbp.opposite_name,cbp.paymoney,cbp.paytype,cbp.application_time,cbp.payer,cbp.applicant
+        FROM ct_bu_contract cbc
+        LEFT JOIN ct_bu_payinfo cbp ON cbc.id = cbp.contract_id
+        LEFT JOIN sys_user u ON u.user_id = cbc.create_by
+        LEFT JOIN sys_dept d ON d.dept_id = cbc.manage_deptment
+        WHERE cbc.del_flag = '1' AND  cbc.status = 2 AND (cbp.del_flag IS NULL OR cbp.del_flag = 1) AND cbc.contract_category = 2
+        <if test="proNo != null  and proNo != ''">and cbc.project_no = #{proNo}</if>
+        <if test="proName != null  and proName != ''">and cbc.project_name like concat('%', #{projectName},
+            '%')
+        </if>
+        <if test="contractNo != null  and contractNo != ''">and cbc.contract_no = #{contractNo}</if>
+        <if test="contractName != null  and contractName != ''">and cbc.contract_name like concat('%', #{contractName},
+            '%')
+        </if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(cbp.application_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            and date_format(cbp.application_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="status != null  and status != ''">and cbp.status = #{status}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope})
+        UNION
+        (SELECT cbc.id AS cbcId, cbc.create_by AS cbcCreateBy,cbc.create_time AS cbcCreateTime, cbc.project_category,
+            cbc.project_category_name, cbc.project_id, cbc.project_no AS projectNo, cbc.project_name AS projectName, cbc.contract_no AS cbcContractNo, cbc.contract_name AS cbcContractName,
+            cbc.del_flag AS cbcDelFlag,cbc.manage_user,cbc.manage_deptment,cbc.opposite_name AS cbcOppositeName,
+            cbp.id, cbp.pro_no, cbp.pro_name, cbp.contract_id, cbp.contract_no, cbp.contract_name, cbp.status, cbp.statusps, cbp.del_flag, cbp.create_by, cbp.create_time, cbp.instance_id, cbp.opposite_name,cbp.paymoney,cbp.paytype,cbp.application_time,cbp.payer,cbp.applicant
+        FROM ct_bu_payinfo cbp
+        LEFT JOIN ct_bu_contract cbc ON cbc.id = cbp.contract_id
+        WHERE cbc.del_flag = '1' AND cbp.del_flag = 1 AND cbc.status = 2 AND (cbc.contract_category = 2 OR cbc.contract_category IS NULL)
+        <if test="proNo != null  and proNo != ''">and cbp.pro_no = #{proNo}</if>
+        <if test="proName != null  and proName != ''">and cbp.pro_name like concat('%', #{proName},
+            '%')
+        </if>
+        <if test="contractNo != null  and contractNo != ''">and cbp.contract_no = #{contractNo}</if>
+
+        <if test="contractName != null  and contractName != ''">and cbp.contract_name like concat('%', #{contractName},
+            '%')
+        </if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(cbp.application_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            and date_format(cbp.application_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="status != null  and status != ''">and cbp.status = #{status}</if>)
+        ORDER BY cbcContractNo DESC
+    </select>
+
+
+    
+</mapper>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.projectApproval.ApprovalNg.mapper.CtBuApprovalNgMapper">
+
+	<resultMap type="CtBuApprovalNg" id="CtBuApprovalNgResult">
+		<result property="id" column="id" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="reqNo" column="req_no" />
+		<result property="proName" column="pro_name" />
+		<result property="proType" column="pro_type" />
+		<result property="proTypeName" column="pro_type_name" />
+		<result property="belongCompanyid" column="belong_companyid" />
+		<result property="belongCompanyName"
+			column="belong_company_name" />
+		<result property="belongDeptid" column="belong_deptid" />
+		<result property="belongDeptName" column="belong_dept_name" />
+		<result property="contractAmountTotal"
+			column="contract_amount_total" />
+		<result property="contractAmountTax"
+			column="contract_amount_tax" />
+		<result property="taxrate" column="taxrate" />
+		<result property="taxamount" column="taxamount" />
+		<result property="status" column="status" />
+		<result property="statusPs" column="status_ps" />
+		<result property="remarks" column="remarks" />
+		<result property="delFlag" column="del_flag" />
+		<result property="instanceId" column="instance_id" />
+
+		<result property="involvingBranchesId"    column="involving_branches_id"    />
+		<result property="involvingBranchesName"    column="involving_branches_name"    />
+		<result property="expectAmount"    column="expect_amount"    />
+		<result property="isAdvanceNeed"    column="is_advance_need"    />
+		<result property="isPlanConfirm"    column="is_plan_confirm"    />
+		<result property="actualAmount"    column="actual_amount"    />
+		<result property="constructionPlan"    column="construction_plan"    />
+		<result property="projectDescription"    column="project_description"    />
+		<result property="benefitDescription"    column="benefit_description"    />
+		<result property="ghbState"    column="ghb_state"    />
+		<result property="deptId"    column="dept_id"    />
+
+	</resultMap>
+
+	<sql id="selectCtBuApprovalNgVo">
+		select ghb_state,involving_branches_id,id, (select nick_name from sys_user u where u.user_id=ct_bu_approval_ng.create_by)create_by, ct_bu_approval_ng.create_time, ct_bu_approval_ng.update_by, ct_bu_approval_ng.update_time, req_no, pro_name,
+		pro_type, pro_type_name, belong_companyid, belong_company_name,
+		belong_deptid, belong_dept_name, contract_amount_total,
+		contract_amount_tax, taxrate, taxamount, ct_bu_approval_ng.status, status_ps, remarks,
+		ct_bu_approval_ng.del_flag,instance_id,involving_branches_name,expect_amount,is_advance_need,is_plan_confirm
+		,actual_amount,construction_plan,project_description,benefit_description
+		 from ct_bu_approval_ng
+		left join sys_dept U on if(ct_bu_approval_ng.belong_deptid is null,ct_bu_approval_ng.belong_companyid,ct_bu_approval_ng.belong_deptid) = U.dept_id
+ 		left join sys_user D on ct_bu_approval_ng.create_by = D.user_id
+	</sql>
+
+	<select id="selectCtBuApprovalNgList"
+		parameterType="CtBuApprovalNg" resultMap="CtBuApprovalNgResult">
+		<include refid="selectCtBuApprovalNgVo" />
+		<where>
+			and ct_bu_approval_ng.del_flag = '1'
+			<if test="reqNo != null  and reqNo != ''"> and req_no = #{reqNo}</if>
+			<if test="proName != null  and proName != ''"> and pro_name like concat('%', #{proName}, '%')</if>
+			<if test="proType != null  and proType != ''"> and pro_type = #{proType}</if>
+			<if test="proTypeName != null  and proTypeName != ''"> and pro_type_name like concat('%', #{proTypeName}, '%')
+			</if>
+			<if test="belongCompanyid != null  and belongCompanyid != ''"> and belong_companyid = #{belongCompanyid}</if>
+			<if test="belongCompanyName != null  and belongCompanyName != ''"> and belong_company_name like concat('%',
+				#{belongCompanyName}, '%')</if>
+			<if test="belongDeptid != null  and belongDeptid != ''"> and belong_deptid = #{belongDeptid}</if>
+			<if test="belongDeptName != null  and belongDeptName != ''"> and belong_dept_name like concat('%', #{belongDeptName},
+				'%')</if>
+			<if test="contractAmountTotal != null "> and contract_amount_total = #{contractAmountTotal}</if>
+			<if test="contractAmountTax != null "> and contract_amount_tax = #{contractAmountTax}</if>
+			<if test="taxrate != null  and taxrate != ''"> and taxrate = #{taxrate}</if>
+			<if test="taxamount != null "> and taxamount = #{taxamount}</if>
+			<if test="status != null "> and ct_bu_approval_ng.status = #{status}</if>
+			<if test="statusPs != null and statusPs !=''  and statusPs =='121'"> and (ct_bu_approval_ng.status='4' OR (ghb_state is not null AND ct_bu_approval_ng.STATUS!='0'))</if>
+			<if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+			<if test="instanceId != null  and instanceId != ''"> and instance_id = #{instanceId}</if>
+
+			<if test="isAdvanceNeed != null  and isAdvanceNeed != ''"> and is_advance_need = #{isAdvanceNeed}</if>
+			<if test="isPlanConfirm != null  and isPlanConfirm != ''"> and is_plan_confirm = #{isPlanConfirm}</if>
+			<if test="id != null  and id != ''"> and id = #{id}</if>
+
+		</where>
+
+		${params.dataScope}
+		ORDER BY create_time DESC
+	</select>
+<!-- 精确查找 -->
+	<select id="selectCtBuApprovalNgListByJq"
+			parameterType="CtBuApprovalNg" resultMap="CtBuApprovalNgResult">
+		<include refid="selectCtBuApprovalNgVo" />
+		<where>
+			ct_bu_approval_ng.del_flag = '1'
+			<if test="reqNo != null  and reqNo != ''"> and req_no = #{reqNo}</if>
+			<if test="proName != null  and proName != ''"> and pro_name = #{proName}</if>
+			<if test="proType != null  and proType != ''"> and pro_type = #{proType}</if>
+			<if test="proTypeName != null  and proTypeName != ''"> and pro_type_name like concat('%', #{proTypeName}, '%')
+			</if>
+			<if test="belongCompanyid != null  and belongCompanyid != ''"> and belong_companyid = #{belongCompanyid}</if>
+			<if test="belongCompanyName != null  and belongCompanyName != ''"> and belong_company_name like concat('%',
+				#{belongCompanyName}, '%')</if>
+			<if test="belongDeptid != null  and belongDeptid != ''"> and belong_deptid = #{belongDeptid}</if>
+			<if test="belongDeptName != null  and belongDeptName != ''"> and belong_dept_name like concat('%', #{belongDeptName},
+				'%')</if>
+			<if test="contractAmountTotal != null "> and contract_amount_total = #{contractAmountTotal}</if>
+			<if test="contractAmountTax != null "> and contract_amount_tax = #{contractAmountTax}</if>
+			<if test="taxrate != null  and taxrate != ''"> and taxrate = #{taxrate}</if>
+			<if test="taxamount != null "> and taxamount = #{taxamount}</if>
+			<if test="status != null "> and status = #{status}</if>
+			<if test="statusPs != null and statusPs !=''  and statusPs =='121'"> and (status='4' OR (ghb_state is not null AND STATUS!='0'))</if>
+			<if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+			<if test="instanceId != null  and instanceId != ''"> and instance_id = #{instanceId}</if>
+
+			<if test="isAdvanceNeed != null  and isAdvanceNeed != ''"> and is_advance_need = #{isAdvanceNeed}</if>
+			<if test="isPlanConfirm != null  and isPlanConfirm != ''"> and is_plan_confirm = #{isPlanConfirm}</if>
+			<if test="id != null  and id != ''"> and id = #{id}</if>
+
+		</where>
+		ORDER BY ct_bu_approval_ng.create_time DESC
+	</select>
+
+	<select id="selectCtBuApprovalNgById" parameterType="String"
+		resultMap="CtBuApprovalNgResult">
+		<include refid="selectCtBuApprovalNgVo" />
+		where ct_bu_approval_ng.id = #{id} and ct_bu_approval_ng.del_flag = '1'
+	</select>
+
+	<insert id="insertCtBuApprovalNg" parameterType="CtBuApprovalNg">
+		insert into ct_bu_approval_ng
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="reqNo != null">req_no,</if>
+			<if test="proName != null">pro_name,</if>
+			<if test="proType != null">pro_type,</if>
+			<if test="proTypeName != null">pro_type_name,</if>
+			<if test="belongCompanyid != null">belong_companyid,</if>
+			<if test="belongCompanyName != null">belong_company_name,</if>
+			<if test="belongDeptid != null">belong_deptid,</if>
+			<if test="belongDeptName != null">belong_dept_name,</if>
+			<if test="contractAmountTotal != null">contract_amount_total,</if>
+			<if test="contractAmountTax != null">contract_amount_tax,</if>
+			<if test="taxrate != null">taxrate,</if>
+			<if test="taxamount != null">taxamount,</if>
+			<if test="status != null">status,</if>
+			<if test="statusPs != null">status_ps,</if>
+			<if test="remarks != null">remarks,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="instanceId != null">instance_id,</if>
+
+			<if test="involvingBranchesId != null">involving_branches_id,</if>
+			<if test="involvingBranchesName != null">involving_branches_name,</if>
+			<if test="expectAmount != null">expect_Amount,</if>
+			<if test="isAdvanceNeed != null">is_advance_need,</if>
+			<if test="isPlanConfirm != null">is_plan_confirm,</if>
+			<if test="actualAmount != null">actual_Amount,</if>
+			<if test="constructionPlan != null">construction_plan,</if>
+			<if test="projectDescription != null">project_description,</if>
+			<if test="benefitDescription != null">benefit_description,</if>
+			<if test="ghbState != null">ghb_state,</if>
+			<if test="deptId != null">dept_id,</if>
+
+
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="reqNo != null">#{reqNo},</if>
+			<if test="proName != null">#{proName},</if>
+			<if test="proType != null">#{proType},</if>
+			<if test="proTypeName != null">#{proTypeName},</if>
+			<if test="belongCompanyid != null">#{belongCompanyid},</if>
+			<if test="belongCompanyName != null">#{belongCompanyName},</if>
+			<if test="belongDeptid != null">#{belongDeptid},</if>
+			<if test="belongDeptName != null">#{belongDeptName},</if>
+			<if test="contractAmountTotal != null">#{contractAmountTotal},</if>
+			<if test="contractAmountTax != null">#{contractAmountTax},</if>
+			<if test="taxrate != null">#{taxrate},</if>
+			<if test="taxamount != null">#{taxamount},</if>
+			<if test="status != null">#{status},</if>
+			<if test="statusPs != null">#{statusPs},</if>
+			<if test="remarks != null">#{remarks},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="instanceId != null">#{instanceId},</if>
+
+			<if test="involvingBranchesId != null">#{involvingBranchesId},</if>
+			<if test="involvingBranchesName != null">#{involvingBranchesName},</if>
+			<if test="expectAmount != null">#{expectAmount},</if>
+			<if test="isAdvanceNeed != null">#{isAdvanceNeed},</if>
+			<if test="isPlanConfirm != null">#{isPlanConfirm},</if>
+			<if test="actualAmount != null">#{actualAmount},</if>
+			<if test="constructionPlan != null">#{constructionPlan},</if>
+			<if test="projectDescription != null">#{projectDescription},</if>
+			<if test="benefitDescription != null">#{benefitDescription},</if>
+			<if test="ghbState != null">#{ghbState},</if>
+			<if test="deptId != null">#{deptId},</if>
+		</trim>
+	</insert>
+
+	<update id="updateCtBuApprovalNg" parameterType="CtBuApprovalNg">
+		update ct_bu_approval_ng
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+			<if test="createTime != null and createTime != ''">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="reqNo != null">req_no = #{reqNo},</if>
+			<if test="proName != null">pro_name = #{proName},</if>
+			<if test="proType != null">pro_type = #{proType},</if>
+			<if test="proTypeName != null">pro_type_name = #{proTypeName},</if>
+			<if test="belongCompanyid != null">belong_companyid = #{belongCompanyid},</if>
+			<if test="belongCompanyName != null">belong_company_name = #{belongCompanyName},</if>
+			<if test="belongDeptid != null">belong_deptid = #{belongDeptid},</if>
+			<if test="belongDeptName != null">belong_dept_name = #{belongDeptName},</if>
+			<if test="contractAmountTotal != null">contract_amount_total = #{contractAmountTotal},</if>
+			<if test="contractAmountTax != null">contract_amount_tax = #{contractAmountTax},</if>
+			<if test="taxrate != null">taxrate = #{taxrate},</if>
+			<if test="taxamount != null">taxamount = #{taxamount},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="statusPs != null">status_ps = #{statusPs},</if>
+			<if test="remarks != null">remarks = #{remarks},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+			<if test="instanceId != null">instance_id = #{instanceId},</if>
+
+			<if test="involvingBranchesId != null">involving_branches_id = #{involvingBranchesId},</if>
+			<if test="involvingBranchesName != null">involving_branches_name = #{involvingBranchesName},</if>
+			<if test="expectAmount != null">expect_amount = #{expectAmount},</if>
+			<if test="isAdvanceNeed != null">is_advance_need = #{isAdvanceNeed},</if>
+			<if test="isPlanConfirm != null">is_plan_confirm = #{isPlanConfirm},</if>
+			<if test="actualAmount != null">actual_amount = #{actualAmount},</if>
+			<if test="constructionPlan != null">construction_plan = #{constructionPlan},</if>
+			<if test="projectDescription != null">project_description = #{projectDescription},</if>
+			<if test="benefitDescription != null">benefit_description = #{benefitDescription},</if>
+			<if test="ghbState != null">ghb_State=#{ghbState},</if>
+			<if test="deptId != null">dept_Id = #{deptId},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<update id="updateCtBuApprovalNgByInstanceId" parameterType="CtBuApprovalNg">
+		update ct_bu_approval_ng
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="reqNo != null">req_no = #{reqNo},</if>
+			<if test="proName != null">pro_name = #{proName},</if>
+			<if test="proType != null">pro_type = #{proType},</if>
+			<if test="proTypeName != null">pro_type_name = #{proTypeName},</if>
+			<if test="belongCompanyid != null">belong_companyid = #{belongCompanyid},</if>
+			<if test="belongCompanyName != null">belong_company_name = #{belongCompanyName},</if>
+			<if test="belongDeptid != null">belong_deptid = #{belongDeptid},</if>
+			<if test="belongDeptName != null">belong_dept_name = #{belongDeptName},</if>
+			<if test="contractAmountTotal != null">contract_amount_total = #{contractAmountTotal},</if>
+			<if test="contractAmountTax != null">contract_amount_tax = #{contractAmountTax},</if>
+			<if test="taxrate != null">taxrate = #{taxrate},</if>
+			<if test="taxamount != null">taxamount = #{taxamount},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="statusPs != null">status_ps = #{statusPs},</if>
+			<if test="remarks != null">remarks = #{remarks},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+
+			<if test="involvingBranchesId != null">involving_branches_id = #{involvingBranchesId},</if>
+			<if test="involvingBranchesName != null">involving_branches_name = #{involvingBranchesName},</if>
+			<if test="expectAmount != null">expect_amount = #{expectAmount},</if>
+			<if test="isAdvanceNeed != null">is_advance_need = #{isAdvanceNeed},</if>
+			<if test="isPlanConfirm != null">is_plan_confirm = #{isPlanConfirm},</if>
+			<if test="actualAmount != null">actual_amount = #{actualAmount},</if>
+			<if test="constructionPlan != null">construction_plan = #{constructionPlan},</if>
+			<if test="projectDescription != null">project_description = #{projectDescription},</if>
+			<if test="benefitDescription != null">benefit_description = #{benefitDescription},</if>
+			<if test="ghbState != null">ghb_State=#{ghbState},</if>
+			<if test="deptId != null">dept_Id = #{deptId},</if>
+		</trim>
+		where instance_id = #{instanceId}
+	</update>
+
+<!-- 	<delete id="deleteCtBuApprovalNgById" parameterType="String">
+		delete from ct_bu_approval_ng where id = #{id}
+	</delete> -->
+	
+	<update id="deleteCtBuApprovalNgById" parameterType="String">
+		update ct_bu_approval_ng set del_flag = '2' where id = #{id}
+	</update>
+
+	<delete id="deleteCtBuApprovalNgByIds" parameterType="String">
+		delete from ct_bu_approval_ng where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<select id="countApprovalNgByCompanyId" parameterType="Long" resultType="int">
+		SELECT count(1) FROM ct_bu_approval_ng WHERE belong_companyid = #{companyId} AND del_flag = 1 AND status = 2
+	</select>
+
+</mapper>

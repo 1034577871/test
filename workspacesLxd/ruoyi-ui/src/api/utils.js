@@ -1,0 +1,105 @@
+import request from '@/utils/request'
+
+// 查询项目类型
+export function findProjectType(query) {
+  return request({
+    url: '/dictionary/protype/findProjectType',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询地区
+export function findBranchOffice(query) {
+  return request({
+    url: '/system/dept/findBranchOffice',
+    method: 'get',
+    params: query
+  })
+}
+
+// 根据文件所属ID获取文件列表(传入文件ID)
+export function findFileListByPid(pid) {
+  return request({
+    url: '/dictionary/fileManage/' + pid,
+    method: 'get'
+  })
+}
+
+// 根据文件所属PID与ptype获取文件列表
+export function findFileListByPidPtype(id,type) {
+
+  return request({
+    url: '/dictionary/fileManage/byPidPtype/'+id+'/'+type,
+   method: 'get' //,
+   // params: {
+   //   pid:pid,
+   //   ptype:ptype
+   // }
+  })
+}
+
+// 删除文件(逻辑删除,传入文件ID)
+export function delFileById(id) {
+  return request({
+    url: '/dictionary/fileManage/' + id,
+    method: 'delete'
+  })
+}
+
+// 根据文件ID下载文件
+export function downloadfileById(id) {
+  return request({
+    url: '/common/download/resource/' + id,
+    method: 'get'
+  })
+}
+
+// 查询合同信息 zck
+export function findContract(query) {
+  return request({
+    url: '/contract/contractInfo/list',
+   method: 'get',
+   params: query
+  })
+}
+
+// 获取当前登录人所属分公司
+export    function findLoginbyCompany() {
+  return request({
+    url: '/system/dept/findLoginbyCompany',
+    method: 'get'
+  })
+}
+
+// 获取下一个集客事前审批编号
+export   function findNextAppNo() {
+  return request({
+    url: '/projectApproval/collectProject/findNextAppNo',
+    method: 'get'
+  })
+}
+
+// 获取下一个非集客事前审批编号
+export   function findNextAppNgcNo(falg) {
+  return request({
+    url: '/projectApproval/appNgc/findNextAppNgcNo/' + falg,
+    method: 'get'
+  })
+}
+
+// 根据所选择分公司获取下属部门
+export function findDeptByBranchOffice(id) {
+  return request({
+    url: '/system/dept/findDeptByBranchOffice/' + id,
+    method: 'get'
+  })
+}
+
+// 根据所选择分公司获取下属部门
+export function findDeptByBranchOffice1(id) {
+  return request({
+    url: '/system/dept/findDeptByBranchOffice1/' + id,
+    method: 'get'
+  })
+}

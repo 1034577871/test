@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.projectApproval.AppNgConst.mapper.AppNgConstMapper">
+
+	<resultMap type="AppNgConst" id="AppNgConstResult">
+		<result property="id" column="id" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="bid" column="bid" />
+		<result property="projectName" column="project_name" />
+		<result property="description" column="description" />
+		<result property="projectUnit" column="project_unit" />
+		<result property="days" column="days" />
+		<result property="daysPrice" column="days_price" />
+		<result property="daysAmount" column="days_amount" />
+		<result property="remarks" column="remarks" />
+		<result property="delFlag" column="del_flag" />
+	</resultMap>
+
+	<sql id="selectAppNgConstVo">
+		select id, create_by, create_time, update_by, update_time, bid,
+		project_name, description, project_unit, days, days_price,
+		days_amount, remarks, del_flag from ct_bu_approvaldt_ng_construcost
+	</sql>
+
+	<select id="selectAppNgConstList" parameterType="AppNgConst"
+		resultMap="AppNgConstResult">
+		<include refid="selectAppNgConstVo" />
+		<where>
+			del_flag = '1'
+			<if test="bid != null  and bid != ''"> and bid = #{bid}</if>
+			<if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')
+			</if>
+			<if test="description != null  and description != ''"> and description = #{description}</if>
+			<if test="projectUnit != null  and projectUnit != ''"> and project_unit = #{projectUnit}</if>
+			<if test="days != null "> and days = #{days}</if>
+			<if test="daysPrice != null "> and days_price = #{daysPrice}</if>
+			<if test="daysAmount != null "> and days_amount = #{daysAmount}</if>
+			<if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+		</where>
+	</select>
+
+	<select id="selectAppNgConstById" parameterType="String"
+		resultMap="AppNgConstResult">
+		<include refid="selectAppNgConstVo" />
+		where id = #{id} and del_flag = '1'
+	</select>
+	
+	<select id="selectAppNgConstByBid" parameterType="String"
+		resultMap="AppNgConstResult">
+		<include refid="selectAppNgConstVo" />
+		where bid = #{id} and del_flag = '1'
+	</select>
+	
+	<insert id="insertAppNgConst" parameterType="AppNgConst">
+		insert into ct_bu_approvaldt_ng_construcost
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="bid != null">bid,</if>
+			<if test="projectName != null">project_name,</if>
+			<if test="description != null">description,</if>
+			<if test="projectUnit != null">project_unit,</if>
+			<if test="days != null">days,</if>
+			<if test="daysPrice != null">days_price,</if>
+			<if test="daysAmount != null">days_amount,</if>
+			<if test="remarks != null">remarks,</if>
+			<if test="delFlag != null">del_flag,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="bid != null">#{bid},</if>
+			<if test="projectName != null">#{projectName},</if>
+			<if test="description != null">#{description},</if>
+			<if test="projectUnit != null">#{projectUnit},</if>
+			<if test="days != null">#{days},</if>
+			<if test="daysPrice != null">#{daysPrice},</if>
+			<if test="daysAmount != null">#{daysAmount},</if>
+			<if test="remarks != null">#{remarks},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+		</trim>
+	</insert>
+
+	<update id="updateAppNgConst" parameterType="AppNgConst">
+		update ct_bu_approvaldt_ng_construcost
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="bid != null">bid = #{bid},</if>
+			<if test="projectName != null">project_name = #{projectName},</if>
+			<if test="description != null">description = #{description},</if>
+			<if test="projectUnit != null">project_unit = #{projectUnit},</if>
+			<if test="days != null">days = #{days},</if>
+			<if test="daysPrice != null">days_price = #{daysPrice},</if>
+			<if test="daysAmount != null">days_amount = #{daysAmount},</if>
+			<if test="remarks != null">remarks = #{remarks},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteAppNgConstById" parameterType="String">
+		delete from ct_bu_approvaldt_ng_construcost where id = #{id}
+	</delete>
+	
+	<update id="deleteAppNgConstByBid" parameterType="Integer">
+		update ct_bu_approvaldt_ng_construcost set del_flag = '2' where bid = #{id}
+	</update>
+	
+	<delete id="deleteAppNgConstByIds" parameterType="String">
+		delete from ct_bu_approvaldt_ng_construcost where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

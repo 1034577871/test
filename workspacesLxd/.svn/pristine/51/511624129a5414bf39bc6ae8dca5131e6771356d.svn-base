@@ -1,0 +1,219 @@
+<template>
+  <div>
+      <el-form ref="elForm" :model="formData"  size="medium" label-width="100px">
+       <table class="curr-table " >
+        	<tbody>
+        		<tr>
+              <th width="16%">预计付款时间</th>
+              <th width="18%">付款条件说明</th>
+              <th width="10%">付款比例(%)</th>
+              <th width="10%">应付金额</th>
+              <!-- <th width="6%">实付金额</th> -->
+              <!-- <th width="15%">实际付款时间</th> -->
+              <th width="10%">发票号</th>
+              <th width="10%">发票含税金额</th>
+              <th width="10%">发票代码</th>
+              <th width="16%">发票时间</th>
+              <th>操作</th>
+             </tr>
+             <tr>
+              <td>
+                <div v-for="item in formData.estimateTime" class="mrg">
+                  <el-date-picker v-model="item.value" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                    :style="{width: '100%'}" placeholder="请选择日期" clearable>
+                  </el-date-picker>
+               </div>
+              </td>
+              <td>
+                <div v-for="item in formData.condition" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+              <td>
+                <div v-for="item in formData.paymentRatio" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+              <td>
+                <div v-for="item in formData.estimateMoney" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+              <!-- <td>
+                <div v-for="item in formData.actualMoney" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+
+               <td>
+                 <div v-for="item in formData.actualTime" class="mrg">
+                   <el-date-picker v-model="item.value" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                     :style="{width: '100%'}" placeholder="请选择日期" clearable>
+                   </el-date-picker>
+                 </div>
+               </td>-->
+              <td>
+                <div v-for="item in formData.invoiceNo" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+              <td>
+                <div v-for="item in formData.invoiceMoney" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+              <td>
+                <div v-for="item in formData.invoiceCode" class="mrg">
+                  <el-input v-model="item.value" ></el-input>
+                </div>
+              </td>
+              <td>
+                <div v-for="item in formData.invoiceTime" class="mrg">
+                  <el-date-picker v-model="item.value" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                    :style="{width: '100%'}" placeholder="请选择日期" clearable>
+                  </el-date-picker>
+                </div>
+              </td>
+               <td>
+                  <el-button size="mini" type="success" @click="addRow()" style="margin: 10px;">新增</el-button>
+                  <div  v-for="item in formData.btnlist" style="margin: 15px 10px;">
+                    <el-button size="mini" type="warning" @click.prevent="delRow(item)">删除</el-button>
+                  </div>
+               </td>
+              </tr>
+             </tbody>
+           </table>
+      </el-form>
+  </div>
+</template>
+<script>
+export default {
+  components: {},
+  props: [],
+  data() {
+    return {
+      formData: {
+        estimateTime: [{
+          value: ''
+        }],
+        condition: [{
+          value: ''
+        }],
+        paymentRatio: [{
+          value: ''
+        }],
+        estimateMoney: [{
+          value: ''
+        }],
+        // actualMoney: [{
+        //   value: ''
+        // }],
+        // actualTime: [{
+        //   value: ''
+        // }],
+        invoiceNo: [{
+          value: ''
+        }],
+        invoiceMoney: [{
+          value: ''
+        }],
+        invoiceCode: [{
+          value: ''
+        }],
+        invoiceTime: [{
+          value: ''
+        }],
+        btnlist: [],
+      }
+    }
+  },
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {},
+  methods: {
+    addRow() {
+      this.formData.estimateTime.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.condition.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.paymentRatio.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.estimateMoney.push({
+        value: '',
+        key: Date.now()
+      });
+      // this.formData.actualTime.push({
+      //   value: '',
+      //   key: Date.now()
+      // });
+      // this.formData.actualMoney.push({
+      //   value: '',
+      //   key: Date.now()
+      // });
+      this.formData.invoiceNo.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.invoiceMoney.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.invoiceCode.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.invoiceTime.push({
+        value: '',
+        key: Date.now()
+      });
+      this.formData.btnlist.push({
+        value: '',
+        key: Date.now()
+      });
+    },
+    delRow(item){
+      var index = this.formData.btnlist.indexOf(item)
+      //alert(index);
+      if (index !== -1) {
+        this.formData.btnlist.splice(index, 1);
+        index +=1;
+        this.formData.estimateTime.splice(index, 1);
+        this.formData.condition.splice(index, 1);
+        this.formData.paymentRatio.splice(index, 1);
+        this.formData.estimateMoney.splice(index, 1);
+        // this.formData.actualMoney.splice(index, 1);
+        // this.formData.actualTime.splice(index, 1);
+        this.formData.invoiceNo.splice(index, 1);
+        this.formData.invoiceMoney.splice(index, 1);
+        this.formData.invoiceCode.splice(index, 1);
+        this.formData.invoiceTime.splice(index, 1);
+      }
+    }
+  }
+}
+
+</script>
+<style>
+  .curr-table{
+    text-align: center;width: 100%;vertical-align:middle;
+    border-spacing:0px; border-style:none; border-collapse:collapse;
+  }
+  .curr-table td,th{
+      padding: 5px 10px;
+  }
+  .curr-table th{
+      font-weight: bold;
+      background-color: #eff3fa;
+      height: 40px;
+  }
+  .mrg{
+    margin: 10px 0;
+  }
+</style>

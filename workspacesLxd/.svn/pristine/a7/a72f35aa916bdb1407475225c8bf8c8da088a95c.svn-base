@@ -1,0 +1,363 @@
+package com.ruoyi.paymentManagement.payinfo.domain;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import com.ruoyi.paymentManagement.payinfoDt.domain.CtBuPayinfoDt;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 付款申请单主对象 ct_bu_payinfo
+ * 
+ * @author ruoyi
+ * @date 2021-01-12
+ */
+public class CtBuPayinfo extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+    /** 唯一主键 */
+    private String id;
+
+    /** 项目编号 */
+    @Excel(name = "项目编号")
+    private String proNo;
+
+    /** 项目名称 */
+    @Excel(name = "项目名称")
+    private String proName;
+
+    /** 合同ID */
+    @Excel(name = "合同ID")
+    private String contractId;
+
+    /** 合同编号 */
+    @Excel(name = "合同编号")
+    private String contractNo;
+
+    /** 合同名称 */
+    @Excel(name = "合同名称")
+    private String contractName;
+
+    /** 付款类型 */
+    @Excel(name = "付款类型")
+    private Integer paytype;
+
+    /** 付款金额 */
+    @Excel(name = "付款金额")
+    private BigDecimal paymoney;
+
+    /** 不含税金额 */
+    @Excel(name = "不含税金额")
+    private BigDecimal ntaxmoney;
+
+    /** 税额 */
+    @Excel(name = "税额")
+    private BigDecimal taxmoney;
+
+    /** 对方单位名称 */
+    @Excel(name = "对方单位名称")
+    private String oppositeName;
+
+    /** 对方单位银行账户 */
+    @Excel(name = "对方单位银行账户")
+    private String oppositeBank;
+
+    /** 对方单位银行账号 */
+    @Excel(name = "对方单位银行账号")
+    private String oppositeBankId;
+
+    /** 对方单位联系人 */
+    @Excel(name = "对方单位联系人")
+    private String oppositeContacts;
+
+    /** 对方单位联系电话 */
+    @Excel(name = "对方单位联系电话")
+    private String oppositePhone;
+
+    /** 对方单位联系地址 */
+    @Excel(name = "对方单位联系地址")
+    private String oppositeAddress;
+
+    /** 影像资料 */
+    @Excel(name = "影像资料")
+    private String imageData;
+
+    /** 状态 */
+    @Excel(name = "状态")
+    private Integer status;
+
+    /** 状态说明 */
+    @Excel(name = "状态说明")
+    private String statusps;
+
+    /** 删除标志 */
+    private String delFlag;
+
+    /** 核销人编号 */
+    @Excel(name = "核销人编号")
+    private String writeOffUserid;
+
+    /** 核销人姓名 */
+    @Excel(name = "核销人姓名")
+    private String writeOffUsername;
+
+    /** 实例ID */
+    @Excel(name = "实例ID")
+    private String instanceId;
+
+    private List<CtBuPayinfoDt> ctBuPayinfoDtList;
+
+    public void setId(String id) 
+    {
+        this.id = id;
+    }
+
+    public String getId() 
+    {
+        return id;
+    }
+    public void setProNo(String proNo) 
+    {
+        this.proNo = proNo;
+    }
+
+    public String getProNo() 
+    {
+        return proNo;
+    }
+    public void setProName(String proName) 
+    {
+        this.proName = proName;
+    }
+
+    public String getProName() 
+    {
+        return proName;
+    }
+    public void setContractId(String contractId) 
+    {
+        this.contractId = contractId;
+    }
+
+    public String getContractId() 
+    {
+        return contractId;
+    }
+    public void setContractNo(String contractNo) 
+    {
+        this.contractNo = contractNo;
+    }
+
+    public String getContractNo() 
+    {
+        return contractNo;
+    }
+    public void setContractName(String contractName) 
+    {
+        this.contractName = contractName;
+    }
+
+    public String getContractName() 
+    {
+        return contractName;
+    }
+    public void setPaytype(Integer paytype) 
+    {
+        this.paytype = paytype;
+    }
+
+    public Integer getPaytype() 
+    {
+        return paytype;
+    }
+    public void setPaymoney(BigDecimal paymoney) 
+    {
+        this.paymoney = paymoney;
+    }
+
+    public BigDecimal getPaymoney() 
+    {
+        return paymoney;
+    }
+    public void setNtaxmoney(BigDecimal ntaxmoney) 
+    {
+        this.ntaxmoney = ntaxmoney;
+    }
+
+    public BigDecimal getNtaxmoney() 
+    {
+        return ntaxmoney;
+    }
+    public void setTaxmoney(BigDecimal taxmoney) 
+    {
+        this.taxmoney = taxmoney;
+    }
+
+    public BigDecimal getTaxmoney() 
+    {
+        return taxmoney;
+    }
+    public void setOppositeName(String oppositeName) 
+    {
+        this.oppositeName = oppositeName;
+    }
+
+    public String getOppositeName() 
+    {
+        return oppositeName;
+    }
+    public void setOppositeBank(String oppositeBank) 
+    {
+        this.oppositeBank = oppositeBank;
+    }
+
+    public String getOppositeBank() 
+    {
+        return oppositeBank;
+    }
+    public void setOppositeBankId(String oppositeBankId) 
+    {
+        this.oppositeBankId = oppositeBankId;
+    }
+
+    public String getOppositeBankId() 
+    {
+        return oppositeBankId;
+    }
+    public void setOppositeContacts(String oppositeContacts) 
+    {
+        this.oppositeContacts = oppositeContacts;
+    }
+
+    public String getOppositeContacts() 
+    {
+        return oppositeContacts;
+    }
+    public void setOppositePhone(String oppositePhone) 
+    {
+        this.oppositePhone = oppositePhone;
+    }
+
+    public String getOppositePhone() 
+    {
+        return oppositePhone;
+    }
+    public void setOppositeAddress(String oppositeAddress) 
+    {
+        this.oppositeAddress = oppositeAddress;
+    }
+
+    public String getOppositeAddress() 
+    {
+        return oppositeAddress;
+    }
+    public void setImageData(String imageData) 
+    {
+        this.imageData = imageData;
+    }
+
+    public String getImageData() 
+    {
+        return imageData;
+    }
+    public void setStatus(Integer status) 
+    {
+        this.status = status;
+    }
+
+    public Integer getStatus() 
+    {
+        return status;
+    }
+    public void setStatusps(String statusps) 
+    {
+        this.statusps = statusps;
+    }
+
+    public String getStatusps() 
+    {
+        return statusps;
+    }
+    public void setDelFlag(String delFlag) 
+    {
+        this.delFlag = delFlag;
+    }
+
+    public String getDelFlag() 
+    {
+        return delFlag;
+    }
+    public void setWriteOffUserid(String writeOffUserid) 
+    {
+        this.writeOffUserid = writeOffUserid;
+    }
+
+    public String getWriteOffUserid() 
+    {
+        return writeOffUserid;
+    }
+    public void setWriteOffUsername(String writeOffUsername) 
+    {
+        this.writeOffUsername = writeOffUsername;
+    }
+
+    public String getWriteOffUsername() 
+    {
+        return writeOffUsername;
+    }
+    public void setInstanceId(String instanceId) 
+    {
+        this.instanceId = instanceId;
+    }
+
+    public String getInstanceId() 
+    {
+        return instanceId;
+    }
+
+    public List<CtBuPayinfoDt> getCtBuPayinfoDtList() {
+        return ctBuPayinfoDtList;
+    }
+
+    public void setCtBuPayinfoDtList(List<CtBuPayinfoDt> ctBuPayinfoDtList) {
+        this.ctBuPayinfoDtList = ctBuPayinfoDtList;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
+            .append("proNo", getProNo())
+            .append("proName", getProName())
+            .append("contractId", getContractId())
+            .append("contractNo", getContractNo())
+            .append("contractName", getContractName())
+            .append("paytype", getPaytype())
+            .append("paymoney", getPaymoney())
+            .append("ntaxmoney", getNtaxmoney())
+            .append("taxmoney", getTaxmoney())
+            .append("oppositeName", getOppositeName())
+            .append("oppositeBank", getOppositeBank())
+            .append("oppositeBankId", getOppositeBankId())
+            .append("oppositeContacts", getOppositeContacts())
+            .append("oppositePhone", getOppositePhone())
+            .append("oppositeAddress", getOppositeAddress())
+            .append("imageData", getImageData())
+            .append("status", getStatus())
+            .append("statusps", getStatusps())
+            .append("delFlag", getDelFlag())
+            .append("remark", getRemark())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .append("writeOffUserid", getWriteOffUserid())
+            .append("writeOffUsername", getWriteOffUsername())
+            .append("instanceId", getInstanceId())
+            .toString();
+    }
+}

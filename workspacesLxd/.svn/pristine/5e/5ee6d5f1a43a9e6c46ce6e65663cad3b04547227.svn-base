@@ -1,0 +1,553 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="项目编号" prop="proNo">
+        <el-input
+          v-model="queryParams.proNo"
+          placeholder="请输入项目编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="项目名称" prop="proName">
+        <el-input
+          v-model="queryParams.proName"
+          placeholder="请输入项目名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="合同ID" prop="contractId">
+        <el-input
+          v-model="queryParams.contractId"
+          placeholder="请输入合同ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="合同编号" prop="contractNo">
+        <el-input
+          v-model="queryParams.contractNo"
+          placeholder="请输入合同编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="合同名称" prop="contractName">
+        <el-input
+          v-model="queryParams.contractName"
+          placeholder="请输入合同名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="付款类型" prop="paytype">
+        <el-select v-model="queryParams.paytype" placeholder="请选择付款类型" clearable size="small">
+          <el-option label="请选择字典生成" value="" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="付款金额" prop="paymoney">
+        <el-input
+          v-model="queryParams.paymoney"
+          placeholder="请输入付款金额"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="不含税金额" prop="ntaxmoney">
+        <el-input
+          v-model="queryParams.ntaxmoney"
+          placeholder="请输入不含税金额"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="税额" prop="taxmoney">
+        <el-input
+          v-model="queryParams.taxmoney"
+          placeholder="请输入税额"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位名称" prop="oppositeName">
+        <el-input
+          v-model="queryParams.oppositeName"
+          placeholder="请输入对方单位名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位银行账户" prop="oppositeBank">
+        <el-input
+          v-model="queryParams.oppositeBank"
+          placeholder="请输入对方单位银行账户"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位银行账号" prop="oppositeBankId">
+        <el-input
+          v-model="queryParams.oppositeBankId"
+          placeholder="请输入对方单位银行账号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位联系人" prop="oppositeContacts">
+        <el-input
+          v-model="queryParams.oppositeContacts"
+          placeholder="请输入对方单位联系人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位联系电话" prop="oppositePhone">
+        <el-input
+          v-model="queryParams.oppositePhone"
+          placeholder="请输入对方单位联系电话"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="对方单位联系地址" prop="oppositeAddress">
+        <el-input
+          v-model="queryParams.oppositeAddress"
+          placeholder="请输入对方单位联系地址"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+          <el-option label="请选择字典生成" value="" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态说明" prop="statusps">
+        <el-input
+          v-model="queryParams.statusps"
+          placeholder="请输入状态说明"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="核销人编号" prop="writeOffUserid">
+        <el-input
+          v-model="queryParams.writeOffUserid"
+          placeholder="请输入核销人编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="核销人姓名" prop="writeOffUsername">
+        <el-input
+          v-model="queryParams.writeOffUsername"
+          placeholder="请输入核销人姓名"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="实例ID" prop="instanceId">
+        <el-input
+          v-model="queryParams.instanceId"
+          placeholder="请输入实例ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['payinfo:payinfo:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['payinfo:payinfo:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['payinfo:payinfo:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['payinfo:payinfo:export']"
+        >导出</el-button>
+      </el-col>
+	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" :data="payinfoList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="唯一主键" align="center" prop="id" />
+      <el-table-column label="项目编号" align="center" prop="proNo" />
+      <el-table-column label="项目名称" align="center" prop="proName" />
+      <el-table-column label="合同ID" align="center" prop="contractId" />
+      <el-table-column label="合同编号" align="center" prop="contractNo" />
+      <el-table-column label="合同名称" align="center" prop="contractName" />
+      <el-table-column label="付款类型" align="center" prop="paytype" />
+      <el-table-column label="付款金额" align="center" prop="paymoney" />
+      <el-table-column label="不含税金额" align="center" prop="ntaxmoney" />
+      <el-table-column label="税额" align="center" prop="taxmoney" />
+      <el-table-column label="对方单位名称" align="center" prop="oppositeName" />
+      <el-table-column label="对方单位银行账户" align="center" prop="oppositeBank" />
+      <el-table-column label="对方单位银行账号" align="center" prop="oppositeBankId" />
+      <el-table-column label="对方单位联系人" align="center" prop="oppositeContacts" />
+      <el-table-column label="对方单位联系电话" align="center" prop="oppositePhone" />
+      <el-table-column label="对方单位联系地址" align="center" prop="oppositeAddress" />
+      <el-table-column label="影像资料" align="center" prop="imageData" />
+      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态说明" align="center" prop="statusps" />
+      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="核销人编号" align="center" prop="writeOffUserid" />
+      <el-table-column label="核销人姓名" align="center" prop="writeOffUsername" />
+      <el-table-column label="实例ID" align="center" prop="instanceId" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['payinfo:payinfo:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['payinfo:payinfo:remove']"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改付款申请单主对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="项目编号" prop="proNo">
+          <el-input v-model="form.proNo" placeholder="请输入项目编号" />
+        </el-form-item>
+        <el-form-item label="项目名称" prop="proName">
+          <el-input v-model="form.proName" placeholder="请输入项目名称" />
+        </el-form-item>
+        <el-form-item label="合同ID" prop="contractId">
+          <el-input v-model="form.contractId" placeholder="请输入合同ID" />
+        </el-form-item>
+        <el-form-item label="合同编号" prop="contractNo">
+          <el-input v-model="form.contractNo" placeholder="请输入合同编号" />
+        </el-form-item>
+        <el-form-item label="合同名称" prop="contractName">
+          <el-input v-model="form.contractName" placeholder="请输入合同名称" />
+        </el-form-item>
+        <el-form-item label="付款类型" prop="paytype">
+          <el-select v-model="form.paytype" placeholder="请选择付款类型">
+            <el-option label="请选择字典生成" value="" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="付款金额" prop="paymoney">
+          <el-input v-model="form.paymoney" placeholder="请输入付款金额" />
+        </el-form-item>
+        <el-form-item label="不含税金额" prop="ntaxmoney">
+          <el-input v-model="form.ntaxmoney" placeholder="请输入不含税金额" />
+        </el-form-item>
+        <el-form-item label="税额" prop="taxmoney">
+          <el-input v-model="form.taxmoney" placeholder="请输入税额" />
+        </el-form-item>
+        <el-form-item label="对方单位名称" prop="oppositeName">
+          <el-input v-model="form.oppositeName" placeholder="请输入对方单位名称" />
+        </el-form-item>
+        <el-form-item label="对方单位银行账户" prop="oppositeBank">
+          <el-input v-model="form.oppositeBank" placeholder="请输入对方单位银行账户" />
+        </el-form-item>
+        <el-form-item label="对方单位银行账号" prop="oppositeBankId">
+          <el-input v-model="form.oppositeBankId" placeholder="请输入对方单位银行账号" />
+        </el-form-item>
+        <el-form-item label="对方单位联系人" prop="oppositeContacts">
+          <el-input v-model="form.oppositeContacts" placeholder="请输入对方单位联系人" />
+        </el-form-item>
+        <el-form-item label="对方单位联系电话" prop="oppositePhone">
+          <el-input v-model="form.oppositePhone" placeholder="请输入对方单位联系电话" />
+        </el-form-item>
+        <el-form-item label="对方单位联系地址" prop="oppositeAddress">
+          <el-input v-model="form.oppositeAddress" placeholder="请输入对方单位联系地址" />
+        </el-form-item>
+        <el-form-item label="影像资料" prop="imageData">
+          <el-input v-model="form.imageData" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="form.status">
+            <el-radio label="1">请选择字典生成</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="状态说明" prop="statusps">
+          <el-input v-model="form.statusps" placeholder="请输入状态说明" />
+        </el-form-item>
+        <el-form-item label="删除标志" prop="delFlag">
+          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="核销人编号" prop="writeOffUserid">
+          <el-input v-model="form.writeOffUserid" placeholder="请输入核销人编号" />
+        </el-form-item>
+        <el-form-item label="核销人姓名" prop="writeOffUsername">
+          <el-input v-model="form.writeOffUsername" placeholder="请输入核销人姓名" />
+        </el-form-item>
+        <el-form-item label="实例ID" prop="instanceId">
+          <el-input v-model="form.instanceId" placeholder="请输入实例ID" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { listPayinfo, getPayinfo, delPayinfo, addPayinfo, updatePayinfo, exportPayinfo } from "@/api/paymentManagement/payinfo";
+
+export default {
+  name: "Payinfo",
+  data() {
+    return {
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 付款申请单主表格数据
+      payinfoList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        proNo: null,
+        proName: null,
+        contractId: null,
+        contractNo: null,
+        contractName: null,
+        paytype: null,
+        paymoney: null,
+        ntaxmoney: null,
+        taxmoney: null,
+        oppositeName: null,
+        oppositeBank: null,
+        oppositeBankId: null,
+        oppositeContacts: null,
+        oppositePhone: null,
+        oppositeAddress: null,
+        imageData: null,
+        status: null,
+        statusps: null,
+        writeOffUserid: null,
+        writeOffUsername: null,
+        instanceId: null
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+      }
+    };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    /** 查询付款申请单主列表 */
+    getList() {
+      this.loading = true;
+      listPayinfo(this.queryParams).then(response => {
+        this.payinfoList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        proNo: null,
+        proName: null,
+        contractId: null,
+        contractNo: null,
+        contractName: null,
+        paytype: null,
+        paymoney: null,
+        ntaxmoney: null,
+        taxmoney: null,
+        oppositeName: null,
+        oppositeBank: null,
+        oppositeBankId: null,
+        oppositeContacts: null,
+        oppositePhone: null,
+        oppositeAddress: null,
+        imageData: null,
+        status: 0,
+        statusps: null,
+        delFlag: null,
+        remark: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        writeOffUserid: null,
+        writeOffUsername: null,
+        instanceId: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length!==1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加付款申请单主";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getPayinfo(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改付款申请单主";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updatePayinfo(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addPayinfo(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除付款申请单主编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delPayinfo(ids);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        })
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm('是否确认导出所有付款申请单主数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return exportPayinfo(queryParams);
+        }).then(response => {
+          this.download(response.msg);
+        })
+    }
+  }
+};
+</script>

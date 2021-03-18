@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.dictionary.area.mapper.SysAreaMapper">
+
+	<resultMap type="SysArea" id="SysAreaResult">
+		<result property="id" column="id" />
+		<result property="parentId" column="parent_id" />
+		<result property="cname" column="cname" />
+		<result property="ctype" column="ctype" />
+	</resultMap>
+
+	<sql id="selectSysAreaVo">
+		select id, parent_id, cname, ctype from sys_area
+	</sql>
+
+	<select id="selectSysAreaList" parameterType="SysArea"
+		resultMap="SysAreaResult">
+		<include refid="selectSysAreaVo" />
+		<where>
+			<if test="parentId != null "> and parent_id = #{parentId}</if>
+			<if test="cname != null  and cname != ''"> and cname like concat('%', #{cname}, '%')</if>
+			<if test="ctype != null "> and ctype = #{ctype}</if>
+		</where>
+	</select>
+
+	<select id="selectSysAreaById" parameterType="Integer"
+		resultMap="SysAreaResult">
+		<include refid="selectSysAreaVo" />
+		where id = #{id}
+	</select>
+
+	<insert id="insertSysArea" parameterType="SysArea"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into sys_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">parent_id,</if>
+			<if test="cname != null and cname != ''">cname,</if>
+			<if test="ctype != null">ctype,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parentId != null">#{parentId},</if>
+			<if test="cname != null and cname != ''">#{cname},</if>
+			<if test="ctype != null">#{ctype},</if>
+		</trim>
+	</insert>
+
+	<update id="updateSysArea" parameterType="SysArea">
+		update sys_area
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="parentId != null">parent_id = #{parentId},</if>
+			<if test="cname != null and cname != ''">cname = #{cname},</if>
+			<if test="ctype != null">ctype = #{ctype},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteSysAreaById" parameterType="Integer">
+		delete from sys_area where id = #{id}
+	</delete>
+
+	<delete id="deleteSysAreaByIds" parameterType="String">
+		delete from sys_area where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

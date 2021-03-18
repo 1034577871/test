@@ -1,0 +1,113 @@
+package com.ruoyi.collection.service.impl;
+
+import java.util.List;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.collection.mapper.CtBuReceiptInfoMapper;
+import com.ruoyi.collection.domain.CtBuReceiptInfo;
+import com.ruoyi.collection.service.ICtBuReceiptInfoService;
+
+/**
+ * 收款单录入Service业务层处理
+ * 
+ * @author ruoyi
+ * @date 2020-12-10
+ */
+@Service
+public class CtBuReceiptInfoServiceImpl implements ICtBuReceiptInfoService 
+{
+    @Autowired
+    private CtBuReceiptInfoMapper ctBuReceiptInfoMapper;
+
+    /**
+     * 查询收款单录入
+     * 
+     * @param id 收款单录入ID
+     * @return 收款单录入
+     */
+    @Override
+    public CtBuReceiptInfo selectCtBuReceiptInfoById(String id)
+    {
+        return ctBuReceiptInfoMapper.selectCtBuReceiptInfoById(id);
+    }
+
+    /**
+     * 查询收款单录入列表
+     * 
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 收款单录入
+     */
+    @Override
+    public List<CtBuReceiptInfo> selectCtBuReceiptInfoList(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        return ctBuReceiptInfoMapper.selectCtBuReceiptInfoList(ctBuReceiptInfo);
+    }
+
+    /**
+     * 新增收款单录入
+     * 
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 结果
+     */
+    @Override
+    public int insertCtBuReceiptInfo(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuReceiptInfo.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuReceiptInfo.setCreateTime(DateUtils.getNowDate());
+        ctBuReceiptInfo.setDelFlag("1");
+        ctBuReceiptInfo.setId(UUID.fastUUID().toString(true));
+        ctBuReceiptInfo.setCreateTime(DateUtils.getNowDate());
+        return ctBuReceiptInfoMapper.insertCtBuReceiptInfo(ctBuReceiptInfo);
+    }
+
+    /**
+     * 修改收款单录入
+     * 
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuReceiptInfo(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuReceiptInfo.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuReceiptInfo.setUpdateTime(DateUtils.getNowDate());
+        return ctBuReceiptInfoMapper.updateCtBuReceiptInfo(ctBuReceiptInfo);
+    }
+
+    /**
+     * 批量删除收款单录入
+     * 
+     * @param ids 需要删除的收款单录入ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuReceiptInfoByIds(String[] ids)
+    {
+        return ctBuReceiptInfoMapper.deleteCtBuReceiptInfoByIds(ids);
+    }
+
+    /**
+     * 删除收款单录入信息
+     * 
+     * @param id 收款单录入ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuReceiptInfoById(String id)
+    {
+        return ctBuReceiptInfoMapper.deleteCtBuReceiptInfoById(id);
+    }
+}

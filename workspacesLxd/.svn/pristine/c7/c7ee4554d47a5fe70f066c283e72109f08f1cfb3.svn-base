@@ -1,0 +1,357 @@
+package com.ruoyi.paymentManagement.payinfo.service.impl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.base.fileManage.domain.CtBuFile;
+import com.ruoyi.base.fileManage.service.ICtBuFileService;
+import com.ruoyi.collection.utils.ActUtils;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.contract.contractInfo.domain.CtBuContract;
+import com.ruoyi.contract.contractInfo.mapper.CtBuContractMapper;
+import com.ruoyi.paymentManagement.payinfo.domain.CtBuPayinfo;
+import com.ruoyi.paymentManagement.payinfo.mapper.CtBuPayinfoMapper;
+import com.ruoyi.paymentManagement.payinfo.service.ICtBuPayinfoService;
+import com.ruoyi.paymentManagement.payinfoDt.domain.CtBuPayinfoDt;
+
+import com.ruoyi.paymentManagement.payinfoDt.mapper.CtBuPayinfoDtMapper;
+import com.ruoyi.paymentManagement.ticketRecord.domain.TicketRecord;
+import com.ruoyi.paymentManagement.ticketRecord.mapper.TicketRecordMapper;
+import com.ruoyi.system.service.ISysUserService;
+import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.engine.TaskService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+/**
+ * 付款申请单主Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2021-01-12
+ */
+@Service
+public class CtBuPayinfoServiceImpl implements ICtBuPayinfoService {
+    @Autowired
+    private CtBuPayinfoMapper ctBuPayinfoMapper;
+
+    @Autowired
+    private CtBuPayinfoDtMapper ctBuPayinfoDtMapper;
+
+    @Autowired
+    private ISysUserService iSysUserService;
+
+    @Autowired
+    private ProcessRuntime processRuntime;
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private TaskRuntime taskRuntime;
+
+    @Autowired
+    private ICtBuFileService fileService;
+
+    @Autowired
+    private CtBuContractMapper ctBuContractMapper;
+
+    @Autowired
+    private TicketRecordMapper ticketRecordMapper;
+
+    /**
+     * 查询付款申请单主
+     *
+     * @param id 付款申请单主ID
+     * @return 付款申请单主
+     */
+    @Override
+    public CtBuPayinfo selectCtBuPayinfoById(String id) {
+        CtBuPayinfo ctBuPayinfo = ctBuPayinfoMapper.selectCtBuPayinfoById(id);
+        if (ctBuPayinfo != null) {
+            List<CtBuPayinfoDt> ctBuPayinfoDts = ctBuPayinfoDtMapper.selectCtBuPayinfoDtByBid(id);
+            ArrayList<TicketRecord> ticketRecordArrayList = new ArrayList<>();
+            if (ctBuPayinfoDts.size() != 0) {
+                ctBuPayinfo.setCtBuPayinfoDtList(ctBuPayinfoDts);
+                for (CtBuPayinfoDt cbpd : ctBuPayinfoDts){
+                    TicketRecord ticketRecord = ticketRecordMapper.selectTicketRecordById(cbpd.getTicketRecordId());
+                    if (ticketRecord != null){
+                        ticketRecordArrayList.add(ticketRecord);
+                    }
+                }
+            } else {
+                ArrayList<CtBuPayinfoDt> ctBuPayinfoDtList = new ArrayList<>();
+                ctBuPayinfo.setCtBuPayinfoDtList(ctBuPayinfoDtList);
+            }
+            ctBuPayinfo.setTicketRecordList(ticketRecordArrayList);
+        }
+        return ctBuPayinfo;
+    }
+
+    /**
+     * 查询付款申请单主列表
+     *
+     * @param ctBuPayinfo 付款申请单主
+     * @return 付款申请单主
+     */
+    @Override
+    public List<CtBuPayinfo> selectCtBuPayinfoList(CtBuPayinfo ctBuPayinfo) {
+        return ctBuPayinfoMapper.selectCtBuPayinfoList(ctBuPayinfo);
+    }
+
+    /**
+     * 新增付款申请单主
+     *
+     * @param ctBuPayinfo 付款申请单主
+     * @return 结果
+     */
+    @Override
+    public int insertCtBuPayinfo(CtBuPayinfo ctBuPayinfo) {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuPayinfo.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuPayinfo.setCreateTime(DateUtils.getNowDate());
+
+        ctBuPayinfo.setId(UUID.fastUUID().toString(true));
+        ctBuPayinfo.setDelFlag("1");
+        List<TicketRecord> ticketRecordList = ctBuPayinfo.getTicketRecordList();
+        if (ticketRecordList != null && ticketRecordList.size() != 0){
+            for (TicketRecord tr : ticketRecordList){
+                CtBuPayinfoDt ctBuPayinfoDt = new CtBuPayinfoDt();
+                ctBuPayinfoDt.setId(UUID.fastUUID().toString(true));
+                ctBuPayinfoDt.setBid(ctBuPayinfo.getId());
+                ctBuPayinfoDt.setCreateBy(ctBuPayinfo.getCreateBy());
+                ctBuPayinfoDt.setCreateTime(DateUtils.getNowDate());
+                ctBuPayinfoDt.setDelFlag("1");
+                ctBuPayinfoDt.setTicketRecordId(tr.getId());
+                ctBuPayinfoDt.setPayMoney(tr.getInvoiceMoney());
+                ctBuPayinfoDt.setNotaxmoney(tr.getInvoiceNomoney());
+                ctBuPayinfoDt.setTaxmoney(tr.getInvoiceMoney().subtract(tr.getInvoiceNomoney()));
+                ctBuPayinfoDtMapper.insertCtBuPayinfoDt(ctBuPayinfoDt);
+            }
+        }
+
+        if (ctBuPayinfo.getStatus() == 0) {
+            ctBuPayinfo.setStatusps("保存");
+        } else if (ctBuPayinfo.getStatus() == 1) {
+            ctBuPayinfo.setStatusps("审核中");
+            //获取当前登陆人的所属部门
+            long dept_id = loginUser.getUser().getDept().getDeptId();
+            Map<String, Object> variables = this.getVarirs(loginUser);
+            variables.put("apply", loginUser.getUsername());
+            String widthName = "付款申请单审核-" + loginUser.getUser().getNickName();
+            String key = "payinfo_audit";
+            ctBuPayinfo.setInstanceId(ActUtils.submitTask(processRuntime, loginUser, ctBuPayinfo.getId(), variables
+                    , taskService, taskRuntime, key, widthName));
+        }
+
+        /** 处理文件 **/
+        if (StringUtils.isNotBlank(ctBuPayinfo.getImageData())) {
+            String[] str = ctBuPayinfo.getImageData().split(",");
+            for (int i = 0; i < str.length; i++) {
+                /** 判断传入文件ID是否为空 **/
+                if (StringUtils.isNotBlank(str[i])) {
+                    CtBuFile file = new CtBuFile();
+                    file.setId(str[i]);
+                    file.setPtype(1);
+                    file.setPid(ctBuPayinfo.getId());
+                    fileService.updateCtBuFile(file);
+                }
+            }
+        }
+        ctBuPayinfo.setImageData(null);
+
+
+        return ctBuPayinfoMapper.insertCtBuPayinfo(ctBuPayinfo);
+    }
+
+    /**
+     * 修改付款申请单主
+     *
+     * @param ctBuPayinfo 付款申请单主
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuPayinfo(CtBuPayinfo ctBuPayinfo) {
+
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuPayinfo.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuPayinfo.setUpdateTime(DateUtils.getNowDate());
+        List<CtBuPayinfoDt> ctBuPayinfoDtList = ctBuPayinfo.getCtBuPayinfoDtList();
+        if (ctBuPayinfoDtList != null && ctBuPayinfoDtList.size() != 0) {
+            for (CtBuPayinfoDt cbpd : ctBuPayinfoDtList) {
+                ctBuPayinfoDtMapper.updateCtBuPayinfoDtById(cbpd.getId());
+            }
+        }
+
+        List<TicketRecord> ticketRecordList = ctBuPayinfo.getTicketRecordList();
+        if (ticketRecordList != null && ticketRecordList.size() != 0){
+            for (TicketRecord tr : ticketRecordList){
+                CtBuPayinfoDt ctBuPayinfoDt = new CtBuPayinfoDt();
+                ctBuPayinfoDt.setId(UUID.fastUUID().toString(true));
+                ctBuPayinfoDt.setBid(ctBuPayinfo.getId());
+                ctBuPayinfoDt.setCreateBy(ctBuPayinfo.getCreateBy());
+                ctBuPayinfoDt.setCreateTime(DateUtils.getNowDate());
+                ctBuPayinfoDt.setDelFlag("1");
+                ctBuPayinfoDt.setTicketRecordId(tr.getId());
+                ctBuPayinfoDt.setPayMoney(tr.getInvoiceMoney());
+                ctBuPayinfoDt.setNotaxmoney(tr.getInvoiceNomoney());
+                ctBuPayinfoDt.setTaxmoney(tr.getInvoiceMoney().subtract(tr.getInvoiceNomoney()));
+                ctBuPayinfoDtMapper.insertCtBuPayinfoDt(ctBuPayinfoDt);
+            }
+        }
+        if (ctBuPayinfo.getStatus() == 0) {
+            ctBuPayinfo.setStatusps("保存");
+        } else if (ctBuPayinfo.getStatus() == 1) {
+            ctBuPayinfo.setStatusps("审核中");
+            //获取当前登陆人的所属部门
+            long dept_id = loginUser.getUser().getDept().getDeptId();
+            Map<String, Object> variables = this.getVarirs(loginUser);
+            variables.put("apply", loginUser.getUsername());
+            String widthName = "付款申请单审核-" + loginUser.getUser().getNickName();
+            String key = "payinfo_audit";
+            ctBuPayinfo.setInstanceId(ActUtils.submitTask(processRuntime, loginUser, ctBuPayinfo.getId(), variables
+                    , taskService, taskRuntime, key, widthName));
+        }
+        return ctBuPayinfoMapper.updateCtBuPayinfo(ctBuPayinfo);
+    }
+
+    /**
+     * 批量删除付款申请单主
+     *
+     * @param ids 需要删除的付款申请单主ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuPayinfoByIds(String[] ids) {
+        return ctBuPayinfoMapper.deleteCtBuPayinfoByIds(ids);
+    }
+
+    /**
+     * 批量逻辑删除付款申请单主
+     *
+     * @param ids 需要删除的付款申请单主ID
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuPayinfoByIds(String[] ids) {
+        if (ids != null && ids.length > 0) {
+            for (int i = 0; i < ids.length; i++) {
+                int i1 = ctBuPayinfoMapper.updateCtBuPayinfoById(ids[i]);
+                if (i1 > 0) {
+                    ctBuPayinfoDtMapper.updateCtBuPayinfoDtByBid(ids[i]);
+                }
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * 删除付款申请单主信息
+     *
+     * @param id 付款申请单主ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuPayinfoById(String id) {
+        return ctBuPayinfoMapper.deleteCtBuPayinfoById(id);
+    }
+
+    /**
+     * 根据实例ID修改
+     * @param ctBuPayinfo 付款申请单主
+     * @return
+     */
+    @Override
+    public int updateCtBuPayinfoByInstanceId(CtBuPayinfo ctBuPayinfo) {
+        return ctBuPayinfoMapper.updateCtBuPayinfoByInstanceId(ctBuPayinfo);
+    }
+
+
+    //获取组人员
+    public Map<String, Object> getVarirs(LoginUser loginUser) {
+        Map<String, Object> variables = new HashMap();
+        List<String> ulist = new ArrayList();
+        long dept_id = 100000;
+        if ("2".equals(loginUser.getUser().getUserType())) {
+            //分公司财务人员
+            dept_id = loginUser.getUser().getDeptId();
+            variables.put("fgsFinance", ActUtils.getVarirs(dept_id, "103", iSysUserService));
+            variables.put("userType", 2);
+        }
+        if ("1".equals(loginUser.getUser().getUserType())) {
+            dept_id = loginUser.getUser().getDeptId();
+            variables.put("bbFinance", ActUtils.getVarirs(null, "105", iSysUserService));
+            variables.put("userType", 1);
+        }
+        return variables;
+    }
+
+    /**
+     * 付款核销
+     * @param ctBuPayinfo 付款申请单主
+     * @return
+     */
+    @Override
+    public int paymentWriteOff(CtBuPayinfo ctBuPayinfo) {
+
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuPayinfo.setWriteOffUserid(loginUser.getUser().getUserId().toString());
+            ctBuPayinfo.setWriteOffUsername(loginUser.getUser().getNickName());
+        }
+        ctBuPayinfo.setWriteOffTime(DateUtils.getNowDate());
+        ctBuPayinfo.setStatus(4);
+        ctBuPayinfo.setStatusps("已核销");
+
+        /** 处理文件  付款凭证 **/
+        if (StringUtils.isNotBlank(ctBuPayinfo.getPaymentEvidence())) {
+            String[] str = ctBuPayinfo.getPaymentEvidence().split(",");
+            for (int i = 0; i < str.length; i++) {
+                /** 判断传入文件ID是否为空 **/
+                if (StringUtils.isNotBlank(str[i])) {
+                    CtBuFile file = new CtBuFile();
+                    file.setId(str[i]);
+                    file.setPtype(2);
+                    file.setPid(ctBuPayinfo.getId());
+                    fileService.updateCtBuFile(file);
+                }
+            }
+        }
+        ctBuPayinfo.setPaymentEvidence(null);
+        int i = ctBuPayinfoMapper.updateCtBuPayinfo(ctBuPayinfo);
+
+        //修改合同表核销金额与未核销金额
+        if (ctBuPayinfo.getContractId() != null && ctBuPayinfo.getPaymoney() != null){
+            CtBuContract ctBuContract = ctBuContractMapper.selectCtBuContractById(ctBuPayinfo.getContractId());
+            if (ctBuContract != null && ctBuContract.getWriteOffAmount() != null && ctBuContract.getTotalMoney() != null){
+                BigDecimal add = ctBuPayinfo.getPaymoney().add(ctBuContract.getWriteOffAmount());
+                BigDecimal subtract = ctBuContract.getTotalMoney().subtract(add);
+                ctBuContract.setWriteOffAmount(add);
+                ctBuContract.setNwriteOffAmount(subtract);
+                ctBuContractMapper.updateCtBuContract(ctBuContract);
+            }
+        }
+
+        return i;
+    }
+
+    @Override
+    public CtBuPayinfo selectCtBuPayinfoByInstanceId(String instanceId) {
+        return ctBuPayinfoMapper.selectCtBuPayinfoByInstanceId(instanceId);
+    }
+}

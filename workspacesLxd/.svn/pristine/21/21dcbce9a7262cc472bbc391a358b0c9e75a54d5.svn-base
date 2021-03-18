@@ -1,0 +1,202 @@
+package com.ruoyi.contract.contractInfo.controller;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.contract.contractInfo.util.ContractInfoUtil;
+import com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfo;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.contract.contractContent.domain.CtBuContractContent;
+import com.ruoyi.contract.contractInfo.domain.CtBuContract;
+import com.ruoyi.contract.contractInfo.service.ICtBuContractService;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.core.page.TableDataInfo;
+
+/**
+ * 合同信息录入主Controller
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+@RestController
+@RequestMapping("/contract/contractInfo")
+public class CtBuContractController extends BaseController {
+    @Autowired
+    private ICtBuContractService ctBuContractService;
+
+    /**
+     * 查询合同信息录入主列表
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(CtBuContract ctBuContract) {
+        startPage();
+        List<CtBuContract> list = ctBuContractService.selectCtBuContractList(ctBuContract);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询合同信息录入主列表
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:listSum')")
+    @GetMapping("/listSum")
+    public TableDataInfo listSum(CtBuContract ctBuContract) {
+        startPage();
+        List<Object> list = ctBuContractService.selectCtBuContractListSum(ctBuContract);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询合同信息统计数据
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:sum')")
+    @GetMapping("/sum")
+    public Map<String, BigDecimal> sum(CtBuContract ctBuContract) {
+        return ctBuContractService.selectCtBuContractSum(ctBuContract);
+    }
+
+
+    /**
+     * 导出合同信息录入主列表
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:export')")
+    @Log(title = "合同信息录入主", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(CtBuContract ctBuContract) {
+        List<CtBuContract> list = ctBuContractService.selectCtBuContractList(ctBuContract);
+        ExcelUtil<CtBuContract> util = new ExcelUtil<CtBuContract>(CtBuContract.class);
+        return util.exportExcel(list, "contract");
+    }
+
+    /**
+     * 获取合同信息录入主详细信息
+     */
+//    @PreAuthorize("@ss.hasPermi('contract:contractInfo:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") String id) {
+        return AjaxResult.success(ctBuContractService.selectCtBuContractById(id));
+    }
+
+    /**
+     * 新增合同信息录入主
+     */
+    //@PreAuthorize("@ss.hasPermi('contract:contractInfo:add')")
+    @Log(title = "合同信息录入主", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody CtBuContract ctBuContract) {
+        //非空校验
+        if (ctBuContract.getOppositeBankId() == null){
+            ContractInfoUtil.checkContractInfo(ctBuContract);
+            for (CtBuContractContent cc : ctBuContract.getCtBuContractContentList()) {
+                ContractInfoUtil.checkContractContent(cc);
+            }
+            for (CtBuContractPayinfo cp : ctBuContract.getCtBuContractPayinfoList()) {
+                ContractInfoUtil.checkContractPayInfo(cp);
+            }
+        }
+        return toAjax(ctBuContractService.insertCtBuContract(ctBuContract));
+    }
+
+    /**
+     * 修改合同信息录入主
+     */
+    //@PreAuthorize("@ss.hasPermi('contract:contractInfo:edit')")
+    @Log(title = "合同信息录入主", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody CtBuContract ctBuContract) {
+        return toAjax(ctBuContractService.updateCtBuContract(ctBuContract));
+    }
+
+    /**
+     * 删除合同信息录入主
+     */
+//    @PreAuthorize("@ss.hasPermi('dictionary:contract:remove')")
+//    @Log(title = "合同信息录入主", businessType = BusinessType.DELETE)
+//	@DeleteMapping("/{ids}")
+//    public AjaxResult remove(@PathVariable String[] ids)
+//    {
+//        return toAjax(ctBuContractService.deleteCtBuContractByIds(ids));
+//    }
+
+
+    /**
+     * 逻辑删除合同信息录入主
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:remove')")
+    @Log(title = "合同信息录入主", businessType = BusinessType.UPDATE)
+    @PutMapping("/{ids}")
+    public AjaxResult editRemove(@PathVariable String[] ids) {
+        return toAjax(ctBuContractService.updateCtBuContractByIds(ids));
+    }
+
+    /**
+     * 保存、修改付款记录
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:edit')")
+    @Log(title = "付款记录", businessType = BusinessType.UPDATE)
+    @PutMapping("/saveTicketInfo")
+    public AjaxResult saveTicketInfo(@RequestBody CtBuContract ctBuContract) {
+        return toAjax(ctBuContractService.saveTicketInfo(ctBuContract));
+    }
+
+    /**
+     * 查询合同内容列表(付款记录查询 查询所有支出的合同)
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractInfo:list')")
+    @GetMapping("/contractlist")
+    public TableDataInfo contractlist(CtBuContract ctBuContract) {
+        startPage();
+        List<CtBuContract> list = ctBuContractService.selectCtBuContractList(ctBuContract);
+        return getDataTable(list);
+    }
+
+    /**
+     * 项目统计
+     * @return
+     */
+    @GetMapping("/projectCount")
+    public List<HashMap<String ,Object>> projectCount(){
+        List<HashMap<String, Object>> hashMaps = ctBuContractService.contractCount();
+        return hashMaps;
+    }
+
+
+    /**
+     * 查询合同信息录入主列表
+     */
+//    @PreAuthorize("@ss.hasPermi('contract:contractInfo:list')")
+    @GetMapping("/collectionAndPaymentStatistics")
+    public TableDataInfo collectionAndPaymentStatistics(CtBuContract ctBuContract) {
+        startPage();
+        List<CtBuContract> list = ctBuContractService.collectionAndPaymentStatistics(ctBuContract);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 合同统计列表查询
+     */
+//    @PreAuthorize("@ss.hasPermi('contract:contractInfo:list')")
+    @GetMapping("/contractStatisticsList")
+    public TableDataInfo contractStatisticsList(String manageCompany, Integer type) {
+        startPage();
+        List<CtBuContract> list = ctBuContractService.contractStatisticsList(manageCompany,type);
+        return getDataTable(list);
+    }
+}

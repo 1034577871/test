@@ -1,0 +1,165 @@
+package com.ruoyi.contract.contractWarning.domain;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 合同预警对象 ct_bu_contract_warning
+ * 
+ * @author ruoyi
+ * @date 2020-12-09
+ */
+public class ContractWarning extends BaseEntity {
+	private static final long serialVersionUID = 1L;
+
+	/** $column.columnComment */
+	private String id;
+
+	/** 合同ID */
+	@Excel(name = "合同ID")
+	private String contractId;
+
+	/** 合同编号 */
+	@Excel(name = "合同编号")
+	private String contractNo;
+
+	/** 合同名称 */
+	@Excel(name = "合同名称")
+	private String contractName;
+
+	/** 经办部门 */
+	@Excel(name = "经办部门")
+	private String manageDeptment;
+
+	/** 经办人 */
+	@Excel(name = "经办人")
+	private String manageUser;
+
+	/** 应付款日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Excel(name = "应付款日期", width = 30, dateFormat = "yyyy-MM-dd")
+	private Date estimateTime;
+
+	/** 应付款金额 */
+	@Excel(name = "应付款金额")
+	private BigDecimal estimateMoney;
+
+	/** 实付款金额 */
+	@Excel(name = "实付款金额")
+	private BigDecimal actualMoney;
+
+	/** 是否处理(0未处理 1已处理) */
+	@Excel(name = "是否处理(0未处理 1已处理)")
+	private Integer handleFlag;
+
+	/** 删除标志 */
+	private Integer delFlag;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setContractId(String contractId) {
+		this.contractId = contractId;
+	}
+
+	public String getContractId() {
+		return contractId;
+	}
+
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
+	}
+
+	public String getContractNo() {
+		return contractNo;
+	}
+
+	public void setContractName(String contractName) {
+		this.contractName = contractName;
+	}
+
+	public String getContractName() {
+		return contractName;
+	}
+
+	public void setManageDeptment(String manageDeptment) {
+		this.manageDeptment = manageDeptment;
+	}
+
+	public String getManageDeptment() {
+		return manageDeptment;
+	}
+
+	public void setManageUser(String manageUser) {
+		this.manageUser = manageUser;
+	}
+
+	public String getManageUser() {
+		return manageUser;
+	}
+
+	public void setEstimateTime(Date estimateTime) {
+		this.estimateTime = estimateTime;
+	}
+
+	public Date getEstimateTime() {
+		return estimateTime;
+	}
+
+	public void setEstimateMoney(BigDecimal estimateMoney) {
+		this.estimateMoney = estimateMoney;
+	}
+
+	public BigDecimal getEstimateMoney() {
+		return estimateMoney;
+	}
+
+	public void setActualMoney(BigDecimal actualMoney) {
+		this.actualMoney = actualMoney;
+	}
+
+	public BigDecimal getActualMoney() {
+		return actualMoney;
+	}
+
+	public void setHandleFlag(Integer handleFlag) {
+		this.handleFlag = handleFlag;
+	}
+
+	public Integer getHandleFlag() {
+		return handleFlag;
+	}
+
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("id", getId())
+				.append("createBy", getCreateBy()).append("createTime", getCreateTime())
+				.append("updateBy", getUpdateBy()).append("updateTime", getUpdateTime())
+				.append("contractId", getContractId()).append("contractNo", getContractNo())
+				.append("contractName", getContractName()).append("manageDeptment", getManageDeptment())
+				.append("manageUser", getManageUser()).append("estimateTime", getEstimateTime())
+				.append("estimateMoney", getEstimateMoney()).append("actualMoney", getActualMoney())
+				.append("handleFlag", getHandleFlag()).append("delFlag", getDelFlag()).append("remark", getRemark())
+				.toString();
+	}
+}

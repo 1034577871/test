@@ -1,0 +1,87 @@
+<template>
+  <div>
+    <el-row :gutter="15">
+		<el-form ref="elForm" :model="formData"  :rules="rules" size="medium" label-width="120px">
+      <el-col :span="12">
+       <el-form-item label="合同编号" >
+        <el-input v-model="formData.contractId" :disabled="true"></el-input>
+       </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="项目类型" prop="projectCategory">
+          <el-select v-model="formData.projectCategory" placeholder="请选择项目类型" style="width: 100%;">
+            <el-option
+              v-for="dict in projectCategory"
+              :key="dict.id"
+              :label="dict.typeName"
+              :value="dict.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+       <el-form-item label="类型名称" >
+        <el-input v-model="formData.contentName" ></el-input>
+       </el-form-item>
+      </el-col>
+      <el-col :span="12">
+       <el-form-item label="类型税率" >
+        <el-input v-model="formData.contentTaxrate" ></el-input>
+       </el-form-item>
+      </el-col>
+      <el-col :span="12">
+       <el-form-item label="含税金额" >
+        <el-input v-model="formData.intaxAmount" ></el-input>
+       </el-form-item>
+      </el-col>
+      <el-col :span="12">
+       <el-form-item label="不含税金额" >
+        <el-input v-model="formData.extaxAmount" :disabled="true"></el-input>
+       </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="备注">
+            <el-input type="textarea" v-model="formData.remarks"></el-input>
+        </el-form-item>
+      </el-col>
+      </el-form>
+    </el-row>
+  </div>
+</template>
+<script>
+export default {
+  components: {},
+  props: [],
+  data() {
+    return {
+      formData: {
+        contentTaxrate:0.1,
+       
+      },
+    }
+  },
+  computed: {},
+  watch: {
+     'formData.intaxAmount':function(val){
+        //var self = this;
+        this.formData.extaxAmount = val * this.formData.contentTaxrate;
+      }
+    },
+  created() {},
+  mounted() {},
+  methods: {
+    submitForm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return
+        // TODO 提交表单
+      })
+    },
+    resetForm() {
+      this.$refs['elForm'].resetFields()
+    },
+  }
+}
+
+</script>
+<style>
+</style>

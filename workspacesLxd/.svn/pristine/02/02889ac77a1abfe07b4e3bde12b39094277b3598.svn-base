@@ -1,0 +1,194 @@
+package com.ruoyi.collection.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.collection.domain.CtBuReceiptInfo;
+import com.ruoyi.collection.utils.ActUtils;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.projectApproval.ApprovalNg.mapper.CtBuApprovalNgMapper;
+import com.ruoyi.system.service.ISysUserService;
+import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.collection.mapper.CtBuReceiptInfoMapper;
+import com.ruoyi.collection.service.ICtBuReceiptInfoService;
+
+/**
+ * 收款单录入Service业务层处理
+ * 
+ * @author ruoyi
+ * @date 2020-12-10
+ */
+@Service
+public class CtBuReceiptInfoServiceImpl implements ICtBuReceiptInfoService 
+{
+    @Autowired
+    private CtBuReceiptInfoMapper ctBuReceiptInfoMapper;
+
+    @Autowired
+    private ProcessRuntime processRuntime;
+
+    @Autowired
+    private TaskRuntime taskRuntime;
+    @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private ISysUserService iSysUserService;
+
+    @Autowired
+    private CtBuApprovalNgMapper ctBuApprovalNgMapper;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    /**
+     * 查询收款单录入
+     * 
+     * @param id 收款单录入ID
+     * @return 收款单录入
+     */
+    @Override
+    public CtBuReceiptInfo selectCtBuReceiptInfoById(String id)
+    {
+        return ctBuReceiptInfoMapper.selectCtBuReceiptInfoById(id);
+    }
+
+    /**
+     * 查询收款单录入列表
+     * 
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 收款单录入
+     */
+    @Override
+    public List<CtBuReceiptInfo> selectCtBuReceiptInfoList(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        return ctBuReceiptInfoMapper.selectCtBuReceiptInfoList(ctBuReceiptInfo);
+    }
+
+    /**
+     * 新增收款单录入
+     * 
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 结果
+     */
+    @Override
+    public int insertCtBuReceiptInfo(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuReceiptInfo.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        String uuid = UUID.fastUUID().toString(true);
+        ctBuReceiptInfo.setCreateTime(DateUtils.getNowDate());
+        ctBuReceiptInfo.setDelFlag("1");
+        ctBuReceiptInfo.setId(uuid);
+        ctBuReceiptInfo.setCreateTime(DateUtils.getNowDate());
+
+        //实列
+        if("1".equals(ctBuReceiptInfo.getStatus())){
+            //获取当前登陆人的所属部门
+            long dept_id = loginUser.getUser().getDept().getDeptId();
+            Map<String, Object> variables = this.getVarirs(dept_id);
+            variables.put("apply",loginUser.getUsername());
+            String widthName = "收款单审核-"+loginUser.getUser().getUserName();
+            String key ="invoiceAudit";
+            ctBuReceiptInfo.setInstanceId(ActUtils.submitTask(processRuntime,loginUser,ctBuReceiptInfo.getId(),variables
+                    ,taskService,taskRuntime,key,widthName));
+        }
+
+        return ctBuReceiptInfoMapper.insertCtBuReceiptInfo(ctBuReceiptInfo);
+    }
+
+    /**
+     * 修改收款单录入
+     * 
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuReceiptInfo(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuReceiptInfo.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuReceiptInfo.setUpdateTime(DateUtils.getNowDate());
+
+
+        //实列
+        if("1".equals(ctBuReceiptInfo.getStatus())){
+            long dept_id = loginUser.getUser().getDept().getDeptId();
+            Map<String, Object> variables = this.getVarirs(dept_id);
+            variables.put("apply",loginUser.getUsername());
+            String widthName = "收款单审核-"+loginUser.getUser().getUserName();
+            String key ="invoiceAudit";
+            ctBuReceiptInfo.setInstanceId(ActUtils.submitTask(processRuntime,loginUser,ctBuReceiptInfo.getId(),variables
+                    ,taskService,taskRuntime,key,widthName));
+        }
+
+
+        return ctBuReceiptInfoMapper.updateCtBuReceiptInfo(ctBuReceiptInfo);
+    }
+
+
+    //获取组人员
+    public Map<String,Object> getVarirs(long dept_id){
+        Map<String,Object> variables = new HashMap();
+        List<String> ulist = new ArrayList();
+        Map params = new HashMap();
+        //分公司财务人员
+        variables.put("skdfgscwsh", ActUtils.getVarirs(dept_id,"103",iSysUserService));
+
+        return variables;
+    }
+    /**
+     * 批量删除收款单录入
+     * 
+     * @param ids 需要删除的收款单录入ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuReceiptInfoByIds(String[] ids)
+    {
+        return ctBuReceiptInfoMapper.deleteCtBuReceiptInfoByIds(ids);
+    }
+
+    /**
+     * 删除收款单录入信息
+     * 
+     * @param id 收款单录入ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuReceiptInfoById(String id)
+    {
+        return ctBuReceiptInfoMapper.deleteCtBuReceiptInfoById(id);
+    }
+
+    /**
+     * 查询收款单录入列表
+     *
+     * @param ctBuReceiptInfo 收款单录入
+     * @return 收款单录入
+     */
+    @Override
+    public List<CtBuReceiptInfo> selectNewCtBuReceiptInfoList(CtBuReceiptInfo ctBuReceiptInfo)
+    {
+        return ctBuReceiptInfoMapper.selectNewCtBuReceiptInfoList(ctBuReceiptInfo);
+    }
+}

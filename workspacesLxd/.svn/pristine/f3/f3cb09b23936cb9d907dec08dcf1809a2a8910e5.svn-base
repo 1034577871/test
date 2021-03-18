@@ -1,0 +1,117 @@
+<template>
+  <div>
+    <el-input placeholder="请选择对方单位" :value="title" 
+     v-hasPermi="['dictionary:company:list']"
+    :readonly='true' @focus='dialogVisible = true'/>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      append-to-body
+      width="40%">
+          <el-table
+            ref="multipleTable"
+            :data="companyList"
+            tooltip-effect="dark"
+             highlight-current-row
+            style="width: 100%"
+            @row-click="rowClick">
+            <!-- <el-table-column
+              label="单位ID"
+              width="100%" v-if="show">
+              <template slot-scope="scope">{{ scope.row.id }}</template>
+            </el-table-column> -->
+            <el-table-column
+              label="单位名称"
+             >
+              <template slot-scope="scope">{{ scope.row.companyName }}</template>
+            </el-table-column>
+            <!-- <el-table-column
+                label="对方单位银行账户"
+                width="120">
+                <template slot-scope="scope">{{ scope.row.openingBank }}</template>
+            </el-table-column>
+            <el-table-column
+                label="对方单位银行账号"
+                width="120" v-if="show">
+                <template slot-scope="scope">{{ scope.row.openingAccount }}</template>
+            </el-table-column>
+            <el-table-column
+                label="对方单位联系人"
+                width="120">
+                <template slot-scope="scope">{{ scope.row.linkMan }}</template>
+            </el-table-column>
+            <el-table-column
+                label="对方单位联系方式"
+                width="120" v-if="show">
+                <template slot-scope="scope">{{ scope.row.linkPhone }}</template>
+            </el-table-column>
+            <el-table-column
+                label="对方单位地址"
+                width="120">
+                <template slot-scope="scope">{{ scope.row.address }}</template>
+            </el-table-column> -->
+          </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+
+
+</template>
+
+
+<script>
+  import request from '@/utils/request'
+  export default {
+    name: 'seleccompanyList',
+    props:{
+      objId:{
+        type:String,
+        default:'',
+      }
+    },
+    data() {
+      return {
+        show: false,
+        desc: '选择项目对话框',
+        title:'',
+        dialogVisible:false,
+        companyList:[],
+        selectItem:'',
+      }
+    },
+    created() {
+      // this.getObjectList().then(res=>{
+      //   this.dataSource = res.rows;
+      // });
+      this.getCompanyList().then(res=>{
+        this.companyList = res.rows;
+      });
+
+    },
+    methods: {
+      getCompanyList(){
+        //查询企业信息列表
+        return request({
+          url:'/dictionary/company/list',
+          methods:'get'
+        });
+      },
+      rowClick(e){
+        this.selectItem = e;//点击后 选中当前行的数据
+      },
+      confirm(){
+        this.$emit('ok',this.selectItem.id,this.selectItem.companyName,this.selectItem.openingBank,this.selectItem.openingAccount,this.selectItem.linkMan,this.selectItem.linkPhone,this.selectItem.address)
+        this.title = this.selectItem.companyName;
+        console.log(this.title,'asd')
+        this.dialogVisible = false;
+      }
+    },
+
+  }
+</script>
+
+<style>
+</style>

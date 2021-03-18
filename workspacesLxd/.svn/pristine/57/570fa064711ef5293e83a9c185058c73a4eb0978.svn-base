@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" id="sample-diagram" targetNamespace="http://activiti.org/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="contractAudit" isExecutable="true">
+    <bpmn2:extensionElements>
+      <activiti:executionListener delegateExpression="${contractAuditEnd}" event="end" />
+    </bpmn2:extensionElements>
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>Flow_0pox27r</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="Activity_19hjzjp" name="分公司合同管理员录入" activiti:assignee="${apply}">
+      <bpmn2:incoming>Flow_0pox27r</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0npyyvl</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1qm9584</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="contract_audit" name="本部法务部审核" activiti:formKey="contract_audit" activiti:candidateUsers="${ministryOfLaw}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="fcwstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1qm9584</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1uapxo6</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_1o03d0z">
+      <bpmn2:incoming>Flow_1uapxo6</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0qlfqln</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0npyyvl</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:endEvent id="Event_1ao5sqx">
+      <bpmn2:incoming>Flow_0qlfqln</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_0pox27r" sourceRef="StartEvent_1" targetRef="Activity_19hjzjp" />
+    <bpmn2:sequenceFlow id="Flow_1qm9584" sourceRef="Activity_19hjzjp" targetRef="contract_audit" />
+    <bpmn2:sequenceFlow id="Flow_1uapxo6" sourceRef="contract_audit" targetRef="Gateway_1o03d0z" />
+    <bpmn2:sequenceFlow id="Flow_0qlfqln" sourceRef="Gateway_1o03d0z" targetRef="Event_1ao5sqx">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${contractAudit=0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0npyyvl" sourceRef="Gateway_1o03d0z" targetRef="Activity_19hjzjp">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${contractAudit=1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="contractAudit">
+      <bpmndi:BPMNEdge id="Flow_0pox27r_di" bpmnElement="Flow_0pox27r">
+        <di:waypoint x="408" y="258" />
+        <di:waypoint x="520" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qm9584_di" bpmnElement="Flow_1qm9584">
+        <di:waypoint x="620" y="258" />
+        <di:waypoint x="750" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uapxo6_di" bpmnElement="Flow_1uapxo6">
+        <di:waypoint x="850" y="258" />
+        <di:waypoint x="965" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qlfqln_di" bpmnElement="Flow_0qlfqln">
+        <di:waypoint x="1015" y="258" />
+        <di:waypoint x="1112" y="258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0npyyvl_di" bpmnElement="Flow_0npyyvl">
+        <di:waypoint x="990" y="283" />
+        <di:waypoint x="990" y="350" />
+        <di:waypoint x="570" y="350" />
+        <di:waypoint x="570" y="298" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="372" y="240" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19hjzjp_di" bpmnElement="Activity_19hjzjp">
+        <dc:Bounds x="520" y="218" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1fs2ya4_di" bpmnElement="contract_audit">
+        <dc:Bounds x="750" y="218" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1o03d0z_di" bpmnElement="Gateway_1o03d0z" isMarkerVisible="true">
+        <dc:Bounds x="965" y="233" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ao5sqx_di" bpmnElement="Event_1ao5sqx">
+        <dc:Bounds x="1112" y="240" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

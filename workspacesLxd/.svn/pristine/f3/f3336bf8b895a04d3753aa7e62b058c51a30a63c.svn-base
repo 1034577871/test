@@ -1,0 +1,39 @@
+<template>
+  <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="基本信息" name="first">
+      <basicInfo ref="basicInfo"></basicInfo>
+    </el-tab-pane>
+    <el-tab-pane label="合同内容" name="second">
+      <contentInfo ref="contentInfo"></contentInfo>
+    </el-tab-pane>
+    <el-tab-pane label="付款信息" name="third">
+      <payInfo ref="payInfo"></payInfo>
+    </el-tab-pane>
+  </el-tabs>
+</template>
+<script>
+
+  import basicInfo from './basicInfo.vue'
+  import contentInfo from './contentInfo.vue'
+  import payInfo from './payInfo.vue'
+
+  export default {
+    components: {
+    	basicInfo,
+      contentInfo,
+      payInfo
+    },
+
+    data() {
+      return {
+        activeName: 'first',
+
+      };
+    },
+    methods: {
+      handleClick(tab, event) {
+        console.log(tab, event);
+      }
+    }
+  };
+</script>

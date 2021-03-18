@@ -1,0 +1,498 @@
+<template>
+  <div class="app-container">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      v-show="showSearch"
+      label-width="90px"
+    >
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <el-form-item label="所属部门" prop="belongDeptid">
+            <treeselect
+              v-model="form.belongDeptid"
+              :options="deptOptions"
+              :show-count="false"
+              placeholder="请选择所属部门"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="申请编号" prop="reqNo">
+            <el-input
+              v-model="queryParams.reqNo"
+              placeholder="请输入申请编号"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="项目名称" prop="proName">
+            <el-input
+              v-model="queryParams.proName"
+              placeholder="请输入项目名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="项目类型" prop="proTypeName">
+            <el-select
+              v-model="queryParams.proTypeName"
+              placeholder="请选择项目类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in proTypeNameList"
+                :key="dict.id"
+                :label="dict.typeName"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <el-form-item label="所属分公司" prop="belongCompanyName">
+            <el-select
+              v-model="queryParams.belongCompanyName"
+              placeholder="请输入所属分公司"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in belongCompanyNameList"
+                :key="dict.deptId"
+                :label="dict.deptName"
+                :value="dict.deptId"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in collectTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button
+              type="cyan"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5"
+        ><el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['projectApproval:collectProject:add']"
+          >新增</el-button
+        ></el-col
+      >
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['projectApproval:collectProject:edit']"
+          >修改</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['projectApproval:collectProject:remove']"
+        >
+          删除
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['projectApproval:collectProject:export']"
+          >导出</el-button
+        >
+      </el-col>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
+    </el-row>
+
+    <el-table
+      v-loading="loading"
+      :data="collectProjectList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+      <el-table-column label="申请编号" align="center" prop="reqNo" />
+      <el-table-column label="项目名称" align="center" prop="proName" />
+      <el-table-column label="项目类型" align="center" prop="proTypeName" />
+      <el-table-column
+        label="所属分公司"
+        align="center"
+        prop="belongCompanyName"
+      />
+      <el-table-column label="所属部门" align="center" prop="belongDeptName" />
+      <el-table-column
+        label="合同金额"
+        align="center"
+        prop="contractAmountTotal"
+      />
+      <el-table-column
+        label="不含税金额"
+        align="center"
+        prop="contractAmountTax"
+      />
+      <el-table-column label="税率" align="center" prop="taxrate" />
+      <el-table-column label="税额" align="center" prop="taxamount" />
+      <el-table-column label="状态说明" align="center" prop="statusPs" />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['projectApproval:collectProject:edit']"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['projectApproval:collectProject:remove']"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+    <!-- 添加或修改事前审批主(集客类)对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body>
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="基本信息" name="base"
+          ><basicInfo ref="basicInfo"></basicInfo
+        ></el-tab-pane>
+        <el-tab-pane label="材料信息" name="second"
+          ><materialsInfo></materialsInfo
+        ></el-tab-pane>
+        <el-tab-pane label="施工费信息" name="third"
+          ><construcostInfo></construcostInfo
+        ></el-tab-pane>
+        <el-tab-pane label="事前审批表" name="fourth"
+          ><approvalInfo></approvalInfo
+        ></el-tab-pane>
+      </el-tabs>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import {
+  listCollectProject,
+  getCollectProject,
+  delCollectProject,
+  addCollectProject,
+  updateCollectProject,
+  exportCollectProject
+} from "@/api/projectApproval/collectProject";
+
+import { findProjectType, findBranchOffice } from "@/api/utils";
+
+import { treeselect } from "@/api/system/dept";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import basicInfo from "./basicInfo.vue";
+import materialsInfo from "./materialsInfo.vue";
+import construcostInfo from "./construcostInfo.vue";
+import approvalInfo from "./approvalInfo";
+
+export default {
+  name: "CollectProject",
+  components: {
+    Treeselect,
+    basicInfo,
+    materialsInfo,
+    construcostInfo,
+    approvalInfo
+  },
+  data() {
+    return {
+      activeName: "base",
+      // 遮罩层
+      loading: true,
+      baseFormData: Object,
+      // 选中数组
+      ids: [],
+      show: false,
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 表格数据
+      collectProjectList: [],
+      collectTypeOptions: [],
+      proTypeNameList: [],
+      belongCompanyNameList: [],
+      // 部门树选项
+      deptOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        belongCompanyid: null,
+        belongCompanyName: null,
+        belongDeptid: null,
+        belongDeptName: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        status: null,
+        statusPs: null,
+        remarks: null
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {}
+    };
+  },
+  created() {
+    this.getList();
+    this.getTreeselect();
+    this.getDicts("collect_type").then(response => {
+      this.collectTypeOptions = response.data;
+    });
+  },
+  methods: {
+    /** 查询事前审批主(集客类)列表 */
+    getList() {
+      this.loading = true;
+      listCollectProject(this.queryParams).then(response => {
+        this.collectProjectList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+      findProjectType().then(response => {
+        this.proTypeNameList = response.data;
+      });
+      findBranchOffice().then(response => {
+        this.belongCompanyNameList = response.data;
+      });
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.deptId = data.id;
+      this.getList();
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        belongCompanyid: null,
+        belongCompanyName: null,
+        belongDeptid: null,
+        belongDeptName: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        status: 0,
+        statusPs: null,
+        remarks: null,
+        delFlag: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "编辑事前审批";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getCollectProject(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "编辑事前审批";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      console.log(this.$refs.basicInfo.baseFormData);
+      this.$refs["saveForm"].validate(valid => {
+        if (valid) {
+          if (this.saveForm.id != null) {
+            updateCollectProject(this.saveForm).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addCollectProject(this.saveForm).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm(
+        '是否确认删除事前审批主(集客类)编号为"' + ids + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(function() {
+          return delCollectProject(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        });
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所有事前审批主(集客类)数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return exportCollectProject(queryParams);
+        })
+        .then(response => {
+          this.download(response.msg);
+        });
+    }
+  }
+};
+</script>
+<style>
+.el-textarea .el-textarea__inner {
+  resize: none;
+}
+</style>

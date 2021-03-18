@@ -1,0 +1,146 @@
+import request from '@/utils/request'
+
+// 查询合同信息录入主列表（带权限）
+export function listContract(query) {
+  return request({
+    url: '/contract/contractInfo/list',
+    method: 'get',
+    params: query
+  })
+}
+// 查询合同信息录入主列表（关联项目表）
+export function listContract1(query) {
+  return request({
+    url: '/contract/contractInfo/list1',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询合同信息录入主列表
+export function listContract2(query) {
+  return request({
+    url: '/contract/contractInfo/list2',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询合同信息录入主详细
+export function getContract(id) {
+  return request({
+    url: '/contract/contractInfo/' + id,
+    method: 'get'
+  })
+}
+
+// 新增合同信息录入主
+export function addContract(data) {
+  return request({
+    url: '/contract/contractInfo',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改合同信息录入主
+export function updateContract(data) {
+  return request({
+    url: '/contract/contractInfo',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除合同信息录入主
+export function delContract(id) {
+  return request({
+    url: '/contract/contractInfo/' + id,
+    method: 'put'
+  })
+}
+
+// 导出合同信息录入主
+export function exportContract(query) {
+  return request({
+    url: '/contract/contractInfo/export',
+    method: 'get',
+    params: query
+  })
+}
+
+export function updateTicketContract(data) {
+  return request({
+    url: '/contract/contractInfo/saveTicketInfo',
+    method: 'put',
+    data: data
+  })
+}
+// 查询合同内容列表
+export function ticketListContract(query) {
+  return request({
+    url: '/contract/contractInfo/contractlist',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询项目统计
+export function projectCount(query) {
+  return request({
+    url: '/contract/contractInfo/projectCount',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询合同信息录入主列表(收付款统计)
+export function collectionAndPaymentStatistics(query) {
+  return request({
+    url: '/contract/contractInfo/collectionAndPaymentStatistics',
+    method: 'get',
+    params: query
+  })
+}
+
+// 项目统计（合同列表）
+export function contractStatisticsList(query) {
+  return request({
+    url: '/contract/contractInfo/contractStatisticsList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 应收未收预警列表
+export function contractWarningList(query) {
+  return request({
+    url: '/contract/contractInfo/contractWarningList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 首页本月合同统计
+export function countContractIndex() {
+  return request({
+    url: '/contract/contractInfo/countContractIndex',
+    method: 'get',
+  })
+}
+
+// 根据收付款周期预警
+export function notReceivedWarning() {
+  return request({
+    url: '/contract/contractInfo/notReceivedWarning',
+    method: 'get',
+  })
+}
+
+// 法务归档
+export function updateIsArchiveByIds(id) {
+  return request({
+    url: '/contract/contractInfo/updateIsArchiveByIds/' + id,
+    method: 'put'
+  })
+}

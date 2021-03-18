@@ -1,0 +1,12 @@
+package com.ruoyi.broadcast;
+
+/**
+ * @Title: TestService.java
+ * @Description: 测试接口
+ * @Author M.Mu
+ * @Date 2020-12-05
+ */
+public interface TestService {
+
+	public String findSelect(String id);
+}

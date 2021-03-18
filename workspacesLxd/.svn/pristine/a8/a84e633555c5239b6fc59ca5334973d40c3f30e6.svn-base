@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.collection.mapper.CtBuInvoiceReqDetailMapper">
+    
+    <resultMap type="CtBuInvoiceReqDetail" id="CtBuInvoiceReqDetailResult">
+        <result property="id"    column="id"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="invoiceProName"    column="invoice_pro_name"    />
+        <result property="invoiceSpec"    column="invoice_spec"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="invoicePrice"    column="invoice_price"    />
+        <result property="invoiceMount"    column="invoice_mount"    />
+        <result property="invoiceAmountTax"    column="invoice_amount_tax"    />
+        <result property="invoiceTaxrate"    column="invoice_taxrate"    />
+        <result property="invoiceAmountNtax"    column="invoice_amount_ntax"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="unit"    column="unit"    />
+    </resultMap>
+
+    <sql id="selectCtBuInvoiceReqDetailVo">
+        select id, invoice_id, invoice_pro_name, invoice_spec, invoice_type, invoice_price, invoice_mount, invoice_amount_tax, invoice_taxrate, invoice_amount_ntax, del_flag, remark, create_by, create_time, update_by, update_time, unit from ct_bu_invoice_req_detail
+    </sql>
+
+    <select id="selectCtBuInvoiceReqDetailList" parameterType="CtBuInvoiceReqDetail" resultMap="CtBuInvoiceReqDetailResult">
+        <include refid="selectCtBuInvoiceReqDetailVo"/>
+        <where>  
+            <if test="invoiceId != null  and invoiceId != ''"> and invoice_id = #{invoiceId}</if>
+            <if test="invoiceProName != null  and invoiceProName != ''"> and invoice_pro_name like concat('%', #{invoiceProName}, '%')</if>
+            <if test="invoiceSpec != null  and invoiceSpec != ''"> and invoice_spec = #{invoiceSpec}</if>
+            <if test="invoiceType != null  and invoiceType != ''"> and invoice_type = #{invoiceType}</if>
+            <if test="invoicePrice != null "> and invoice_price = #{invoicePrice}</if>
+            <if test="invoiceMount != null "> and invoice_mount = #{invoiceMount}</if>
+            <if test="invoiceAmountTax != null "> and invoice_amount_tax = #{invoiceAmountTax}</if>
+            <if test="invoiceTaxrate != null  and invoiceTaxrate != ''"> and invoice_taxrate = #{invoiceTaxrate}</if>
+            <if test="invoiceAmountNtax != null "> and invoice_amount_ntax = #{invoiceAmountNtax}</if>
+            <if test="unit != null  and unit != ''"> and unit = #{unit}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuInvoiceReqDetailById" parameterType="String" resultMap="CtBuInvoiceReqDetailResult">
+        <include refid="selectCtBuInvoiceReqDetailVo"/>
+        where id = #{id} and del_flag = 1
+    </select>
+        
+    <insert id="insertCtBuInvoiceReqDetail" parameterType="CtBuInvoiceReqDetail">
+        insert into ct_bu_invoice_req_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="invoiceId != null">invoice_id,</if>
+            <if test="invoiceProName != null">invoice_pro_name,</if>
+            <if test="invoiceSpec != null">invoice_spec,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="invoicePrice != null">invoice_price,</if>
+            <if test="invoiceMount != null">invoice_mount,</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax,</if>
+            <if test="invoiceTaxrate != null">invoice_taxrate,</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="unit != null">unit,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="invoiceId != null">#{invoiceId},</if>
+            <if test="invoiceProName != null">#{invoiceProName},</if>
+            <if test="invoiceSpec != null">#{invoiceSpec},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="invoicePrice != null">#{invoicePrice},</if>
+            <if test="invoiceMount != null">#{invoiceMount},</if>
+            <if test="invoiceAmountTax != null">#{invoiceAmountTax},</if>
+            <if test="invoiceTaxrate != null">#{invoiceTaxrate},</if>
+            <if test="invoiceAmountNtax != null">#{invoiceAmountNtax},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="unit != null">#{unit},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuInvoiceReqDetail" parameterType="CtBuInvoiceReqDetail">
+        update ct_bu_invoice_req_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceId != null">invoice_id = #{invoiceId},</if>
+            <if test="invoiceProName != null">invoice_pro_name = #{invoiceProName},</if>
+            <if test="invoiceSpec != null">invoice_spec = #{invoiceSpec},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="invoicePrice != null">invoice_price = #{invoicePrice},</if>
+            <if test="invoiceMount != null">invoice_mount = #{invoiceMount},</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax = #{invoiceAmountTax},</if>
+            <if test="invoiceTaxrate != null">invoice_taxrate = #{invoiceTaxrate},</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax = #{invoiceAmountNtax},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="unit != null">unit = #{unit},</if>
+        </trim>
+        where id = #{invoiceId}
+    </update>
+
+<!--    <delete id="deleteCtBuInvoiceReqDetailById" parameterType="String">-->
+<!--        delete from ct_bu_invoice_req_detail where id = #{id}-->
+<!--    </delete>-->
+
+    <update id="deleteCtBuInvoiceReqDetailById" parameterType="String">
+        update  ct_bu_invoice_req_detail set del_flag = 2 where id = #{id}
+    </update>
+    <update id="deleteCtBuInvoiceReqDetailByIds" parameterType="String">
+        update ct_bu_invoice_req_detail set del_flag = 2 where invoice_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+<!--    <delete id="deleteCtBuInvoiceReqDetailByIds" parameterType="String">-->
+<!--        delete from ct_bu_invoice_req_detail where id in -->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+    
+</mapper>

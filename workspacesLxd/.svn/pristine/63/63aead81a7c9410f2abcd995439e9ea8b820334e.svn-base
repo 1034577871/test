@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.collection.mapper.CtBuInvoiceReqMapper">
+    
+    <resultMap type="CtBuInvoiceReq" id="CtBuInvoiceReqResult">
+        <result property="id"    column="id"    />
+        <result property="approvalType"    column="approval_type"    />
+        <result property="approvalId"    column="approval_id"    />
+        <result property="proNo"    column="pro_no"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="reqDeptid"    column="req_deptid"    />
+        <result property="reqDeptname"    column="req_deptname"    />
+        <result property="reqUserid"    column="req_userid"    />
+        <result property="reqUsername"    column="req_username"    />
+        <result property="reqDate"    column="req_date"    />
+        <result property="payerName"    column="payer_name"    />
+        <result property="creditCode"    column="credit_code"    />
+        <result property="payerAddress"    column="payer_address"    />
+        <result property="payerPhone"    column="payer_phone"    />
+        <result property="payerOpeningBank"    column="payer_opening_bank"    />
+        <result property="payerAccount"    column="payer_account"    />
+        <result property="invoiceAmountTax"    column="invoice_amount_tax"    />
+        <result property="invoiceAmountNtax"    column="invoice_amount_ntax"    />
+        <result property="expectedCollectionTime"    column="expected_collection_time"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="contractCategory"    column="contract_category"    />
+        <result property="contractCategoryName"    column="contract_category_name"    />
+        <result property="invoiceTaxrate"    column="invoice_taxrate"    />
+        <result property="record"    column="record"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="zmcl"    column="zmcl"    />
+        <result property="ifysk"    column="ifysk"    />
+        <result property="yskid"    column="yskid"    />
+        <result property="yskamount"    column="yskamount"    />
+        <result property="pid"    column="pid"    />
+        <result property="payinfoid"    column="payinfoid"    />
+        <result property="paymentPeriod"    column="payment_period"    />
+    </resultMap>
+
+    <resultMap type="CtBuInvoiceReqDto" id="CtBuInvoiceReqResults">
+        <result property="id"    column="id"    />
+        <result property="approvalType"    column="approval_type"    />
+        <result property="approvalId"    column="approval_id"    />
+        <result property="proNo"    column="pro_no"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="invoiceTypes"    column="invoice_types"    />
+        <result property="reqDeptid"    column="req_deptid"    />
+        <result property="reqDeptname"    column="req_deptname"    />
+        <result property="reqUserid"    column="req_userid"    />
+        <result property="reqUsername"    column="req_username"    />
+        <result property="reqDate"    column="req_date"    />
+        <result property="payerName"    column="payer_name"    />
+        <result property="creditCode"    column="credit_code"    />
+        <result property="payerAddress"    column="payer_address"    />
+        <result property="payerPhone"    column="payer_phone"    />
+        <result property="payerOpeningBank"    column="payer_opening_bank"    />
+        <result property="payerAccount"    column="payer_account"    />
+        <result property="invoiceAmountTax"    column="invoice_amount_tax"    />
+        <result property="invoiceAmountTaxs"    column="invoice_amount_taxs"    />
+        <result property="invoiceAmountNtax"    column="invoice_amount_ntax"    />
+        <result property="expectedCollectionTime"    column="expected_collection_time"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="invoiceProName"    column="invoice_Pro_Name"    />
+        <result property="invoiceSpec"    column="invoice_Spec"    />
+        <result property="unit"    column="unit"    />
+        <result property="invoicePrice"    column="invoice_Price"    />
+        <result property="invoiceMount"    column="invoice_Mount"    />
+        <result property="contractCategory"    column="contract_category"    />
+        <result property="contractCategoryName"    column="contract_category_name"    />
+        <result property="invoiceTaxrate"    column="invoice_taxrate"    />
+        <result property="record"    column="record"    />
+        <result property="zmcl"    column="zmcl"    />
+        <result property="ifysk"    column="ifysk"    />
+        <result property="yskid"    column="yskid"    />
+        <result property="yskamount"    column="yskamount"    />
+        <result property="pid"    column="pid"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="payinfoid"    column="payinfoid"    />
+        <result property="paymentPeriod"    column="payment_period"    />
+        <result property="isVirtual"    column="is_virtual"    />
+        <result property="totalMoney"    column="total_money"    />
+    </resultMap>
+
+
+    <resultMap type="ActWorkflowFormDatas" id="ActWorkflowFormDataResults">
+        <result property="id"    column="id"    />
+        <result property="businessKey"    column="business_key"    />
+        <result property="formKey"    column="form_key"    />
+        <result property="controlId"    column="control_id"    />
+        <result property="controlName"    column="control_name"    />
+        <result property="controlValue"    column="control_value"    />
+        <result property="taskNodeName"    column="task_node_name"    />
+        <result property="createName"    column="create_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectCtBuInvoiceReqVo">
+        select payinfoid,payment_Period,id,pid,ifysk,yskid,yskamount,zmcl,create_by_name,record,invoice_taxrate,id, approval_type, approval_id, pro_no, pro_name, contract_id, contract_no, contract_name, invoice_type, req_deptid, req_deptname, req_userid, req_username, req_date, payer_name, credit_code, payer_address, payer_phone, payer_opening_bank, payer_account, invoice_amount_tax, invoice_amount_ntax, expected_collection_time, status, statusPS, del_flag, remark, create_by, create_time, update_by, update_time,instance_id,contract_category_name,contract_category from ct_bu_invoice_req
+    </sql>
+
+    <select id="selectContractPayinfoById" parameterType="com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfoDto" resultType="com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfoDto">
+        SELECT
+        GROUP_CONCAT( IF ( t.invoice_amount_tax &lt; 0,CONCAT(-( t.invoice_amount_tax ),'=',t.id), CONCAT(t.invoice_amount_tax,'=',t.id )) ) moneyPid,
+        p.id,
+        p.contract_id contractId,
+        p.estimate_time estimateTime,p.payment_ratio paymentRatio,p.estimate_money estimateMoney,
+        GROUP_CONCAT(i.invoice_code) invoiceCode,
+        GROUP_CONCAT(i.invoice_no) invoiceNo,
+	    GROUP_CONCAT(DATE_FORMAT(i.create_time, '%Y-%m-%d')) startDate ,
+
+        GROUP_CONCAT( IF (  t.invoice_amount_tax &lt; 0,- ( t.invoice_amount_tax ), t.invoice_amount_tax ) ) invoiceMoney,
+        GROUP_CONCAT( IF ( t.invoice_amount_ntax &lt; 0,- ( t.invoice_amount_ntax ), t.invoice_amount_ntax ) ) invoiceNomoney
+        FROM
+        ct_bu_contract_payinfo p
+        left join ct_bu_invoice_req t on p.contract_id = t.contract_id and p.id=t.payinfoid and t.del_flag = 1 and t.status!=6 and t.status &gt; 0
+        left join ct_bu_invoice_info i on t.id=i.req_id and i.del_flag = 1
+
+        WHERE 1=1 and p.del_flag=1
+--         and p.contract_id in(select id from ct_bu_contract where contract_category=1)
+        AND p.contract_id = #{contractId}
+        group by p.id,p.contract_id,p.estimate_time,p.payment_ratio,p.estimate_money
+    </select>
+
+    <select id="selectGroupActWorkflowFormDataLists" parameterType="ActWorkflowFormDatas" resultMap="ActWorkflowFormDataResults">
+        SELECT
+        f.task_node_name,
+        GROUP_CONCAT( control_value SEPARATOR ':' ) control_value,
+        f.create_name,f.create_time
+        FROM
+        act_workflow_FormData f
+        WHERE
+        business_key = #{businessKey}
+        <if test="formKey != null  and formKey != ''"> and form_key = #{formKey}</if>
+        GROUP BY
+        form_key,f.task_node_name,create_name,create_time order by create_time desc
+
+
+    </select>
+
+
+
+    <select id="selectCtBuInvoiceReqList" parameterType="CtBuInvoiceReq" resultMap="CtBuInvoiceReqResult">
+        SELECT
+        payinfoid,
+        payment_Period,
+        r.id,
+        pid,
+        ifysk,
+        yskid,
+        yskamount,
+        zmcl,
+        create_by_name,
+        record,
+        invoice_taxrate,
+        approval_type,
+        approval_id,
+        IF
+        ( pro_no IS NULL, t.project_no, r.pro_no ) pro_no,
+        IF
+        ( pro_name IS NULL, t.project_name, r.pro_name ) pro_name,
+        IF
+        ( r.contract_id IS NULL, t.id, r.contract_id ) contract_id,
+        IF
+        ( r.contract_no IS NULL, t.contract_no, r.contract_no ) contract_no,
+        IF
+        ( r.contract_name IS NULL, t.contract_name, r.contract_name ) contract_name,
+        invoice_type,
+        req_deptid,
+        req_deptname,
+        req_userid,
+        req_username,
+        req_date,
+        payer_name,
+        credit_code,
+        payer_address,
+        payer_phone,
+        payer_opening_bank,
+        payer_account,
+        invoice_amount_tax,
+        invoice_amount_ntax,
+        expected_collection_time,
+        r.STATUS,
+        statusPS,
+        r.del_flag,
+        r.remark,
+        r.create_by,
+        r.create_time,
+        r.update_by,
+        r.update_time,
+        r.instance_id,
+        r.contract_category_name,
+        r.contract_category,
+        t.is_virtual,
+        t.total_money
+        FROM
+        (select x.* from ct_bu_contract x JOIN sys_dept U ON x.manage_company = U.dept_id and x.del_flag='1'   ${params.dataScope} ) t
+
+        LEFT JOIN(
+        SELECT c.* from
+        ct_bu_invoice_req c
+        JOIN sys_dept U ON c.req_deptid = U.dept_id and c.del_flag=1
+        ${params.dataScope}
+        ) r on t.id=r.contract_id
+
+
+        <where>
+           t.del_flag = 1 and t.status=2 and t.contract_category = 1
+            <if test="approvalType != null "> and approval_type = #{approvalType}</if>
+            <if test="approvalId != null  and approvalId != ''"> and approval_id = #{approvalId}</if>
+            <if test="proNo != null  and proNo != ''"> and (pro_no like concat('%', #{proNo}, '%') or t.project_no like concat('%', #{proNo}, '%') ) </if>
+            <if test="proName != null  and proName != ''"> and (pro_name like concat('%', #{proName}, '%') or t.project_name like concat('%', #{proName}, '%'))</if>
+            <if test="contractId != null  and contractId != ''"> and t.contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and t.contract_no like concat('%', #{contractNo}, '%')</if>
+            <if test="contractName != null  and contractName != ''"> and t.contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="invoiceType != null  and invoiceType != ''"> and invoice_type = #{invoiceType}</if>
+            <if test="reqDeptid != null  and reqDeptid != ''"> and req_deptid = #{reqDeptid}</if>
+            <if test="reqDeptname != null  and reqDeptname != ''"> and req_deptname like concat('%', #{reqDeptname}, '%')</if>
+            <if test="reqUserid != null  and reqUserid != ''"> and req_userid = #{reqUserid}</if>
+            <if test="reqUsername != null  and reqUsername != ''"> and req_username like concat('%', #{reqUsername}, '%')</if>
+            <if test="reqDate != null "> and req_date = #{reqDate}</if>
+            <if test="payerName != null  and payerName != ''"> and payer_name like concat('%', #{payerName}, '%')</if>
+            <if test="creditCode != null  and creditCode != ''"> and credit_code = #{creditCode}</if>
+            <if test="payerAddress != null  and payerAddress != ''"> and payer_address = #{payerAddress}</if>
+            <if test="payerPhone != null  and payerPhone != ''"> and payer_phone = #{payerPhone}</if>
+            <if test="payerOpeningBank != null  and payerOpeningBank != ''"> and payer_opening_bank = #{payerOpeningBank}</if>
+            <if test="payerAccount != null  and payerAccount != ''"> and payer_account = #{payerAccount}</if>
+            <if test="invoiceAmountTax != null "> and invoice_amount_tax = #{invoiceAmountTax}</if>
+            <if test="invoiceAmountNtax != null "> and invoice_amount_ntax = #{invoiceAmountNtax}</if>
+            <if test="expectedCollectionTime != null "> and expected_collection_time = #{expectedCollectionTime}</if>
+            <if test="status != null "> and r.status = #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and r.statusPS = #{statusps}</if>
+            <!--  <if test="createBy != null">and r.create_by= #{createBy}</if>-->
+            <if test="beginTime != null and beginTime!=''"><!-- 开始时间检索 -->
+                AND r.req_date &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null  and endTime!=''"><!-- 结束时间检索 -->
+                AND r.req_date &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+
+        order by r.create_time desc
+    </select>
+    
+    <select id="selectCtBuInvoiceReqById" parameterType="String" resultMap="CtBuInvoiceReqResult">
+        <include refid="selectCtBuInvoiceReqVo"/>
+        where id = #{id}  and del_flag = 1
+    </select>
+    <select id="selectCtBuInvoiceReqDtoById" parameterType="String" resultMap="CtBuInvoiceReqResults">
+
+        <include refid="selectCtBuInvoiceReqVo"/>
+        where ct_bu_invoice_req.id = #{id}  and ct_bu_invoice_req.del_flag = 1
+    </select>
+    <select id="selectCtBuInvoiceReqDtoByInstanceId" parameterType="String" resultMap="CtBuInvoiceReqResults">
+
+        <include refid="selectCtBuInvoiceReqVo"/>
+        where ct_bu_invoice_req.instance_id = #{id}  and ct_bu_invoice_req.del_flag = 1
+    </select>
+
+    <insert id="insertCtBuInvoiceReq" parameterType="CtBuInvoiceReqDto">
+        insert into ct_bu_invoice_req
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="approvalType != null">approval_type,</if>
+            <if test="approvalId != null">approval_id,</if>
+            <if test="proNo != null">pro_no,</if>
+            <if test="proName != null">pro_name,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="reqDeptid != null">req_deptid,</if>
+            <if test="reqDeptname != null">req_deptname,</if>
+            <if test="reqUserid != null">req_userid,</if>
+            <if test="reqUsername != null">req_username,</if>
+            <if test="reqDate != null">req_date,</if>
+            <if test="payerName != null">payer_name,</if>
+            <if test="creditCode != null">credit_code,</if>
+            <if test="payerAddress != null">payer_address,</if>
+            <if test="payerPhone != null">payer_phone,</if>
+            <if test="payerOpeningBank != null">payer_opening_bank,</if>
+            <if test="payerAccount != null">payer_account,</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax,</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax,</if>
+            <if test="expectedCollectionTime != null">expected_collection_time,</if>
+            <if test="status != null">status,</if>
+            <if test="statusps != null">statusPS,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="instanceId != null">instance_id,</if>
+            <if test="contractCategory != null">contract_category,</if>
+            <if test="contractCategoryName != null">contract_category_name,</if>
+            <if test="invoiceTaxrate != null">invoice_taxrate,</if>
+            <if test="record != null">record,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="zmcl != null">zmcl,</if>
+            <if test="ifysk != null">ifysk,</if>
+            <if test="yskid != null">yskid,</if>
+            <if test="yskamount != null">yskamount,</if>
+            <if test="pid != null and pid!=''">pid,</if>
+            <if test="payinfoid != null and payinfoid!=''">payinfoid,</if>
+            <if test="paymentPeriod != null and paymentPeriod!=''">payment_period,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="approvalType != null">#{approvalType},</if>
+            <if test="approvalId != null">#{approvalId},</if>
+            <if test="proNo != null">#{proNo},</if>
+            <if test="proName != null">#{proName},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="reqDeptid != null">#{reqDeptid},</if>
+            <if test="reqDeptname != null">#{reqDeptname},</if>
+            <if test="reqUserid != null">#{reqUserid},</if>
+            <if test="reqUsername != null">#{reqUsername},</if>
+            <if test="reqDate != null">#{reqDate},</if>
+            <if test="payerName != null">#{payerName},</if>
+            <if test="creditCode != null">#{creditCode},</if>
+            <if test="payerAddress != null">#{payerAddress},</if>
+            <if test="payerPhone != null">#{payerPhone},</if>
+            <if test="payerOpeningBank != null">#{payerOpeningBank},</if>
+            <if test="payerAccount != null">#{payerAccount},</if>
+            <if test="invoiceAmountTax != null">#{invoiceAmountTax},</if>
+            <if test="invoiceAmountNtax != null">#{invoiceAmountNtax},</if>
+            <if test="expectedCollectionTime != null">#{expectedCollectionTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusps != null">#{statusps},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="instanceId != null">#{instanceId},</if>
+            <if test="contractCategory != null">#{contractCategory},</if>
+            <if test="contractCategoryName != null">#{contractCategoryName},</if>
+            <if test="invoiceTaxrate != null">#{invoiceTaxrate},</if>
+            <if test="record != null">#{record},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="zmcl != null">#{zmcl},</if>
+
+            <if test="ifysk != null">#{ifysk},</if>
+            <if test="yskid != null">#{yskid},</if>
+            <if test="yskamount != null">#{yskamount},</if>
+            <if test="pid != null  and pid!='' ">#{pid},</if>
+            <if test="payinfoid != null and payinfoid!=''">#{payinfoid},</if>
+            <if test="paymentPeriod != null and paymentPeriod!=''">#{paymentPeriod},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuInvoiceReq" parameterType="CtBuInvoiceReqDto">
+        update ct_bu_invoice_req
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="approvalType != null">approval_type = #{approvalType},</if>
+            <if test="approvalId != null">approval_id = #{approvalId},</if>
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="reqDeptid != null">req_deptid = #{reqDeptid},</if>
+            <if test="reqDeptname != null">req_deptname = #{reqDeptname},</if>
+            <if test="reqUserid != null">req_userid = #{reqUserid},</if>
+            <if test="reqUsername != null">req_username = #{reqUsername},</if>
+            <if test="reqDate != null">req_date = #{reqDate},</if>
+            <if test="payerName != null">payer_name = #{payerName},</if>
+            <if test="creditCode != null">credit_code = #{creditCode},</if>
+            <if test="payerAddress != null">payer_address = #{payerAddress},</if>
+            <if test="payerPhone != null">payer_phone = #{payerPhone},</if>
+            <if test="payerOpeningBank != null">payer_opening_bank = #{payerOpeningBank},</if>
+            <if test="payerAccount != null">payer_account = #{payerAccount},</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax = #{invoiceAmountTax},</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax = #{invoiceAmountNtax},</if>
+            <if test="expectedCollectionTime != null">expected_collection_time = #{expectedCollectionTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="instanceId != null">instance_Id = #{instanceId},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="invoiceTaxrate != null">invoice_Taxrate = #{invoiceTaxrate},</if>
+            <if test="record != null">record = #{record},</if>
+            <if test="createByName != null">create_By_Name = #{createByName},</if>
+            <if test="zmcl != null">zmcl = #{zmcl},</if>
+
+            <if test="ifysk != null">ifysk = #{ifysk},</if>
+            <if test="yskid != null">yskid = #{yskid},</if>
+            <if test="yskamount != null">yskamount = #{yskamount},</if>
+            <if test="pid != null  and pid!=''">pid = #{pid},</if>
+
+            <if test="payinfoid != null and payinfoid!=''">payinfoid = #{payinfoid},</if>
+            <if test="paymentPeriod != null and paymentPeriod!=''">payment_Period = #{paymentPeriod},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+
+    <update id="updateCtBuInvoiceReqByInstanceId" parameterType="CtBuInvoiceReqDto">
+        update ct_bu_invoice_req
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="approvalType != null">approval_type = #{approvalType},</if>
+            <if test="approvalId != null">approval_id = #{approvalId},</if>
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="reqDeptid != null">req_deptid = #{reqDeptid},</if>
+            <if test="reqDeptname != null">req_deptname = #{reqDeptname},</if>
+            <if test="reqUserid != null">req_userid = #{reqUserid},</if>
+            <if test="reqUsername != null">req_username = #{reqUsername},</if>
+            <if test="reqDate != null">req_date = #{reqDate},</if>
+            <if test="payerName != null">payer_name = #{payerName},</if>
+            <if test="creditCode != null">credit_code = #{creditCode},</if>
+            <if test="payerAddress != null">payer_address = #{payerAddress},</if>
+            <if test="payerPhone != null">payer_phone = #{payerPhone},</if>
+            <if test="payerOpeningBank != null">payer_opening_bank = #{payerOpeningBank},</if>
+            <if test="payerAccount != null">payer_account = #{payerAccount},</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax = #{invoiceAmountTax},</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax = #{invoiceAmountNtax},</if>
+            <if test="expectedCollectionTime != null">expected_collection_time = #{expectedCollectionTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+
+            <if test="invoiceTaxrate != null">invoice_Taxrate = #{invoiceTaxrate},</if>
+            <if test="record != null">record = #{record},</if>
+            <if test="createByName != null">create_By_Name = #{createByName},</if>
+            <if test="zmcl != null">zmcl = #{zmcl},</if>
+
+            <if test="ifysk != null">ifysk = #{ifysk},</if>
+            <if test="yskid != null">yskid = #{yskid},</if>
+            <if test="yskamount != null">yskamount = #{yskamount},</if>
+            <if test="pid != null  and pid!=''">pid = #{pid},</if>
+            <if test="payinfoid != null and payinfoid!=''">payinfoid = #{payinfoid},</if>
+            <if test="paymentPeriod != null and paymentPeriod!=''">payment_Period = #{paymentPeriod},</if>
+        </trim>
+        where instance_Id = #{instanceId}
+    </update>
+
+<!--    <delete id="deleteCtBuInvoiceReqById" parameterType="String">-->
+<!--        delete from ct_bu_invoice_req where id = #{id}-->
+<!--    </delete>-->
+
+    <update id="deleteCtBuInvoiceReqById" parameterType="String">
+        update  ct_bu_invoice_req set del_flag = 2 where id = #{id}
+    </update>
+
+
+    <update id="deleteCtBuInvoiceReqByIds" parameterType="String">
+        update ct_bu_invoice_req  set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+<!--    <delete id="deleteCtBuInvoiceReqByIds" parameterType="String">-->
+<!--        delete from ct_bu_invoice_req where id in -->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+
+
+
+    <insert id="insertSubActWorkflowFormData" parameterType="HashMap" useGeneratedKeys="true" keyProperty="id">
+        insert into act_workflow_FormData
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="businessKey != null">business_key,</if>
+            <if test="formKey != null">form_key,</if>
+            <if test="controlId != null">control_id,</if>
+            <if test="controlName != null">control_name,</if>
+            <if test="controlValue != null">control_value,</if>
+            <if test="taskNodeName != null">task_node_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createName != null">create_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="businessKey != null">#{businessKey},</if>
+            <if test="formKey != null">#{formKey},</if>
+            <if test="controlId != null">#{controlId},</if>
+            <if test="controlName != null">#{controlName},</if>
+            <if test="controlValue != null">#{controlValue},</if>
+            <if test="taskNodeName != null">#{taskNodeName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createName != null">#{createName},</if>
+        </trim>
+    </insert>
+
+
+</mapper>

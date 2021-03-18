@@ -1,0 +1,12 @@
+package com.ruoyi.base.cache.service;
+
+/**
+ * @Title: CacheService.java
+ * @Description: 缓存工具类(Redis)
+ * @Author M.Mu
+ * @Date 2020-12-12
+ */
+public interface CacheService {
+	
+	
+}

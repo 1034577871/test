@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.projectApproval.ApprovalNg.mapper.CtBuConstructionInfoMapper">
+    
+    <resultMap type="CtBuConstructionInfo" id="CtBuConstructionInfoResult">
+        <result property="id"    column="id"    />
+        <result property="planName"    column="plan_name"    />
+        <result property="type"    column="type"    />
+        <result property="sgxName"    column="sgx_name"    />
+        <result property="sgContent"    column="sg_content"    />
+        <result property="sgRemark"    column="sg_remark"    />
+        <result property="price"    column="price"    />
+        <result property="units"    column="units"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyPrice"    column="company_price"    />
+    </resultMap>
+
+    <sql id="selectCtBuConstructionInfoVo">
+        select id, plan_name, type, sgx_name  as value,sgx_name, sg_content, sg_remark, price, units, company_name, company_id, company_price from ct_bu_construction_info
+    </sql>
+
+    <select id="selectCtBuConstructionInfoList" parameterType="CtBuConstructionInfo" resultMap="CtBuConstructionInfoResult">
+        <include refid="selectCtBuConstructionInfoVo"/>
+        <where>  
+            <if test="planName != null  and planName != ''"> and plan_name like concat('%', #{planName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="sgxName != null  and sgxName != ''"> and sgx_name like concat('%', #{sgxName}, '%')</if>
+            <if test="sgContent != null  and sgContent != ''"> and sg_content = #{sgContent}</if>
+            <if test="sgRemark != null  and sgRemark != ''"> and sg_remark = #{sgRemark}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="units != null  and units != ''"> and units = #{units}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="companyId != null  and companyId != ''"> and company_id = #{companyId}</if>
+            <if test="companyPrice != null  and companyPrice != ''"> and company_price = #{companyPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuConstructionInfoById" parameterType="Long" resultMap="CtBuConstructionInfoResult">
+        <include refid="selectCtBuConstructionInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtBuConstructionInfo" parameterType="CtBuConstructionInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into ct_bu_construction_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planName != null">plan_name,</if>
+            <if test="type != null">type,</if>
+            <if test="sgxName != null">sgx_name,</if>
+            <if test="sgContent != null">sg_content,</if>
+            <if test="sgRemark != null">sg_remark,</if>
+            <if test="price != null">price,</if>
+            <if test="units != null">units,</if>
+            <if test="companyName != null">company_name,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="companyPrice != null">company_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planName != null">#{planName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="sgxName != null">#{sgxName},</if>
+            <if test="sgContent != null">#{sgContent},</if>
+            <if test="sgRemark != null">#{sgRemark},</if>
+            <if test="price != null">#{price},</if>
+            <if test="units != null">#{units},</if>
+            <if test="companyName != null">#{companyName},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="companyPrice != null">#{companyPrice},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuConstructionInfo" parameterType="CtBuConstructionInfo">
+        update ct_bu_construction_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planName != null">plan_name = #{planName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="sgxName != null">sgx_name = #{sgxName},</if>
+            <if test="sgContent != null">sg_content = #{sgContent},</if>
+            <if test="sgRemark != null">sg_remark = #{sgRemark},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="units != null">units = #{units},</if>
+            <if test="companyName != null">company_name = #{companyName},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="companyPrice != null">company_price = #{companyPrice},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtBuConstructionInfoById" parameterType="Long">
+        delete from ct_bu_construction_info where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuConstructionInfoByIds" parameterType="String">
+        delete from ct_bu_construction_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

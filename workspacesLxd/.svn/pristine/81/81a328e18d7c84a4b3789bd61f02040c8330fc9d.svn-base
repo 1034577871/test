@@ -1,0 +1,172 @@
+package com.ruoyi.contract.contractInfo.mapper;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import com.ruoyi.contract.contractInfo.domain.CtBuContract;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * 合同信息录入主Mapper接口
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+public interface CtBuContractMapper {
+    public int updateAddCtBuContract(CtBuContract ctBuContract);
+    /**
+     * 查询合同信息录入主
+     *
+     * @param id 合同信息录入主ID
+     * @return 合同信息录入主
+     */
+    public CtBuContract selectCtBuContractById(String id);
+
+    /**
+     * 查询合同信息录入主列表
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 合同信息录入主集合
+     */
+    public List<CtBuContract> selectCtBuContractList(CtBuContract ctBuContract);
+
+    /**
+     * 新增合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    public int insertCtBuContract(CtBuContract ctBuContract);
+
+    /**
+     * 修改合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    public int updateCtBuContract(CtBuContract ctBuContract);
+
+    /**
+     * 删除合同信息录入主
+     *
+     * @param id 合同信息录入主ID
+     * @return 结果
+     */
+    public int deleteCtBuContractById(String id);
+
+    /**
+     * 批量删除合同信息录入主
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteCtBuContractByIds(String[] ids);
+
+    /**
+     * 统计当月合同数量
+     *
+     * @param contractNo
+     * @return
+     */
+    public int countContract(String contractNo);
+
+
+    /**
+     * 查询本月最新合同编号
+     *
+     * @param contractNo
+     * @return
+     */
+    public String newestContractNo(String contractNo);
+
+    /**
+     * 批量逻辑删除合同信息录入主
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int updateCtBuContractByIds(String[] ids);
+
+    /**
+     * 逻辑删除合同信息录入主
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int updateCtBuContractById(String ids);
+
+
+    /**
+     * 合同金额统计
+     *
+     * @param ctBuContract
+     * @return totalMoneySum               合同标的额
+     * notTaxMoneySum              不含税金额
+     * receiveAmountSum            已收金额
+     * outstandingAmountSum        未收金额
+     * writeOffAmountSum           已核销金额
+     * nwriteOffAmountSum          未核销金额
+     */
+    public HashMap<String, BigDecimal> selectCtBuContractSum(CtBuContract ctBuContract);
+
+
+    /**
+     * 收入类查询预警付款合同
+     *
+     * @param WarningDate
+     * @return
+     */
+    public List<CtBuContract> selectWarning(Date WarningDate);
+
+    /**
+     * 根据实例ID修改合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    public int updateCtBuContractByInstanceId(CtBuContract ctBuContract);
+
+    /**
+     * 合同签订数量
+     * @param company
+     * @return
+     */
+    public int countContractByCompany(Long company);
+
+    /**
+     * 进行中合同数量
+     * @param company      公司id
+     * @return
+     */
+    public int countContractUnderwayByCompany(@Param("company") Long company);
+
+
+    /**
+     * 未启动合同数量
+     * @param company      公司id
+     * @return
+     */
+    public int countContractUnStartByCompany(@Param("company") Long company);
+
+    /**
+     * 完成合同数量
+     * @param company      公司id
+     * @return
+     */
+    public int countContractAccomplishByCompany(@Param("company") Long company);
+
+
+    public List<CtBuContract> collectionAndPaymentStatistics(CtBuContract ctBuContract);
+
+    /**
+     * 合同统计列表查询
+     * @param companyId
+     * @param type
+     * @return
+     */
+    public List<CtBuContract> contractStatisticsList(@Param("companyId") String companyId,@Param("type") Integer type);
+
+    public HashMap<String,Object> contractCount(Long companyId);
+}

@@ -1,0 +1,61 @@
+package com.ruoyi.projectApproval.ApprovalNg.service;
+
+import java.util.List;
+
+import com.ruoyi.projectApproval.ApprovalNg.domain.CtBuApprovalNg;
+
+/**
+ * 事前审批主(集客类)Service接口
+ * 
+ * @author Mu
+ * @date 2020-12-08
+ */
+public interface ICtBuApprovalNgService {
+	/**
+	 * 查询事前审批主(集客类)
+	 * 
+	 * @param id 事前审批主(集客类)ID
+	 * @return 事前审批主(集客类)
+	 */
+	public CtBuApprovalNg selectCtBuApprovalNgById(String id);
+
+	/**
+	 * 查询事前审批主(集客类)列表
+	 * 
+	 * @param ctBuApprovalNg 事前审批主(集客类)
+	 * @return 事前审批主(集客类)集合
+	 */
+	public List<CtBuApprovalNg> selectCtBuApprovalNgList(CtBuApprovalNg ctBuApprovalNg);
+
+	/**
+	 * 新增事前审批主(集客类)
+	 * 
+	 * @param ctBuApprovalNg 事前审批主(集客类)
+	 * @return 结果
+	 */
+	public int insertCtBuApprovalNg(CtBuApprovalNg ctBuApprovalNg);
+
+	/**
+	 * 修改事前审批主(集客类)
+	 * 
+	 * @param ctBuApprovalNg 事前审批主(集客类)
+	 * @return 结果
+	 */
+	public int updateCtBuApprovalNg(CtBuApprovalNg ctBuApprovalNg);
+
+	/**
+	 * 批量删除事前审批主(集客类)
+	 * 
+	 * @param ids 需要删除的事前审批主(集客类)ID
+	 * @return 结果
+	 */
+	public int deleteCtBuApprovalNgByIds(String[] ids);
+
+	/**
+	 * 删除事前审批主(集客类)信息
+	 * 
+	 * @param id 事前审批主(集客类)ID
+	 * @return 结果
+	 */
+	public int deleteCtBuApprovalNgById(String id);
+}

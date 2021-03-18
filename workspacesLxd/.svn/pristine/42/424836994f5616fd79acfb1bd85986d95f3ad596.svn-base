@@ -1,0 +1,79 @@
+import request from '@/utils/request'
+
+// 查询付款申请单主列表
+export function listPayinfo(query) {
+  return request({
+    url: '/paymentManagement/payinfo/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询付款申请单主列表（合同与付款申请全联）
+export function listPayinfo1(query) {
+  return request({
+    url: '/paymentManagement/payinfo/list1',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询付款申请单主详细
+export function getPayinfo(id) {
+  return request({
+    url: '/paymentManagement/payinfo/' + id,
+    method: 'get'
+  })
+}
+
+// 新增付款申请单主
+export function addPayinfo(data) {
+  return request({
+    url: '/paymentManagement/payinfo',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改付款申请单主
+export function updatePayinfo(data) {
+  return request({
+    url: '/paymentManagement/payinfo',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除付款申请单主
+export function delPayinfo(id) {
+  return request({
+    url: '/paymentManagement/payinfo/' + id,
+    method: 'delete'
+  })
+}
+
+// 导出付款申请单主
+export function exportPayinfo(query) {
+  return request({
+    url: '/paymentManagement/payinfo/export',
+    method: 'get',
+    params: query
+  })
+}
+
+// 逻辑删除付款申请单主
+export function editRemovePayinfo(id) {
+  return request({
+    url: '/paymentManagement/payinfo/' + id,
+    method: 'put'
+  })
+}
+
+// 核销
+export function paymentWriteOff(data) {
+  return request({
+    url: '/paymentManagement/payinfo/paymentWriteOff',
+    method: 'put',
+    data: data
+  })
+}

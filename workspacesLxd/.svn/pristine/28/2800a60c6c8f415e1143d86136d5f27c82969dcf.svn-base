@@ -1,0 +1,588 @@
+<template>
+  <div>
+    <el-form ref="elForm" :model="formData" size="medium" label-width="180px" :rules="rules">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="项目类型" prop="projectCategory">
+            <el-select v-model="formData.projectCategory" :typeNumber="formData.projectCategory" placeholder="请选择项目类型" style="width: 100%;">
+              <el-option v-for="dict in projectCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!-- <el-col :span="12">
+          <el-form-item label="项目ID" prop="projectId">
+            <el-input v-model="formData.projectId" :disabled="true"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="项目编号" prop="projectNo">
+            <el-input v-model="formData.projectNo" :disabled="true"/>
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="项目名称" prop="projectName">
+            <el-input v-model="formData.projectName" placeholder="请输入项目名称"  v-on:click.native="showDialog"/>
+            <selectObjectDialog v-if="isShowDialog" ref="selectObjectDialog" @ok="objDialogOk" v-bind:stat="formData.projectCategory" v-bind:dialogVisible="isShowDialog"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="合同名称" prop="contractName"><el-input v-model="formData.contractName" placeholder="请输入合同名称" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="合同类别" prop="contractCategory">
+            <el-select v-model="formData.contractCategory" placeholder="请选择合同类别" style="width: 100%;">
+              <el-option v-for="dict in contractCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="收入类型" prop="incomeType">
+            <el-select v-model="formData.incomeType" placeholder="请选择收入类型" style="width: 100%;">
+              <el-option v-for="dict in incomeTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24" style="margin-top: 0;">
+          <el-divider content-position="center">
+            <el-link type="primary"><b>对方单位信息</b></el-link>
+          </el-divider>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="对方单位ID" prop="oppositeId" v-if="show">
+            <el-input v-model="formData.oppositeId" :disabled="true" />
+           </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="对方单位名称" prop="oppositeName">
+            <el-input v-model="formData.oppositeName" placeholder="请输入对方名称" v-on:click.native="showOppositeName = true" />
+            <selectCompany v-if="showOppositeName" ref="company" @ok="companyOk" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="对方单位银行账户" prop="oppositeBank"><el-input v-model="formData.oppositeBank" :disabled="true" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="对方单位银行账号" prop="oppositeBankId"><el-input v-model="formData.oppositeBankId" :disabled="true" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="对方单位联系人" prop="oppositeContacts"><el-input v-model="formData.oppositeContacts" :disabled="true" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="对方单位联系电话" prop="oppositePhone"><el-input v-model="formData.oppositePhone" :disabled="true" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="对方单位联系地址" prop="oppositeAddress"><el-input v-model="formData.oppositeAddress" :disabled="true" /></el-form-item>
+        </el-col>
+        <el-col :span="24" style="margin-top: 0;">
+          <el-divider content-position="center">
+            <el-link type="primary"><b>我方单位信息</b></el-link>
+          </el-divider>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="我方单位名称" prop="ourName">
+            <!-- <el-select v-model="formData.ourName" placeholder="请选择单位名称" clearable style="width: 100%;">
+              <el-option v-for="dict in ourNameList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            </el-select> -->
+
+            <el-input v-model="formData.ourName" placeholder="请输入我方名称" v-on:click.native="showOurselves = true" />
+            <selectOurselves v-if="showOurselves" ref="ourselves" @ok="Ourselves" />
+
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="我方单位联系人" prop="oppositeContacts"><el-input v-model="formData.ourContacts" placeholder="请输入我方单位联系人" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="我方单位联系电话" prop="ourPhone"><el-input v-model="formData.ourPhone" placeholder="请输入我方单位联系电话" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="我方单位银行账户" prop="ourBank"><el-input v-model="formData.ourBank" placeholder="请输入我方单位银行账户" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="我方单位银行账号" prop="ourBankId"><el-input v-model="formData.ourBankId" placeholder="请输入我方单位银行账号" /></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="我方单位联系地址" prop="ourBankId"><el-input v-model="formData.ourAddress" placeholder="请输入我方单位联系地址" /></el-form-item>
+        </el-col>
+        <el-col :span="24" style="margin-top: 0;">
+          <el-divider content-position="center">
+            <el-link type="primary"><b>合同签订信息</b></el-link>
+          </el-divider>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="合同签订日期">
+            <el-date-picker
+              v-model="formData.starttime"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              :style="{ width: '100%' }"
+              placeholder="请选择日期"
+              clearable
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="合同截止日期">
+            <el-date-picker v-model="formData.endtime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :style="{ width: '100%' }" placeholder="请选择日期" clearable></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <!-- <el-col :span="12">
+          <el-form-item label="合同服务开始日期" >
+              <el-date-picker v-model="formData.contractServeStart" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                :style="{width: '100%'}" placeholder="请选择日期" clearable></el-date-picker>
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="合同服务开始日期" prop="contractServeStart">
+            <el-date-picker
+              clearable
+              :style="{ width: '100%' }"
+              v-model="formData.contractServeStart"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择合同服务开始日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <!-- <el-col :span="12">
+          <el-form-item label="合同服务截止日期" >
+              <el-date-picker v-model="formData.contractServeEnd" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                :style="{width: '100%'}" placeholder="请选择日期" clearable></el-date-picker>
+          </el-form-item>
+        </el-col> -->
+        <el-col :span="12">
+          <el-form-item label="服务期限(月)" prop="serviceTerm"><el-input v-model="formData.serviceTerm"></el-input></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="合同标的额(元)" prop="totalMoney"><el-input v-model="formData.totalMoney" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="税率(%)" prop="taxrate"><el-input v-model="formData.taxrate"></el-input></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="不含税金额(元)"><el-input v-model="formData.notTaxMoney" :disabled="true"></el-input></el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="付款方式" prop="payMethod">
+            <el-select v-model="formData.payMethod" placeholder="请选择付款方式" clearable style="width: 100%;">
+              <el-option v-for="dict in payMethodList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!--
+        <el-col :span="12">
+          <el-form-item label="经办部门" prop="manageDeptment"><el-input v-model="formData.manageDeptment" :disabled="true" /></el-form-item>
+        </el-col>
+        -->
+        <!-- <el-col :span="12">
+          <el-form-item label="经办部门" prop="manageDeptment">
+            <el-select v-model="formData.manageDeptment" placeholder="请选择经办部门" style="width: 100%;">
+              <el-option v-for="dict in projectCategoryTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            </el-select>
+          </el-form-item>
+        </el-col> -->
+
+        <el-col :span="12">
+          <el-form-item label="经办部门" prop="manageDeptment">
+            <treeselect v-model="formData.manageDeptment" :options="deptOptions" :show-count="false" placeholder="请选择所属部门" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="经办人" prop="manageUser"><el-input v-model="formData.manageUser" /></el-form-item>
+        </el-col>
+      </el-row>
+      <!-- <el-col :span="12">
+          <el-form-item label="变更之前ID" prop="originalId">
+            <el-input v-model="formData.originalId" :disabled="true"/>
+          </el-form-item>
+        </el-col> -->
+      <!-- <el-col :span="12">
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="formData.status" placeholder="请选择" clearable style="width: 100%;">
+              <el-option v-for="dict in contractStatusList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="状态说明"><el-input type="textarea" v-model="formData.statusPS"></el-input></el-form-item>
+        </el-col> -->
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="合同归档资料" prop="archiveFiles">
+            <el-upload
+              ref="field101"
+              :file-list="field101fileList"
+              :action="field101Action"
+              :on-success="handleAvatarSuccess"
+              :on-remove="removeFile"
+              :auto-upload="autoUploadFalg"
+              multiple
+              :limit="20"
+              :before-upload="field101BeforeUpload"
+            >
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <!-- <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件，且不超过500kb
+                </div> -->
+            </el-upload>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="合同扫描件" prop="statusPS">
+            <el-upload
+              ref="field101"
+              :file-list="field101fileList"
+              :action="field101Action"
+              :on-success="handleAvatarSuccess"
+              :on-remove="removeFile"
+              :auto-upload="autoUploadFalg"
+              multiple
+              :limit="20"
+              :before-upload="field101BeforeUpload"
+            >
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <!-- <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件，且不超过500kb
+                </div> -->
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="合同签订审批流程附件" prop="contractApprovalFile">
+            <el-upload
+              ref="field101"
+              :file-list="field101fileList"
+              :action="field101Action"
+              :on-success="handleAvatarSuccess"
+              :on-remove="removeFile"
+              :auto-upload="autoUploadFalg"
+              multiple
+              :limit="20"
+              :before-upload="field101BeforeUpload"
+            >
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <!-- <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件，且不超过500kb
+                </div> -->
+            </el-upload>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="其他附件" prop="otherFiles">
+            <el-upload
+              ref="field101"
+              :file-list="field101fileList"
+              :action="field101Action"
+              :on-success="handleAvatarSuccess"
+              :on-remove="removeFile"
+              :auto-upload="autoUploadFalg"
+              multiple
+              :limit="20"
+              :before-upload="field101BeforeUpload"
+            >
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <!-- <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件，且不超过500kb
+                </div> -->
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-col :span="24">
+        <el-form-item label="备注"><el-input type="textarea" v-model="formData.remarks"></el-input></el-form-item>
+      </el-col>
+    </el-form>
+  </div>
+</template>
+<script>
+import { listContract, getContract, delContract, addContract, updateContract, exportContract } from '@/api/contract/contractInfo';
+import selectObjectDialog from './selectObjectDialog';
+import selectCompany from './selectCompany';
+import selectOurselves from './selectOurselves.vue'
+import { treeselect } from '../../../api/system/dept';
+import Treeselect from '@riophae/vue-treeselect';
+import '@riophae/vue-treeselect/dist/vue-treeselect.css';
+// import { getToken } from "@/utils/auth";
+export default {
+  components: {
+    selectObjectDialog,
+    selectCompany,
+    Treeselect,
+    selectOurselves
+  },
+  props:{
+    typeNumber:0
+  },
+  data() {
+    return {
+      showOurselves:false,
+      showOppositeName:false,
+      isShowDialog:false,
+      show: false,
+      autoUploadFalg: true,
+      formData: {
+        branchInvolvedId: undefined,
+        id: '',
+        oppositeBank: '',
+        projectCategory: null,
+        contentType: null,
+        projectId: null,
+        projectNo: null,
+        projectName: null,
+        contractNo: null,
+        contractName: null,
+        month: null,
+        contractCategory: null,
+        incomeType: null,
+        oppositeName: null,
+        oppositeBankId: null,
+        oppositeContacts: null,
+        oppositePhone: null,
+        oppositeAddress: null,
+        ourName: null,
+        ourContacts: null,
+        ourPhone: null,
+        ourBank: null,
+        ourBankId: null,
+        ourAddress: null,
+        starttime: null,
+        endtime: null,
+        contractServeStart: null,
+        serviceTerm: null,
+        contractServeEnd: null,
+        totalMoney: null,
+        taxrate: null,
+        notTaxMoney: null,
+        payMethod: null,
+        archiveFiles: null,
+        manageDeptment: null,
+        manageUser: null,
+        originalId: null,
+        status: null,
+        // statusPs: null,
+        contractScanningFile: null,
+        contractApprovalFile: null,
+        otherFiles: null,
+        remarks: null,
+
+        ctBuContractPayinfoList: [],
+        ctBuContractContentList: []
+      },
+
+      rules: {
+        totalMoney: [
+          {
+            required: true,
+            message: '请输入合同标的额',
+            trigger: 'blur'
+          }
+        ],
+        taxrate: [
+          {
+            required: true,
+            message: '请输入税率',
+            trigger: 'blur'
+          }
+        ],
+        serviceTerm: [
+          {
+            required: true,
+            message: '请输入服务期限',
+            trigger: 'blur'
+          }
+        ],
+        contractServeStart: [
+          {
+            required: true,
+            message: '请选择合同服务开始日期',
+            trigger: 'blur'
+          }
+        ]
+      },
+
+      field101Action: '/dev-api/dictionary/fileManage/addSaveFile',
+      // field101fileList: [],
+      field101fileList: [
+        {
+          name: 'food.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        },
+        {
+          name: 'food2.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }
+      ],
+      //项目类型
+      projectCategoryTypeList: [],
+      //合同类别
+      contractCategoryTypeList: [],
+      //收入类型
+      incomeTypeList: [],
+      //付款方式
+      payMethodList: [],
+      //合同状态
+      contractStatusList: [],
+      //我方单位名称
+      ourNameList: [],
+      proTypeNameList: [],
+      belongCompanyNameList: [],
+      //经办单位
+      deptOptions: []
+    };
+  },
+  computed: {},
+  watch: {
+    'formData.totalMoney': function(val) {
+      //var self = this;
+      if (this.formData.taxrate != null) {
+        this.formData.notTaxMoney = (val / (this.formData.taxrate * 0.01 + 1)).toFixed(2);
+      }
+    },
+
+    'formData.taxrate': function(val) {
+      //var self = this;
+      if (this.formData.totalMoney != null || this.formData.totalMoney.length != 0) {
+        this.formData.notTaxMoney = (this.formData.totalMoney / (val * 0.01 + 1)).toFixed(2);
+      }
+    },
+
+  },
+  created() {
+
+    //项目类型列表
+    this.getDicts('project_category_type').then(response => {
+      this.projectCategoryTypeList = response.data;
+      console.log('项目类型', this.projectCategoryTypeList);
+    });
+    //合同类别
+    this.getDicts('contract_category_type').then(response => {
+      console.log('合同类别', response.data);
+      this.contractCategoryTypeList = response.data;
+    });
+    //收入类型
+    this.getDicts('income_type').then(response => {
+      this.incomeTypeList = response.data;
+    });
+    //付款方式
+    this.getDicts('pay_method').then(response => {
+      this.payMethodList = response.data;
+    });
+    //合同状态
+    this.getDicts('contract_status').then(response => {
+      this.contractStatusList = response.data;
+    });
+    //经办部门
+    this.getTreeselect();
+  },
+  mounted() {
+    this.$on('basic');
+  },
+  methods: {
+
+    showDialog(){
+      //this.isShowDialog = false;
+      this.isShowDialog = true;
+    },
+
+    submitForm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return;
+        // TODO 提交表单
+      });
+    },
+    resetForm() {
+      this.$refs['elForm'].resetFields();
+    },
+    /*选择项目弹出框 调用方法*/
+    objDialogOk(id, no, name) {
+      this.formData.projectId = id;
+      this.formData.projectNo = no;
+      this.formData.projectName = name;
+      this.$set(this.formData, 'projectName', name);
+      this.isShowDialog = false
+    },
+    /*选择对方单位弹出框 调用方法*/
+    companyOk(id, companyName, openingBank, openingAccount, linkMan, linkPhone, address) {
+      console.log(id, companyName, openingBank, openingAccount, linkMan, linkPhone, address, '3333333333333333333');
+      if(companyName != ""){
+        this.formData.oppositeId = id;
+        this.formData.oppositeName = companyName;
+        this.formData.oppositeBank = openingBank;
+        this.formData.oppositeBankId = openingAccount;
+        this.formData.oppositeContacts = linkMan;
+        this.formData.oppositePhone = linkPhone;
+        this.formData.oppositeAddress = address;
+        this.$set(this.formData, 'oppositeName', companyName);
+      }
+      this.showOppositeName = false
+    },
+    /** 文件上传检测 **/
+    field101BeforeUpload(file) {
+      let isRightSize = file.size / 1024 / 1024 < 2;
+      if (!isRightSize) {
+        this.$message.error('文件大小超过 2MB');
+      }
+      return isRightSize;
+    },
+    /** 上传文件成功操作 **/
+    handleAvatarSuccess(res, file, fileList) {
+      for (let index = 0; index < fileList.length; index++) {
+        const element = fileList[index];
+        if (element.uid == file.uid) {
+          element.uid = res.msg;
+        }
+      }
+      if (this.form.files) {
+        this.form.files += res.msg + ',';
+      } else {
+        this.form.files = res.msg + ',';
+      }
+    },
+    /** 删除文件操作 **/
+    removeFile(file, fileList) {
+      delFileById(file.uid).then(response => {
+        if (response.code == 200) {
+          this.form.files = null;
+          for (let index = 0; index < fileList.length; index++) {
+            const element = fileList[index];
+            if (this.form.files) {
+              this.form.files += element.uid + ',';
+            } else {
+              this.form.files = element.uid + ',';
+            }
+          }
+        }
+      });
+    },
+
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+
+    Ourselves(id, companyName, openingBank, openingAccount, linkMan, linkPhone, address){
+
+       if(companyName != ""){
+         this.formData.oppositeId = id;
+         this.formData.ourName = companyName;
+         this.formData.ourBank = openingBank;
+         this.formData.ourBankId = openingAccount;
+         this.formData.ourContacts = linkMan;
+         this.formData.ourPhone = linkPhone;
+         this.formData.ourAddress = address;
+         this.$set(this.formData, 'ourName', companyName);
+       }
+
+       this.showOurselves = false
+    }
+  }
+};
+</script>

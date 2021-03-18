@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.collection.mapper.CtBuInvoiceInfoMapper">
+    
+    <resultMap type="CtBuInvoiceInfo" id="CtBuInvoiceInfoResult">
+        <result property="id"    column="id"    />
+        <result property="contractCategory"    column="contract_category"    />
+        <result property="contractCategoryName"    column="contract_category_name"    />
+        <result property="reqId"    column="req_id"    />
+        <result property="invoiceCode"    column="invoice_code"    />
+        <result property="invoiceNo"    column="invoice_no"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceDrawer"    column="invoice_drawer"    />
+        <result property="invoiceReviewer"    column="invoice_reviewer"    />
+        <result property="invoicePayee"    column="invoice_payee"    />
+        <result property="invoiceAmountTax"    column="invoice_amount_tax"    />
+        <result property="invoiceTaxrate"    column="invoice_taxrate"    />
+        <result property="invoiceAmountNtax"    column="invoice_amount_ntax"    />
+        <result property="invoiceImg"    column="invoice_img"    />
+        <result property="companyImg"    column="company_img"    />
+        <result property="handoverUserid"    column="handover_userid"    />
+        <result property="handoverUsername"    column="handover_username"    />
+        <result property="handoverTime"    column="handover_time"    />
+        <result property="confirmerUserid"    column="confirmer_userid"    />
+        <result property="confirmerUsername"    column="confirmer_username"    />
+        <result property="confirmerTime"    column="confirmer_time"    />
+        <result property="voucherNo"    column="voucher_no"    />
+        <result property="voucherUserid"    column="voucher_userid"    />
+        <result property="voucherUsername"    column="voucher_username"    />
+        <result property="voucherTime"    column="voucher_time"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="voucherDept"    column="voucher_dept"    />
+        <result property="payinfoid"    column="payinfoid"    />
+        <result property="paymentPeriod"    column="payment_period"    />
+
+        <association property="ctBuInvoiceReq" javaType="com.ruoyi.collection.domain.CtBuInvoiceReq">
+            <result property="id"    column="instance_id"    />
+            <result property="approvalType"    column="approval_type"    />
+            <result property="approvalId"    column="approval_id"    />
+            <result property="proNo"    column="pro_no"    />
+            <result property="proName"    column="pro_name"    />
+            <result property="contractId"    column="contract_id"    />
+            <result property="contractNo"    column="contract_no"    />
+            <result property="contractName"    column="contract_name"    />
+            <result property="invoiceType"    column="invoice_type"    />
+            <result property="reqDeptid"    column="req_deptid"    />
+            <result property="reqDeptname"    column="req_deptname"    />
+            <result property="reqUserid"    column="req_userid"    />
+            <result property="reqUsername"    column="req_username"    />
+            <result property="reqDate"    column="req_date"    />
+            <result property="payerName"    column="payer_name"    />
+            <result property="creditCode"    column="credit_code"    />
+            <result property="payerAddress"    column="payer_address"    />
+            <result property="payerPhone"    column="payer_phone"    />
+            <result property="payerOpeningBank"    column="payer_opening_bank"    />
+            <result property="payerAccount"    column="payer_account"    />
+            <result property="invoiceAmountTax"    column="invoice_amount_tax"    />
+            <result property="invoiceAmountNtax"    column="invoice_amount_ntax"    />
+            <result property="expectedCollectionTime"    column="expected_collection_time"    />
+            <result property="status"    column="status"    />
+            <result property="statusps"    column="statusPS"    />
+            <result property="delFlag"    column="del_flag"    />
+            <result property="remark"    column="remark"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="contractCategory"    column="contract_category"    />
+            <result property="contractCategoryName"    column="contract_category_name"    />
+            <result property="invoiceTaxrate"    column="invoice_taxrate"    />
+            <result property="createByName"    column="create_By_Name"    />
+
+        </association>
+    </resultMap>
+
+    <sql id="selectCtBuInvoiceInfoVo">
+        select payment_period,payinfoid,voucher_dept,id, contract_category, req_id, invoice_code, invoice_no, invoice_date, invoice_drawer, invoice_reviewer, invoice_payee, invoice_amount_tax, invoice_taxrate, invoice_amount_ntax, invoice_img, company_img, handover_userid, handover_username, handover_time, confirmer_userid, confirmer_username, confirmer_time, voucher_no, voucher_userid, voucher_username, voucher_time, status, statusPS, del_flag, remark, create_by, create_time, update_by, update_time,contract_category_name from ct_bu_invoice_info
+    </sql>
+
+
+    <select id="selectCtBuInvoiceQrInfoandReqsList" parameterType="CtBuInvoiceInfo" resultMap="CtBuInvoiceInfoResult">
+          select i.payment_period,i.payinfoid, i.voucher_dept,i.id,i.req_id,i.invoice_code,i.invoice_no,i.invoice_date,i.invoice_drawer,i.invoice_reviewer,i.invoice_payee,i.invoice_img
+        ,i.company_img,i.handover_userid,i.handover_username,i.handover_time,i.confirmer_userid,i.confirmer_username,i.confirmer_time
+        ,i.voucher_no,i.voucher_userid,i.voucher_username,i.voucher_time,i.status,
+        r.id instance_id, r.approval_type, r.approval_id, r.pro_no, r.pro_name, r.contract_id, r.contract_no, r.contract_name,
+        r.invoice_type, r.req_deptid, r.req_deptname, r.req_userid, r.req_username, r.req_date, r.payer_name,
+        r.credit_code, r.payer_address, r.payer_phone, r.payer_opening_bank, r.payer_account, r.invoice_amount_tax,
+        r.invoice_amount_ntax, r.expected_collection_time, r.status, r.statusPS, r.del_flag, r.remark, r.create_by,r.create_by_name,
+        r.create_time, r.update_by, r.update_time,r.contract_category,r.contract_category_name,r.invoice_taxrate
+
+
+        from ct_bu_invoice_req r left join ct_bu_invoice_info i on r.id=i.req_id
+        <where>
+            r.del_flag = 1  and  r.`status`=2
+            <if test="proName != null">and r.pro_name like concat('%', #{proName}, '%') </if>
+            <if test="contractName != null">and r.contract_name  like concat('%', #{contractName}, '%')  </if>
+
+            <if test="createBy != null  and createBy != ''"> and r.create_by = #{createBy}</if>
+            <if test="status != null  and status != ''"> and i.status &gt;= #{status}</if>
+
+            <if test="contractCategory != null  and contractCategory != ''"> and i.contract_category = #{contractCategory}</if>
+            <if test="reqId != null  and reqId != ''"> and i.req_id = #{reqId}</if>
+            <if test="invoiceCode != null  and invoiceCode != ''"> and i.invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and i.invoice_no = #{invoiceNo}</if>
+            <if test="invoiceDate != null "> and i.invoice_date = #{invoiceDate}</if>
+            <if test="invoiceDrawer != null  and invoiceDrawer != ''"> and i.invoice_drawer = #{invoiceDrawer}</if>
+            <if test="invoiceReviewer != null  and invoiceReviewer != ''"> and i.invoice_reviewer = #{invoiceReviewer}</if>
+            <if test="voucherNo != null  and voucherNo != ''"> and i.voucher_no = #{voucherNo}</if>
+            <if test="createTime != null">and i.create_time= #{createTime}</if>
+        </where>
+        order by r.create_time,i.create_time desc
+
+    </select>
+    <select id="CtBuInvoiceInfo" parameterType="CtBuInvoiceInfo" resultMap="CtBuInvoiceInfoResult">
+        <include refid="selectCtBuInvoiceInfoVo"/>
+        <where>
+            del_flag = 1
+            <if test="contractCategory != null  and contractCategory != ''"> and contract_category = #{contractCategory}</if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''"> and contract_category_name like concat('%', #{contractCategoryName}, '%')</if>
+            <if test="reqId != null  and reqId != ''"> and req_id = #{reqId}</if>
+            <if test="invoiceCode != null  and invoiceCode != ''"> and invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and invoice_no = #{invoiceNo}</if>
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceDrawer != null  and invoiceDrawer != ''"> and invoice_drawer = #{invoiceDrawer}</if>
+            <if test="invoiceReviewer != null  and invoiceReviewer != ''"> and invoice_reviewer = #{invoiceReviewer}</if>
+            <if test="invoicePayee != null  and invoicePayee != ''"> and invoice_payee = #{invoicePayee}</if>
+            <if test="invoiceAmountTax != null "> and invoice_amount_tax = #{invoiceAmountTax}</if>
+            <if test="invoiceTaxrate != null  and invoiceTaxrate != ''"> and invoice_taxrate = #{invoiceTaxrate}</if>
+            <if test="invoiceAmountNtax != null "> and invoice_amount_ntax = #{invoiceAmountNtax}</if>
+            <if test="invoiceImg != null "> and invoice_img = #{invoiceImg}</if>
+            <if test="companyImg != null "> and company_img = #{companyImg}</if>
+            <if test="handoverUserid != null  and handoverUserid != ''"> and handover_userid = #{handoverUserid}</if>
+            <if test="handoverUsername != null  and handoverUsername != ''"> and handover_username like concat('%', #{handoverUsername}, '%')</if>
+            <if test="handoverTime != null "> and handover_time = #{handoverTime}</if>
+            <if test="confirmerUserid != null  and confirmerUserid != ''"> and confirmer_userid = #{confirmerUserid}</if>
+            <if test="confirmerUsername != null  and confirmerUsername != ''"> and confirmer_username like concat('%', #{confirmerUsername}, '%')</if>
+            <if test="confirmerTime != null "> and confirmer_time = #{confirmerTime}</if>
+            <if test="voucherNo != null  and voucherNo != ''"> and voucher_no = #{voucherNo}</if>
+            <if test="voucherUserid != null  and voucherUserid != ''"> and voucher_userid = #{voucherUserid}</if>
+            <if test="voucherUsername != null  and voucherUsername != ''"> and voucher_username like concat('%', #{voucherUsername}, '%')</if>
+            <if test="voucherTime != null "> and voucher_time = #{voucherTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and statusPS = #{statusps}</if>
+        </where>
+    </select>
+
+    <select id="selectCtBuInvoiceQrInfoList" parameterType="CtBuInvoiceInfo" resultMap="CtBuInvoiceInfoResult">
+        <include refid="selectCtBuInvoiceInfoVo"/>
+        <where>
+            del_flag = 1
+            <if test="contractCategory != null  and contractCategory != ''"> and contract_category = #{contractCategory}</if>
+            <if test="reqId != null  and reqId != ''"> and req_id = #{reqId}</if>
+            <if test="invoiceCode != null  and invoiceCode != ''"> and invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and invoice_no = #{invoiceNo}</if>
+            <if test="invoiceDate != null "> and invoice_date = #{invoiceDate}</if>
+            <if test="invoiceDrawer != null  and invoiceDrawer != ''"> and invoice_drawer = #{invoiceDrawer}</if>
+            <if test="invoiceReviewer != null  and invoiceReviewer != ''"> and invoice_reviewer = #{invoiceReviewer}</if>
+            <if test="invoicePayee != null  and invoicePayee != ''"> and invoice_payee = #{invoicePayee}</if>
+            <if test="invoiceAmountTax != null "> and invoice_amount_tax = #{invoiceAmountTax}</if>
+            <if test="invoiceTaxrate != null  and invoiceTaxrate != ''"> and invoice_taxrate = #{invoiceTaxrate}</if>
+            <if test="invoiceAmountNtax != null "> and invoice_amount_ntax = #{invoiceAmountNtax}</if>
+            <if test="invoiceImg != null "> and invoice_img = #{invoiceImg}</if>
+            <if test="companyImg != null "> and company_img = #{companyImg}</if>
+            <if test="handoverUserid != null  and handoverUserid != ''"> and handover_userid = #{handoverUserid}</if>
+            <if test="handoverUsername != null  and handoverUsername != ''"> and handover_username like concat('%', #{handoverUsername}, '%')</if>
+            <if test="handoverTime != null "> and handover_time = #{handoverTime}</if>
+            <if test="confirmerUserid != null  and confirmerUserid != ''"> and confirmer_userid = #{confirmerUserid}</if>
+            <if test="confirmerUsername != null  and confirmerUsername != ''"> and confirmer_username like concat('%', #{confirmerUsername}, '%')</if>
+            <if test="confirmerTime != null "> and confirmer_time = #{confirmerTime}</if>
+            <if test="voucherNo != null  and voucherNo != ''"> and voucher_no = #{voucherNo}</if>
+            <if test="voucherUserid != null  and voucherUserid != ''"> and voucher_userid = #{voucherUserid}</if>
+            <if test="voucherUsername != null  and voucherUsername != ''"> and voucher_username like concat('%', #{voucherUsername}, '%')</if>
+            <if test="voucherTime != null "> and voucher_time = #{voucherTime}</if>
+            <if test="status != null "> and status &gt;= #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and statusPS = #{statusps}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuInvoiceInfoById" parameterType="String" resultMap="CtBuInvoiceInfoResult">
+        <include refid="selectCtBuInvoiceInfoVo"/>
+        where id = #{id} and del_flag = 1
+    </select>
+        
+    <insert id="insertCtBuInvoiceInfo" parameterType="CtBuInvoiceInfo">
+        insert into ct_bu_invoice_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="contractCategory != null">contract_category,</if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''"> contract_category_name,</if>
+
+            <if test="reqId != null">req_id,</if>
+            <if test="invoiceCode != null">invoice_code,</if>
+            <if test="invoiceNo != null">invoice_no,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceDrawer != null">invoice_drawer,</if>
+            <if test="invoiceReviewer != null">invoice_reviewer,</if>
+            <if test="invoicePayee != null">invoice_payee,</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax,</if>
+            <if test="invoiceTaxrate != null">invoice_taxrate,</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax,</if>
+            <if test="invoiceImg != null">invoice_img,</if>
+            <if test="companyImg != null">company_img,</if>
+            <if test="handoverUserid != null">handover_userid,</if>
+            <if test="handoverUsername != null">handover_username,</if>
+            <if test="handoverTime != null">handover_time,</if>
+            <if test="confirmerUserid != null">confirmer_userid,</if>
+            <if test="confirmerUsername != null">confirmer_username,</if>
+            <if test="confirmerTime != null">confirmer_time,</if>
+            <if test="voucherNo != null">voucher_no,</if>
+            <if test="voucherUserid != null">voucher_userid,</if>
+            <if test="voucherUsername != null">voucher_username,</if>
+            <if test="voucherTime != null">voucher_time,</if>
+            <if test="status != null">status,</if>
+            <if test="statusps != null">statusPS,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="voucherDept != null">voucher_dept,</if>
+            <if test="payinfoid != null">payinfoid,</if>
+            <if test="paymentPeriod != null">payment_period,</if>
+
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="contractCategory != null">#{contractCategory},</if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''"> #{contractCategoryName},</if>
+
+            <if test="reqId != null">#{reqId},</if>
+            <if test="invoiceCode != null">#{invoiceCode},</if>
+            <if test="invoiceNo != null">#{invoiceNo},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceDrawer != null">#{invoiceDrawer},</if>
+            <if test="invoiceReviewer != null">#{invoiceReviewer},</if>
+            <if test="invoicePayee != null">#{invoicePayee},</if>
+            <if test="invoiceAmountTax != null">#{invoiceAmountTax},</if>
+            <if test="invoiceTaxrate != null">#{invoiceTaxrate},</if>
+            <if test="invoiceAmountNtax != null">#{invoiceAmountNtax},</if>
+            <if test="invoiceImg != null">#{invoiceImg},</if>
+            <if test="companyImg != null">#{companyImg},</if>
+            <if test="handoverUserid != null">#{handoverUserid},</if>
+            <if test="handoverUsername != null">#{handoverUsername},</if>
+            <if test="handoverTime != null">#{handoverTime},</if>
+            <if test="confirmerUserid != null">#{confirmerUserid},</if>
+            <if test="confirmerUsername != null">#{confirmerUsername},</if>
+            <if test="confirmerTime != null">#{confirmerTime},</if>
+            <if test="voucherNo != null">#{voucherNo},</if>
+            <if test="voucherUserid != null">#{voucherUserid},</if>
+            <if test="voucherUsername != null">#{voucherUsername},</if>
+            <if test="voucherTime != null">#{voucherTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusps != null">#{statusps},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="voucherDept != null">#{voucherDept},</if>
+            <if test="payinfoid != null">#{payinfoid},</if>
+            <if test="paymentPeriod != null">#{paymentPeriod},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuInvoiceInfo" parameterType="CtBuInvoiceInfo">
+        update ct_bu_invoice_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''">contract_Category_Name = #{contractCategoryName},</if>
+
+            <if test="reqId != null">req_id = #{reqId},</if>
+            <if test="invoiceCode != null">invoice_code = #{invoiceCode},</if>
+            <if test="invoiceNo != null">invoice_no = #{invoiceNo},</if>
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            <if test="invoiceDrawer != null">invoice_drawer = #{invoiceDrawer},</if>
+            <if test="invoiceReviewer != null">invoice_reviewer = #{invoiceReviewer},</if>
+            <if test="invoicePayee != null">invoice_payee = #{invoicePayee},</if>
+            <if test="invoiceAmountTax != null">invoice_amount_tax = #{invoiceAmountTax},</if>
+            <if test="invoiceTaxrate != null">invoice_taxrate = #{invoiceTaxrate},</if>
+            <if test="invoiceAmountNtax != null">invoice_amount_ntax = #{invoiceAmountNtax},</if>
+            <if test="invoiceImg != null">invoice_img = #{invoiceImg},</if>
+            <if test="companyImg != null">company_img = #{companyImg},</if>
+            <if test="handoverUserid != null">handover_userid = #{handoverUserid},</if>
+            <if test="handoverUsername != null">handover_username = #{handoverUsername},</if>
+            <if test="handoverTime != null">handover_time = #{handoverTime},</if>
+            <if test="confirmerUserid != null">confirmer_userid = #{confirmerUserid},</if>
+            <if test="confirmerUsername != null">confirmer_username = #{confirmerUsername},</if>
+            <if test="confirmerTime != null">confirmer_time = #{confirmerTime},</if>
+            <if test="voucherNo != null">voucher_no = #{voucherNo},</if>
+            <if test="voucherUserid != null">voucher_userid = #{voucherUserid},</if>
+            <if test="voucherUsername != null">voucher_username = #{voucherUsername},</if>
+            <if test="voucherTime != null">voucher_time = #{voucherTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="voucherDept != null">voucher_Dept=#{voucherDept},</if>
+            <if test="payinfoid != null">payinfoid = #{payinfoid},</if>
+            <if test="paymentPeriod != null">payment_Period = #{paymentPeriod},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+<!--    <delete id="deleteCtBuInvoiceInfoById" parameterType="String">-->
+<!--        delete from ct_bu_invoice_info where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteCtBuInvoiceInfoByIds" parameterType="String">-->
+<!--        delete from ct_bu_invoice_info where id in -->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+
+    <update id="deleteCtBuInvoiceInfoById" parameterType="String">
+        update ct_bu_invoice_info set del_flag = 2  where id = #{id}
+    </update>
+
+    <update id="deleteCtBuInvoiceInfoByIds" parameterType="String">
+        update ct_bu_invoice_info set del_flag = 2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 移交发票 -->
+    <update id="updateCtBuInvoiceInfoByIds" parameterType="Map">
+        update ct_bu_invoice_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="handoverUserid != null and handoverUserid!=''">handover_userid = #{handoverUserid},</if>
+            <if test="handoverUsername != null and handoverUsername!=''"> handover_username = #{handoverUsername},</if>
+            <if test="handoverTime != null ">handover_time = #{handoverTime},</if>
+            <if test="confirmerUserid != null and confirmerUserid!=''">confirmer_userid = #{confirmerUserid},</if>
+            <if test="confirmerUsername != null and confirmerUsername!=''">confirmer_Username = #{confirmerUsername},</if>
+            <if test="confirmerTime != null ">confirmer_time = #{confirmerTime},</if>
+
+            <if test="voucherNo != null and voucherNo!=''">voucher_no = #{voucherNo},</if>
+            <if test="voucherUserid != null and voucherUserid!=''">voucher_userid = #{voucherUserid},</if>
+            <if test="voucherUsername != null and voucherUsername!=''">voucher_username = #{voucherUsername},</if>
+            <if test="voucherTime != null ">voucher_time = #{voucherTime},</if>
+            <if test="status != null and status!=''">status = #{status},</if>
+            <if test="voucherDept != null">voucher_Dept=#{voucherDept},</if>
+
+        </trim>
+<!--        <if test="status != null and status==8">-->
+<!--            where req_id in-->
+<!--            <foreach item="id" collection="ids" open="(" separator="," close=")">-->
+<!--                #{id}-->
+<!--            </foreach>-->
+
+<!--        </if>-->
+        <if test="status != null">
+            where id in
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+
+        </if>
+
+    </update>
+
+
+    <resultMap type="HashMap" id="invoiceCount">
+        <result property="invoiceType"    column="cbir.invoice_type"    />
+        <result property="invoiceCount"    column="count(1)"    />
+    </resultMap>
+
+    <select id="invoiceStatistics"  resultType="int" >
+        SELECT count(1)
+        FROM ct_bu_invoice_info cbii
+        LEFT JOIN ct_bu_invoice_req cbir ON cbii.req_id = cbir.id
+        LEFT JOIN sys_user su ON cbir.create_by = su.user_id
+        <where>
+            su.company_id = #{companyId} AND cbir.invoice_type =  #{invoiceType}
+            <if test="startDate != null "> AND cbii.invoice_date >= #{startDate}</if>
+            <if test="endDate != null "> AND #{endDate} >= cbii.invoice_date </if>
+        </where>
+    </select>
+
+    
+</mapper>

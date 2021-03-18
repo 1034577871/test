@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CtPdeptDeptMapper">
+    
+    <resultMap type="CtPdeptDept" id="CtPdeptDeptResult">
+        <result property="id"    column="id"    />
+        <result property="pname"    column="pname"    />
+        <result property="name"    column="name"    />
+        <result property="fgld"    column="fgld"    />
+        <result property="fgldid"    column="fgldid"    />
+
+    </resultMap>
+
+    <sql id="selectCtPdeptDeptVo">
+        select id, pname, name,fgld,fgldid from ct_pdept_dept
+    </sql>
+
+    <select id="selectCtPdeptDeptList" parameterType="CtPdeptDept" resultMap="CtPdeptDeptResult">
+        <include refid="selectCtPdeptDeptVo"/>
+        <where>  
+            <if test="pname != null  and pname != ''"> and pname like concat('%', #{pname}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="fgld != null  and name != ''"> and fgld = #{fgld} </if>
+            <if test="fgldid != null  and fgldid != ''"> and fgldid = #{fgldid} </if>
+        </where>
+    </select>
+    
+    <select id="selectCtPdeptDeptById" parameterType="String" resultMap="CtPdeptDeptResult">
+        <include refid="selectCtPdeptDeptVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCtPdeptDept" parameterType="CtPdeptDept">
+        insert into ct_pdept_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="pname != null">pname,</if>
+            <if test="name != null">name,</if>
+            <if test="fgld != null">fgld,</if>
+            <if test="fgldid != null">fgldid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="pname != null">#{pname},</if>
+            <if test="name != null">#{name},</if>
+            <if test="fgld != null">#{fgld}},</if>
+            <if test="fgldid != null">#{fgldid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtPdeptDept" parameterType="CtPdeptDept">
+        update ct_pdept_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pname != null">pname = #{pname},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="fgld != null">fgld = #{fgld},</if>
+            <if test="fgldid != null">fgldid = #{fgldid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtPdeptDeptById" parameterType="String">
+        delete from ct_pdept_dept where id = #{id}
+    </delete>
+
+    <delete id="deleteCtPdeptDeptByIds" parameterType="String">
+        delete from ct_pdept_dept where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

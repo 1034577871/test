@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.projectApproval.AppNgBase.mapper.AppNgBaseMapper">
+
+	<resultMap type="AppNgBase" id="AppNgBaseResult">
+		<result property="id" column="id" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="bid" column="bid" />
+		<result property="branchInvolvedId" column="branch_involved_id"/>
+		<result property="branchInvolvedName"
+			column="branch_involved_name" />
+		<result property="companyCharge" column="company_charge" />
+		<result property="departCharge" column="depart_charge" />
+		<result property="proCharge" column="pro_charge" />
+		<result property="projectTypeId" column="project_type_id" />
+		<result property="projectTypeName" column="project_type_name" />
+		<result property="buildingsNumber" column="buildings_number" />
+		<result property="buildingsInvolvedNumber"
+			column="buildings_involved_number" />
+		<result property="digitaltvNumber" column="digitaltv_number" />
+		<result property="broadbandNumber" column="broadband_number" />
+		<result property="budgetMaterial" column="budget_material" />
+		<result property="budgetLabor" column="budget_labor" />
+		<result property="budgetTotal" column="budget_total" />
+		<result property="designTime" column="design_time" />
+		<result property="dmissionTime" column="dmission_time" />
+		<result property="completionTime" column="completion_time" />
+		<result property="remark" column="remark" />
+		<result property="delFlag" column="del_flag" />
+		<result property="cid" column="cid" />
+	</resultMap>
+
+	<sql id="selectAppNgBaseVo">
+		select id, create_by, create_time, update_by, update_time, bid,
+		branch_involved_id, branch_involved_name, company_charge,
+		depart_charge, pro_charge, project_type_id, project_type_name,
+		buildings_number, buildings_involved_number, digitaltv_number,
+		broadband_number, budget_material, budget_labor, budget_total,
+		design_time, dmission_time, completion_time, remark, del_flag,cid from
+		ct_bu_approvaldt_ng_base
+	</sql>
+
+	<select id="selectAppNgBaseList" parameterType="AppNgBase"
+		resultMap="AppNgBaseResult">
+		<include refid="selectAppNgBaseVo" />
+		<where>
+			del_flag = '1'
+			<if test="bid != null  and bid != ''"> and bid = #{bid}</if>
+			<if test="branchInvolvedId != null  and branchInvolvedId != ''"> and branch_involved_id = #{branchInvolvedId}</if>
+			<if
+				test="branchInvolvedName != null  and branchInvolvedName != ''"> and branch_involved_name like concat('%',
+				#{branchInvolvedName}, '%')</if>
+			<if test="companyCharge != null  and companyCharge != ''"> and company_charge = #{companyCharge}</if>
+			<if test="departCharge != null  and departCharge != ''"> and depart_charge = #{departCharge}</if>
+			<if test="proCharge != null  and proCharge != ''"> and pro_charge = #{proCharge}</if>
+			<if test="projectTypeId != null "> and project_type_id = #{projectTypeId}</if>
+			<if test="projectTypeName != null  and projectTypeName != ''"> and project_type_name like concat('%',
+				#{projectTypeName}, '%')</if>
+			<if test="buildingsNumber != null "> and buildings_number = #{buildingsNumber}</if>
+			<if test="buildingsInvolvedNumber != null "> and buildings_involved_number =
+				#{buildingsInvolvedNumber}</if>
+			<if test="digitaltvNumber != null "> and digitaltv_number = #{digitaltvNumber}</if>
+			<if test="broadbandNumber != null "> and broadband_number = #{broadbandNumber}</if>
+			<if test="budgetMaterial != null "> and budget_material = #{budgetMaterial}</if>
+			<if test="budgetLabor != null "> and budget_labor = #{budgetLabor}</if>
+			<if test="budgetTotal != null "> and budget_total = #{budgetTotal}</if>
+			<if test="designTime != null "> and design_time = #{designTime}</if>
+			<if test="dmissionTime != null "> and dmission_time = #{dmissionTime}</if>
+			<if test="completionTime != null "> and completion_time = #{completionTime}</if>
+			<if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+			<if test="cid != null  and cid != ''"> and cid in(select id from ct_bu_approvaldt_ng_company where bid=#{bid} and
+				branch_involved_id = #{cid}	 )</if>
+		</where>
+	</select>
+
+	<select id="selectAppNgBaseById" parameterType="String"
+		resultMap="AppNgBaseResult">
+		<include refid="selectAppNgBaseVo" />
+		where id = #{id} and del_flag = '1'
+	</select>
+	
+	<select id="selectAppNgBaseByBid" parameterType="String"
+		resultMap="AppNgBaseResult">
+		<include refid="selectAppNgBaseVo" />
+		where bid = #{id} and del_flag = '1'
+
+	</select>
+	
+	<insert id="insertAppNgBase" parameterType="AppNgBase">
+		insert into ct_bu_approvaldt_ng_base
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="bid != null">bid,</if>
+			<if test="branchInvolvedId != null">branch_involved_id,</if>
+			<if test="branchInvolvedName != null">branch_involved_name,</if>
+			<if test="companyCharge != null">company_charge,</if>
+			<if test="departCharge != null">depart_charge,</if>
+			<if test="proCharge != null">pro_charge,</if>
+			<if test="projectTypeId != null">project_type_id,</if>
+			<if test="projectTypeName != null">project_type_name,</if>
+			<if test="buildingsNumber != null">buildings_number,</if>
+			<if test="buildingsInvolvedNumber != null">buildings_involved_number,</if>
+			<if test="digitaltvNumber != null">digitaltv_number,</if>
+			<if test="broadbandNumber != null">broadband_number,</if>
+			<if test="budgetMaterial != null">budget_material,</if>
+			<if test="budgetLabor != null">budget_labor,</if>
+			<if test="budgetTotal != null">budget_total,</if>
+			<if test="designTime != null">design_time,</if>
+			<if test="dmissionTime != null">dmission_time,</if>
+			<if test="completionTime != null">completion_time,</if>
+			<if test="remark != null">remark,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="cid != null">cid,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="bid != null">#{bid},</if>
+			<if test="branchInvolvedId != null">#{branchInvolvedId},</if>
+			<if test="branchInvolvedName != null">#{branchInvolvedName},</if>
+			<if test="companyCharge != null">#{companyCharge},</if>
+			<if test="departCharge != null">#{departCharge},</if>
+			<if test="proCharge != null">#{proCharge},</if>
+			<if test="projectTypeId != null">#{projectTypeId},</if>
+			<if test="projectTypeName != null">#{projectTypeName},</if>
+			<if test="buildingsNumber != null">#{buildingsNumber},</if>
+			<if test="buildingsInvolvedNumber != null">#{buildingsInvolvedNumber},</if>
+			<if test="digitaltvNumber != null">#{digitaltvNumber},</if>
+			<if test="broadbandNumber != null">#{broadbandNumber},</if>
+			<if test="budgetMaterial != null">#{budgetMaterial},</if>
+			<if test="budgetLabor != null">#{budgetLabor},</if>
+			<if test="budgetTotal != null">#{budgetTotal},</if>
+			<if test="designTime != null">#{designTime},</if>
+			<if test="dmissionTime != null">#{dmissionTime},</if>
+			<if test="completionTime != null">#{completionTime},</if>
+			<if test="remark != null">#{remark},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="cid != null">#{cid},</if>
+		</trim>
+	</insert>
+
+	<update id="updateAppNgBase" parameterType="AppNgBase">
+		update ct_bu_approvaldt_ng_base
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="bid != null">bid = #{bid},</if>
+			<if test="branchInvolvedId != null">branch_involved_id = #{branchInvolvedId},</if>
+			<if test="branchInvolvedName != null">branch_involved_name = #{branchInvolvedName},</if>
+			<if test="companyCharge != null">company_charge = #{companyCharge},</if>
+			<if test="departCharge != null">depart_charge = #{departCharge},</if>
+			<if test="proCharge != null">pro_charge = #{proCharge},</if>
+			<if test="projectTypeId != null">project_type_id = #{projectTypeId},</if>
+			<if test="projectTypeName != null">project_type_name = #{projectTypeName},</if>
+			<if test="buildingsNumber != null">buildings_number = #{buildingsNumber},</if>
+			<if test="buildingsInvolvedNumber != null">buildings_involved_number = #{buildingsInvolvedNumber},
+			</if>
+			<if test="digitaltvNumber != null">digitaltv_number = #{digitaltvNumber},</if>
+			<if test="broadbandNumber != null">broadband_number = #{broadbandNumber},</if>
+			<if test="budgetMaterial != null">budget_material = #{budgetMaterial},</if>
+			<if test="budgetLabor != null">budget_labor = #{budgetLabor},</if>
+			<if test="budgetTotal != null">budget_total = #{budgetTotal},</if>
+			<if test="designTime != null">design_time = #{designTime},</if>
+			<if test="dmissionTime != null">dmission_time = #{dmissionTime},</if>
+			<if test="completionTime != null">completion_time = #{completionTime},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+			<if test="cid != null">cid = #{cid},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteAppNgBaseById" parameterType="String">
+		delete from ct_bu_approvaldt_ng_base where id = #{id}
+	</delete>
+	
+	<update id="deleteAppNgBaseByBid" parameterType="String">
+		update ct_bu_approvaldt_ng_base set del_flag = '2' where bid = #{id}
+	</update>
+	
+	<delete id="deleteAppNgBaseByIds" parameterType="String">
+		delete from ct_bu_approvaldt_ng_base where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

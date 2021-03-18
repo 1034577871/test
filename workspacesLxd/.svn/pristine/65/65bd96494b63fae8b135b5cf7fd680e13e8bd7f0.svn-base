@@ -1,0 +1,626 @@
+package com.ruoyi.projectApproval.ApprovalNg.domain;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ruoyi.collection.domain.ActWorkflowFormDatas;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.projectApproval.AppNgBase.domain.AppNgBase;
+import com.ruoyi.projectApproval.AppNgCompany.domain.CtBuApprovaldtNgCompany;
+import com.ruoyi.projectApproval.AppNgCompany.domain.CtBuApprovaldtNgCompanys;
+import com.ruoyi.projectApproval.AppNgConst.domain.AppNgConst;
+import com.ruoyi.projectApproval.AppNgMaterial.domain.AppNgMaterial;
+import com.ruoyi.projectApproval.AppxNgReq.domain.AppxNgReq;
+
+/**
+ * 事前审批主(集客类)对象 ct_bu_approval_ng
+ *
+ * @author Mu
+ * @date 2020-12-08
+ */
+public class CtBuApprovalNg extends BaseEntity {
+
+    private static final long serialVersionUID = 1L;
+
+    public String getProNames() {
+        return proNames;
+    }
+
+    public void setProNames(String proNames) {
+        this.proNames = proNames;
+    }
+
+    private String proNames;
+
+    public BigDecimal getCltotal() {
+        return cltotal;
+    }
+
+    public void setCltotal(BigDecimal cltotal) {
+        this.cltotal = cltotal;
+    }
+
+    public BigDecimal getSgtotal() {
+        return sgtotal;
+    }
+
+    public void setSgtotal(BigDecimal sgtotal) {
+        this.sgtotal = sgtotal;
+    }
+
+    private BigDecimal cltotal;
+    private BigDecimal sgtotal;
+
+    public String getGhbState() {
+        return ghbState;
+    }
+
+    public void setGhbState(String ghbState) {
+        this.ghbState = ghbState;
+    }
+
+    private String ghbState;
+
+    public List<String> getSelectComp() {
+        return selectComp;
+    }
+
+    public void setSelectComp(List<String> selectComp) {
+        this.selectComp = selectComp;
+    }
+
+    private List<String> selectComp;
+
+    public List<CtBuApprovaldtNgCompanys> getCompanys() {
+        return companys;
+    }
+
+    public void setCompanys(List<CtBuApprovaldtNgCompanys> companys) {
+        this.companys = companys;
+    }
+
+    private List<CtBuApprovaldtNgCompanys> companys;
+
+
+    public List<CtBuApprovaldtNgCompany> getCompanyList() {
+        return companyList;
+    }
+
+    public void setCompanyList(List<CtBuApprovaldtNgCompany> companyList) {
+        this.companyList = companyList;
+    }
+
+    private List<CtBuApprovaldtNgCompany> companyList;
+
+    public String getProjectCode() {
+        return ProjectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        ProjectCode = projectCode;
+    }
+
+    private String ProjectCode;
+
+    public List<AppNgBase> getAppNgBaseList() {
+        return appNgBaseList;
+    }
+
+    public void setAppNgBaseList(List<AppNgBase> appNgBaseList) {
+        this.appNgBaseList = appNgBaseList;
+    }
+
+    private List<AppNgBase> appNgBaseList;
+
+    private String appSqsp;
+
+    public String getAppSqsp() {
+        return appSqsp;
+    }
+
+    public void setAppSqsp(String appSqsp) {
+        this.appSqsp = appSqsp;
+    }
+
+
+    public List getAppDepts() {
+        return appDepts;
+    }
+
+    public void setAppDepts(List appDepts) {
+        this.appDepts = appDepts;
+    }
+
+    private List appDepts;
+
+    public BigDecimal getActualAmount() {
+        return actualAmount;
+    }
+
+    public void setActualAmount(BigDecimal actualAmount) {
+        this.actualAmount = actualAmount;
+    }
+
+    private BigDecimal actualAmount;
+
+    public List<ActWorkflowFormDatas> getActWorkflowFormDatas() {
+        return actWorkflowFormDatas;
+    }
+
+    public void setActWorkflowFormDatas(List<ActWorkflowFormDatas> actWorkflowFormDatas) {
+        this.actWorkflowFormDatas = actWorkflowFormDatas;
+    }
+
+    private List<ActWorkflowFormDatas> actWorkflowFormDatas;
+    /**
+     * 唯一ID
+     */
+    private String id;
+
+    /**
+     * 申请编号
+     */
+    @Excel(name = "申请编号")
+    private String reqNo;
+
+    /**
+     * 项目名称
+     */
+    @Excel(name = "项目名称")
+    private String proName;
+
+    /**
+     * 项目类型编号
+     */
+    @Excel(name = "项目类型编号")
+    private String proType;
+
+    /**
+     * 项目类型名称
+     */
+    @Excel(name = "项目类型名称")
+    private String proTypeName;
+
+    /**
+     * 所属分公司编号
+     */
+    @Excel(name = "所属分公司编号")
+    private String belongCompanyid;
+
+    /**
+     * 所属分公司名称
+     */
+    @Excel(name = "所属分公司名称")
+    private String belongCompanyName;
+
+    /**
+     * 所属部门编号
+     */
+    @Excel(name = "所属部门编号")
+    private String belongDeptid;
+
+    /**
+     * 所属部门名称
+     */
+    @Excel(name = "所属部门名称")
+    private String belongDeptName;
+
+    /**
+     * 合同金额
+     */
+    @Excel(name = "合同金额")
+    private BigDecimal contractAmountTotal;
+
+    /**
+     * 不含税金额
+     */
+    @Excel(name = "不含税金额")
+    private BigDecimal contractAmountTax;
+
+    /**
+     * 税率
+     */
+    @Excel(name = "税率")
+    private BigDecimal taxrate;
+
+    /**
+     * 税额
+     */
+    @Excel(name = "税额")
+    private BigDecimal taxamount;
+
+    /**
+     * 状态
+     */
+    @Excel(name = "状态")
+    private Integer status;
+
+    /**
+     * 状态说明
+     */
+    @Excel(name = "状态说明")
+    private String statusPs;
+
+    /**
+     * 备注信息
+     */
+    @Excel(name = "备注信息")
+    private String remarks;
+
+    /**
+     * 删除标记
+     */
+    private Integer delFlag;
+
+    /**
+     * 项目基本情况
+     **/
+    private AppNgBase appNgBase;
+
+    /**
+     * 材料使用情况
+     **/
+    private List<AppNgMaterial> appNgMaterialList;
+
+    /**
+     * 施工费情况
+     **/
+    private List<AppNgConst> appNgConstList;
+
+    /**
+     * 事前审批对象
+     **/
+    private AppxNgReq appxNgReq;
+
+    /**
+     * 实例ID
+     */
+    private String instanceId;
+
+
+    public List<List<AppNgMaterial>> getAppNgMaterialLists() {
+        return appNgMaterialLists;
+    }
+
+    public void setAppNgMaterialLists(List<List<AppNgMaterial>> appNgMaterialLists) {
+        this.appNgMaterialLists = appNgMaterialLists;
+    }
+
+    public List<List<AppNgConst>> getAppNgConstLists() {
+        return appNgConstLists;
+    }
+
+    public void setAppNgConstLists(List<List<AppNgConst>> appNgConstLists) {
+        this.appNgConstLists = appNgConstLists;
+    }
+
+    /**
+     * 材料使用情况
+     **/
+    private List<List<AppNgMaterial>> appNgMaterialLists;
+
+    /**
+     * 施工费情况
+     **/
+    private List<List<AppNgConst>> appNgConstLists;
+    /**
+     * 流程类型（1.三重一大项目或预算投资金额≥50万元
+     * 2.针对跨区项目，涉及网络自主建设或技术平台建设及应用，预计项目金额≥10万元 或 5万元≤投资额＜50万元
+     * 3.针对非跨区项目，涉及网络自主建设或技术平台建设及应用，预计项目金额≥10万元 或 5万元≤投资额＜50万元
+     * 4.针对不涉及网络自主建设或技术平台建设及应用，预计项目金额≥10万元（非垫资）
+     * 5.针对框架类协议业务点位新增、小集客业务政策申请、预计项目金额＜10万元 或 投资额＜5万元的项目	）
+     */
+    private Integer instanceType;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setReqNo(String reqNo) {
+        this.reqNo = reqNo;
+    }
+
+    public String getReqNo() {
+        return reqNo;
+    }
+
+    public void setProName(String proName) {
+        this.proName = proName;
+    }
+
+    public String getProName() {
+        return proName;
+    }
+
+    public void setProType(String proType) {
+        this.proType = proType;
+    }
+
+    public String getProType() {
+        return proType;
+    }
+
+    public void setProTypeName(String proTypeName) {
+        this.proTypeName = proTypeName;
+    }
+
+    public String getProTypeName() {
+        return proTypeName;
+    }
+
+    public void setBelongCompanyid(String belongCompanyid) {
+        this.belongCompanyid = belongCompanyid;
+    }
+
+    public String getBelongCompanyid() {
+        return belongCompanyid;
+    }
+
+    public void setBelongCompanyName(String belongCompanyName) {
+        this.belongCompanyName = belongCompanyName;
+    }
+
+    public String getBelongCompanyName() {
+        return belongCompanyName;
+    }
+
+    public void setBelongDeptid(String belongDeptid) {
+        this.belongDeptid = belongDeptid;
+    }
+
+    public String getBelongDeptid() {
+        return belongDeptid;
+    }
+
+    public void setBelongDeptName(String belongDeptName) {
+        this.belongDeptName = belongDeptName;
+    }
+
+    public String getBelongDeptName() {
+        return belongDeptName;
+    }
+
+    public BigDecimal getContractAmountTotal() {
+        return contractAmountTotal;
+    }
+
+    public void setContractAmountTotal(BigDecimal contractAmountTotal) {
+        this.contractAmountTotal = contractAmountTotal;
+    }
+
+    public BigDecimal getContractAmountTax() {
+        return contractAmountTax;
+    }
+
+    public void setContractAmountTax(BigDecimal contractAmountTax) {
+        this.contractAmountTax = contractAmountTax;
+    }
+
+    public BigDecimal getTaxrate() {
+        return taxrate;
+    }
+
+    public void setTaxrate(BigDecimal taxrate) {
+        this.taxrate = taxrate;
+    }
+
+    public BigDecimal getTaxamount() {
+        return taxamount;
+    }
+
+    public void setTaxamount(BigDecimal taxamount) {
+        this.taxamount = taxamount;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getStatusPs() {
+        return statusPs;
+    }
+
+    public void setStatusPs(String statusPs) {
+        this.statusPs = statusPs;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public AppNgBase getAppNgBase() {
+        return appNgBase;
+    }
+
+    public void setAppNgBase(AppNgBase appNgBase) {
+        this.appNgBase = appNgBase;
+    }
+
+    public List<AppNgMaterial> getAppNgMaterialList() {
+        return appNgMaterialList;
+    }
+
+    public void setAppNgMaterialList(List<AppNgMaterial> appNgMaterialList) {
+        this.appNgMaterialList = appNgMaterialList;
+    }
+
+    public List<AppNgConst> getAppNgConstList() {
+        return appNgConstList;
+    }
+
+    public void setAppNgConstList(List<AppNgConst> appNgConstList) {
+        this.appNgConstList = appNgConstList;
+    }
+
+    public AppxNgReq getAppxNgReq() {
+        return appxNgReq;
+    }
+
+    public void setAppxNgReq(AppxNgReq appxNgReq) {
+        this.appxNgReq = appxNgReq;
+    }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
+
+    public Integer getInstanceType() {
+        return instanceType;
+    }
+
+    public void setInstanceType(Integer instanceType) {
+        this.instanceType = instanceType;
+    }
+
+    public String getInvolvingBranchesId() {
+        return involvingBranchesId;
+    }
+
+    public void setInvolvingBranchesId(String involvingBranchesId) {
+        this.involvingBranchesId = involvingBranchesId;
+    }
+
+    public String getInvolvingBranchesName() {
+        return involvingBranchesName;
+    }
+
+    public void setInvolvingBranchesName(String involvingBranchesName) {
+        this.involvingBranchesName = involvingBranchesName;
+    }
+
+    public BigDecimal getExpectAmount() {
+        return expectAmount;
+    }
+
+    public void setExpectAmount(BigDecimal expectAmount) {
+        this.expectAmount = expectAmount;
+    }
+
+    public String getIsAdvanceNeed() {
+        return isAdvanceNeed;
+    }
+
+    public void setIsAdvanceNeed(String isAdvanceNeed) {
+        this.isAdvanceNeed = isAdvanceNeed;
+    }
+
+    public String getIsPlanConfirm() {
+        return isPlanConfirm;
+    }
+
+    public void setIsPlanConfirm(String isPlanConfirm) {
+        this.isPlanConfirm = isPlanConfirm;
+    }
+
+    public BigDecimal getActualAmountT() {
+        return actualAmountT;
+    }
+
+    public void setActualAmountT(BigDecimal actualAmountT) {
+        this.actualAmountT = actualAmountT;
+    }
+
+    public String getConstructionPlan() {
+        return constructionPlan;
+    }
+
+    public void setConstructionPlan(String constructionPlan) {
+        this.constructionPlan = constructionPlan;
+    }
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
+    }
+
+    public String getBenefitDescription() {
+        return benefitDescription;
+    }
+
+    public void setBenefitDescription(String benefitDescription) {
+        this.benefitDescription = benefitDescription;
+    }
+
+    /**
+     * 涉及分公司编号
+     */
+    @Excel(name = "涉及分公司编号")
+    private String involvingBranchesId;
+
+    /**
+     * 涉及分公司名称
+     */
+    @Excel(name = "涉及分公司名称")
+    private String involvingBranchesName;
+
+    /**
+     * 预计投资金额
+     */
+    @Excel(name = "预计投资金额")
+    private BigDecimal expectAmount;
+
+    /**
+     * 公司是否垫资
+     */
+    @Excel(name = "公司是否垫资")
+    private String isAdvanceNeed;
+
+    /**
+     * 是否经过规划确认
+     */
+    @Excel(name = "是否经过规划确认")
+    private String isPlanConfirm;
+
+    /**
+     * 实际投资金额
+     */
+    @Excel(name = "实际投资金额")
+    private BigDecimal actualAmountT;
+
+    /**
+     * 建设方案
+     */
+    @Excel(name = "建设方案")
+    private String constructionPlan;
+
+    /**
+     * 项目描述
+     */
+    @Excel(name = "项目描述")
+    private String projectDescription;
+
+    /**
+     * 项目效益说明
+     */
+    @Excel(name = "项目效益说明")
+    private String benefitDescription;
+}

@@ -1,0 +1,535 @@
+<template>
+  <div class="app-container">
+
+ <el-form :model="queryParams"
+    ref="queryForm"
+    v-show="showSearch"
+    label-width="90px">
+
+      <el-row :gutter="15">
+        <el-col :span="6">
+           <el-form-item label="流程名称" prop="processDefinitionName">
+             <el-input
+               v-model="queryParams.processDefinitionName"
+               placeholder="请输入流程名称"
+               clearable
+               size="small"
+               @keyup.enter.native="handleQuery"
+             />
+           </el-form-item>
+        </el-col>
+          <el-col :span="6">
+            <el-form-item label="任务节点名称" label-width="150px" prop="taskName">
+              <el-input
+                v-model="queryParams.taskName"
+                placeholder="请输入流程名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+         </el-col>
+         <!-- <el-col :span="6">
+          <el-form-item label="审核日期" prop="createdDate">
+            <el-date-picker
+              v-model="dateRange"
+              size="small"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col> -->
+
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+
+    <el-table v-loading="loading" :data="tastList">
+           <el-table-column label="流程ID" align="center" prop="id" v-if="show"/>
+      <el-table-column label="流程名称" align="center" prop="instanceName"/>
+      <el-table-column label="任务节点名称" align="center" prop="name"/>
+      <el-table-column label="任务状态" align="center" prop="status"/>
+       <el-table-column label="办理人" align="center" prop="remark"/>
+      <el-table-column label="创建时间" align="center" prop="createdDate"/>
+
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-document"
+            @click="examineAndApprove (scope.row)"
+
+          >查看详情
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="examineAndApproves (scope.row)"
+
+          >查看流程图
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+
+<el-dialog title="查看流程图" :visible.sync="show" width="80%">
+  <div>
+    <a :href ="'http://localhost:81/dev-api/task/exportImage/?processInstanceId=745a837a-41bf-11eb-b8da-3c6aa761ef86'">跳转</a>
+
+    <!-- <img :src="imgUrl" id="lct" alt="查看流程图"  width="80%" height="80%"/> -->
+  </div>
+</el-dialog>
+
+  <el-dialog title="查看详情" :visible.sync="open" width="80%">
+      <el-form ref="form" :model="form"    label-width="100px">
+        <el-row :gutter="15">
+          <el-col :span="24" style="margin-top: 0;">
+            <el-divider content-position="center" ><el-link type="primary"><b>申请信息</b></el-link></el-divider>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="项目类型" prop="ApprovalType">
+              <el-select v-model="form.approvalType" placeholder="请选择项目类型" style="width: 100%;">
+                <el-option
+                  v-for="dict in projectCategoryTypeList"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+
+            <el-form-item label="项目编号" prop="proNo">
+              <el-input v-model="form.proNo"   />
+            </el-form-item>
+           </el-col>
+           <el-col :span="8">
+            <el-form-item label="项目名称" prop="proName">
+              <el-input v-model="form.proName"      placeholder="请输入项目名称"  />
+            </el-form-item>
+          </el-col>
+
+
+          <el-col :span="6">
+            <el-form-item label="" prop="projectCategory">
+
+            </el-form-item>
+          </el-col>
+
+           <el-col :span="8">
+            <el-form-item label="合同编号"     prop="contractNo">
+                <el-input v-model="form.contractNo"   placeholder="请输入合同编号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="合同名称"    prop="contractName">
+              <el-input v-model="form.contractName"   placeholder="请输入合同名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="发票种类" prop="invoiceType" >
+             <el-select :style="{ width: '100%' }"
+               v-model="form.invoiceType"
+               placeholder="发票类型"
+             >
+               <el-option
+                 v-for="dict in billTypeOptions"
+                 :key="dict.dictValue"
+                 :label="dict.dictLabel"
+                 :value="dict.dictValue"
+               />
+             </el-select>
+            </el-form-item>
+           </el-col>
+           <el-col :span="8">
+            <el-form-item label="部门编号" prop="reqDeptid">
+              <el-input v-model="form.reqDeptid"      placeholder="请输入申请部门编号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="部门名称" prop="reqDeptname">
+              <el-input v-model="form.reqDeptname"      placeholder="请输入申请部门名称" />
+            </el-form-item>
+          </el-col>
+              <el-col :span="8">
+                <el-form-item  label="申请人编号" prop="reqUserid">
+                  <el-input v-model="form.reqUserid"      placeholder="请输入申请人编号" />
+                </el-form-item>
+              </el-col>
+               <el-col :span="8">
+                <el-form-item label="申请人姓名" prop="reqUsername">
+                  <el-input v-model="form.reqUsername"      placeholder="请输入申请人姓名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="申请日期" prop="reqDate">
+                  <el-date-picker clearable size="small" :style="{ width: '100%' }"
+                    v-model="form.reqDate"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择申请日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位名称" prop="payerName">
+                  <el-input v-model="form.payerName" placeholder="请输入付款单位名称" />
+
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位地址" prop="payerAddress">
+                  <el-input v-model="form.payerAddress"      placeholder="请输入付款单位地址" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="纳税人识别号" prop="creditCode" >
+                  <el-input v-model="form.creditCode" placeholder="请输入纳税人识别号" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位电话"    prop="payerPhone">
+                  <el-input v-model="form.payerPhone"   placeholder="请输入付款单位电话" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位开户行"    prop="payerOpeningBank">
+                  <el-input v-model="form.payerOpeningBank"   placeholder="请输入付款单位开户行" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位账号"    prop="payerAccount">
+                  <el-input v-model="form.payerAccount"   placeholder="请输入付款单位账号" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="开票金额(含税)" prop="invoiceAmountTax">
+                  <el-input v-model="form.invoiceAmountTax" placeholder="请输入开票金额"  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="开票金额(不含税)"    prop="invoiceAmountNtax">
+                  <el-input v-model="form.invoiceAmountNtax"  placeholder="请输入开票金额" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="预计回款时间" prop="expectedCollectionTime" >
+                  <el-date-picker clearable size="small"
+                    v-model="form.expectedCollectionTime"
+                    type="date"  :style="{ width: '100%' }"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择预计回款时间">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+        <el-col :span="24" style="margin-top: 0;">
+         <el-divider content-position="center" ><el-link type="primary"><b>开票信息</b></el-link></el-divider>
+        </el-col>
+        <table class="curr-table ">
+          <tbody>
+            <tr>
+              <th width="5%">序号</th>
+              <th width="25%">项目名称</th>
+              <th width="10%">规格</th>
+              <th width="10%">型号</th>
+              <!-- <th width="8%">单位</th> -->
+              <th width="10%">单价</th>
+              <th width="8%">数量</th>
+              <th width="12%">金额(含税)</th>
+              <th width="12%">税率</th>
+              <th width="12%">金额(不含税)</th>
+
+
+            </tr>
+            <tr v-for="(value, index) in dataList" :key="index">
+              <td>
+                {{ index }}
+              </td>
+              <td>
+                <el-input
+                  v-model="value.invoiceProName"
+                  :name="'appMateList[' + index + '].invoiceProName'"
+                />
+              </td>
+              <td>
+                <el-input
+                  v-model="value.invoiceSpec"
+                  :name="'appMateList[' + index + '].invoiceSpec'"
+                />
+              </td>
+              <td>
+                <el-input
+                  v-model="value.invoiceType"
+                  :name="'appMateList[' + index + '].invoiceType'"
+                />
+              </td>
+
+              <td>
+                <el-input
+                  v-model="value.invoicePrice"
+                  :name="'appMateList[' + index + '].invoicePrice'"
+
+                />
+              </td>
+              <td>
+                <el-input
+                  v-model="value.invoiceMount"
+                  :name="'appMateList[' + index + '].invoiceMount'"
+                />
+              </td>
+              <td>
+                <el-input
+
+                  v-model="value.invoiceAmountTax"
+                  :name="'appMateList[' + index + '].invoiceAmountTax'"
+                />
+              </td>
+
+              <td>
+                <el-input
+
+                  v-model="value.invoiceTaxrate"
+                  :name="'appMateList[' + index + '].invoiceTaxrate'"
+
+                />
+              </td>
+              <td>
+                <el-input
+
+                  v-model="value.invoiceAmountNtax"
+                  :name="'appMateList[' + index + '].invoiceAmountNtax'"
+                />
+              </td>
+
+              <td>
+                <el-input
+                  type="hidden"
+                  v-model="value.id"
+                  :name="'appMateList[' + index + '].id'"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </el-form>
+    </el-dialog>
+
+
+
+
+
+  <AddorUpdate v-if="addOrUpdateVisible" ref="addOrUpdate"></AddorUpdate>
+  <collectOrder :businessKey="businessKey" ref="collectOrder"  v-if="collectAudit"/>
+  <contractInfo :businessKey="businessKey" ref="contractInfo"  v-if="contractAudit"/>
+  <ngcInfo :businessKey="businessKey" ref="ngcInfo"  v-if="ngcAudit"/>
+    </div>
+
+
+</template>
+
+<script>
+
+
+  import {showDiagram ,findProcessPic,selectBuessKeyByExe ,listTasks_,listTask, formDataShow, formDataSave} from "@/api/activiti/task";
+import AddorUpdate from './detail.vue';
+ import collectOrder  from './collectOrder.vue';  //导入自定义组件页面
+ import contractInfo  from './contractInfo.vue';  //导入自定义组件页面
+  import ngcInfo  from './ngcInfo.vue';  //导入自定义组件页面
+  export default {
+    name: "Leave",
+    components: {
+      AddorUpdate,collectOrder,contractInfo,ngcInfo},
+    data() {
+      return {
+        ngcAudit:false,
+        //收款单
+        collectAudit:false,
+        contractAudit:false,
+        imgUrl:'http://localhost:81/dev-api/task/exportImage/?processInstanceId=745a837a-41bf-11eb-b8da-3c6aa761ef86',
+         dataList: [],  //动态添加行的数据集合
+         show:false,
+         projectCategoryTypeList:[],
+        id:'',
+        addOrUpdateVisible:false,
+         billTypeOptions: [],
+        definitionKey: '',
+        businessKey: '',
+          showcom:false,
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 显示搜索条件
+        showSearch: true,
+        // 总条数
+        total: 0,
+        // 请假表格数据
+        tastList: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          processDefinitionName:null,
+          createdDate:null
+
+        },
+
+        // 表单参数
+        form: {
+          formData:[]
+        },
+        // 表单校验
+        rules: {}
+      };
+    },
+    created() {
+      this.getList();
+      //项目类型列表
+      this.getDicts("project_category_type").then((response) => {
+        console.log("************************************");
+        this.approvalTypeOptions = response.data;
+        this.projectCategoryTypeList = response.data;
+      });
+      this.getDicts("bill_type").then((response) => {
+        this.billTypeOptions = response.data;
+      });
+    },
+    methods: {
+      getList() {
+        this.loading = true;
+        listTasks_(this.queryParams).then(response => {
+          this.tastList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getList();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+    czyFormat(row, column) {
+      return this.selectDictLabel(this.billTypeOptions, row.invoiceType);
+    },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.definitionKey = '',
+          this.businessKey = '',
+          this.form = {
+            formData:[],
+          };
+        this.resetForm("form");
+      },
+
+      /** 查看流程图 */
+      examineAndApproves(row) {
+        this.reset();
+
+        let url = window.location.hostname;
+        if(url.indexOf("http")<0){
+          url = "http://"+url;
+        }
+        let hosturl = url+":9001/task/exportImage?processInstanceId="+row.id;
+        window.open(hosturl,"_blank");
+      },
+      /** 提交按钮 */
+      submitForm() {
+        formDataSave(this.id,this.form.formData).then(response => {
+          this.msgSuccess("审批成功");
+          this.open = false;
+          this.getList();
+        });
+      },
+      /** 审批按钮操作 */
+      examineAndApprove(id) {
+        console.log(id);
+
+         this.getDioag(id.instanceName);
+
+        this.$nextTick(() =>{
+          if(this.collectAudit == true){
+             this.$refs.collectOrder.init(id);
+          }
+          if(this.addOrUpdateVisible == true){
+             this.$refs.addOrUpdate.init(id);
+          }
+          if(this.contractAudit == true){
+             this.$refs.contractInfo.init(id);
+          }
+          if(this.ngcAudit == true){
+             this.$refs.ngcInfo.init(id);
+          }
+
+        })
+      },
+      getDioag(obj){
+        if(obj.indexOf("发票申请")>=0 || obj.indexOf("开票申请")>=0){
+          this.addOrUpdateVisible = true;
+          this.collectAudit = false;
+          this.contractAudit = false;
+           this.ngcAudit = false;
+        }
+        if(obj.indexOf("收款单审核")>=0){
+          this.collectAudit = true;
+           this.addOrUpdateVisible = false;
+           this.contractAudit = false;
+           this.ngcAudit = false;
+        }
+        if(obj.indexOf("合同审核")>=0){
+          this.contractAudit = true;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+            this.ngcAudit = false;
+        }
+        if(obj.indexOf("非集客10w限额以下的审批")>=0  || obj.indexOf("非集客项目(限额以上的审批流程)")>=0){
+          this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = true;
+        }
+      },
+    }
+  };
+</script>

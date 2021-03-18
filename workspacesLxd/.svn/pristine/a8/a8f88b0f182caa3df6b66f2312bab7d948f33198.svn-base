@@ -1,0 +1,72 @@
+package com.ruoyi.dictionary.taxrate.service;
+
+import com.ruoyi.dictionary.taxrate.domain.CtDicTaxrate;
+
+import java.util.List;
+
+
+/**
+ * 税率字典Service接口
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+public interface ICtDicTaxrateService {
+    /**
+     * 查询税率字典
+     *
+     * @param id 税率字典ID
+     * @return 税率字典
+     */
+    public CtDicTaxrate selectCtDicTaxrateById(String id);
+
+    /**
+     * 查询税率字典列表
+     *
+     * @param ctDicTaxrate 税率字典
+     * @return 税率字典集合
+     */
+    public List<CtDicTaxrate> selectCtDicTaxrateList(CtDicTaxrate ctDicTaxrate);
+
+    /**
+     * 新增税率字典
+     *
+     * @param ctDicTaxrate 税率字典
+     * @return 结果
+     */
+    public int insertCtDicTaxrate(CtDicTaxrate ctDicTaxrate);
+
+    /**
+     * 修改税率字典
+     *
+     * @param ctDicTaxrate 税率字典
+     * @return 结果
+     */
+    public int updateCtDicTaxrate(CtDicTaxrate ctDicTaxrate);
+
+    /**
+     * 批量删除税率字典
+     *
+     * @param ids 需要删除的税率字典ID
+     * @return 结果
+     */
+    public int deleteCtDicTaxrateByIds(String[] ids);
+
+    /**
+     * 删除税率字典信息
+     *
+     * @param id 税率字典ID
+     * @return 结果
+     */
+    public int deleteCtDicTaxrateById(String id);
+
+
+    /**
+     * 批量逻辑删除税率字典
+     *
+     * @param ids 需要删除的税率字典ID
+     * @return 结果
+     */
+    public int updateCtDicTaxrateByIds(String[] ids);
+
+}

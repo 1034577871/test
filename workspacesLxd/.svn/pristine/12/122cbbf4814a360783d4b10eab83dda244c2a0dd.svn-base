@@ -1,0 +1,202 @@
+<!-- 审批详情弹出页 -->
+<template>
+  <div>
+    <el-dialog title="非集客项目立项详情" :visible.sync="modalShow" width="80%" :before-close="modalClose">
+
+     <el-form ref="form" :model="form"  label-width="100px">
+          <el-col :span="8">
+              <el-form-item label="项目名称" prop="proName">
+                <el-input v-model="form.proName" placeholder="请输入项目名称" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="所属公司" prop="belongCompanyname">
+                <el-input v-model="form.belongCompanyname" placeholder="请输入所属公司" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="所属部门" prop="belongDeptname">
+                 <el-input v-model="form.belongDeptname" placeholder="请输入所属公司" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="项目类型" prop="proName">
+                <el-input v-model="form.proName" placeholder="请输入所属公司" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="项目分类" prop="classification">
+                  <el-input v-model="form.classification" placeholder="请输入所属公司" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="合同金额" prop="contractAmountTotal">
+                <el-input
+                  v-model="form.contractAmountTotal"
+                  placeholder="请输入合同金额"
+                  v-on:input="changeNum()"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="税率(%)" prop="taxrate">
+                <el-input
+                  v-model="form.taxrate"
+                  placeholder="请输入税率"
+                  v-on:input="changeNum()"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="不含税金额" prop="contractAmountTax">
+                <el-input
+                  v-model="form.contractAmountTax"
+                  placeholder="不含税金额"
+
+                  :disabled="true"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="税额(元)" prop="taxamount" >
+                <el-input
+                  v-model="form.taxamount"
+
+                  placeholder="税额"
+                  :disabled="true"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="申请原因" prop="reqReason">
+                <el-input
+                  v-model="form.reqReason"
+                  type="textarea"
+                  placeholder="请输入内容"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="说明" prop="explainInfo">
+                <el-input
+                  v-model="form.explainInfo"
+                  type="textarea"
+                  placeholder="请输入内容"
+                />
+              </el-form-item>
+            </el-col>
+          <!-- <el-form-item label="附件" prop="files">
+            <el-upload
+              ref="field101"
+              :file-list="field101fileList"
+              :action="field101Action"
+              :headers="token"
+              :on-success="handleAvatarSuccess"
+              :on-remove="removeFile"
+              :auto-upload="autoUploadFalg"
+              multiple
+              :limit="20"
+              :before-upload="field101BeforeUpload"
+            >
+              <el-button slot="trigger" size="small" type="primary"
+                >选取文件</el-button
+              >
+            </el-upload>
+          </el-form-item> -->
+          <el-row :gutter="15">
+            <el-table :data="tableData">
+              <el-table-column label="任务节点" prop="taskNodeName" header-align="center" align="center">
+              </el-table-column>
+              <el-table-column label="审批人" prop="createName" header-align="center" align="center">
+              </el-table-column>
+              <el-table-column label="审批意见" prop="controlValue" header-align="center" align="center">
+              </el-table-column>
+              <el-table-column label="审批时间" prop="createTime"   header-align="center" align="center">
+              </el-table-column>
+            </el-table>
+          </el-row>
+     </el-form>
+     </el-dialog>
+  </div>
+</template>
+
+<script>
+  import { findWorkFlowFormData ,listApplyCollection,detailNgcApproval,findContract,detailhtCon,getUserInfo  } from "@/api/collection/common";
+    import { historyFromData,getCollection } from '@/api/activiti/historyFormdata'
+    import{ findProjectType, getFjkDetail }  from '@/api/projectApproval/collectProject'
+    export default {
+        name: "index",
+        data() {
+            return {
+               tableData:[], //审批信息
+               invoiceDataList:[], //开票信息
+              show:false,
+                modalShow:false,
+                 projectCategoryTypeList:[],
+                 form: {
+                   proNo: null,
+                    proName:null,
+                    contractNo:null,
+                    contractName:null,
+                    reqUsername:null,
+                    reqDeptname:null,
+                    reqDate:null,
+                    invoiceAmountTax:null,
+                    invoiceAmountNtax:null,
+                    businessKey:null
+                  },
+            }
+        },
+
+        methods:{
+            init(row){
+              this.form.businessKey = row.id;
+               this.tableData=[];
+
+             getFjkDetail(this.form.businessKey).then(response => {
+
+                 this.form = response.data
+                 let proName_ = response.data;
+                this.modalShow = true;
+                 this.tableData = response.data.actWorkflowFormDatas;
+             //项目类型列表
+                this.getDicts("project_category_type").then((response1) => {
+                  for(let item of response1.data) {
+                    if(item.dictValue==proName_.proType){
+                      this.form.approvalType = item.dictLabel;
+                    }
+                  }
+                });
+
+
+
+               })
+
+              //this.findWork();
+            },
+            findWork(){
+              findWorkFlowFormData(this.form).then(responses => {
+                this.tableData = responses;
+              });
+            },
+            modalClose(){
+                this.modalShow = false;
+            }
+        },
+    }
+
+</script>
+
+<style scoped lang="scss">
+  ::v-deep .input-noborder {
+    .el-input__inner {
+      border: 0;
+      background-color: #f8f8f9;
+    }
+  }
+  ::v-deep .el-dialog {
+    .el-dialog__body {
+      padding: 0px 20px !important;
+    }
+  }
+</style>

@@ -1,0 +1,502 @@
+package com.ruoyi.collection.domain;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 发票申请对象 ct_bu_invoice_req
+ * 
+ * @author ruoyi
+ * @date 2020-12-09
+ */
+
+public class CtBuInvoiceReqVo extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+
+    public int getIsOldCon() {
+        return isOldCon;
+    }
+
+    public void setIsOldCon(int isOldCon) {
+        this.isOldCon = isOldCon;
+    }
+
+    private int isOldCon;
+    public String getCreateByName() {
+        return createByName;
+    }
+
+    public void setCreateByName(String createByName) {
+        this.createByName = createByName;
+    }
+
+    private String createByName;
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+
+    public String state;
+
+    public long getInvoiceMount() {
+        return invoiceMount;
+    }
+
+    public void setInvoiceMount(long invoiceMount) {
+        this.invoiceMount = invoiceMount;
+    }
+
+    public long invoiceMount;
+
+    public List<CtBuInvoiceReqDetail> getCtBuInvoiceReqDetail() {
+        return ctBuInvoiceReqDetail;
+    }
+
+    public void setCtBuInvoiceReqDetail(List<CtBuInvoiceReqDetail> ctBuInvoiceReqDetail) {
+        this.ctBuInvoiceReqDetail = ctBuInvoiceReqDetail;
+    }
+
+    @Excel(name = "发票明细")
+    private List<CtBuInvoiceReqDetail> ctBuInvoiceReqDetail;
+
+
+    /** 主键 */
+    private String instanceId_;
+    /** 主键 */
+    private String id_;
+
+    /** 事前审批类型 1:集客类 2:非集客类 */
+    @Excel(name = "事前审批类型 1:集客类 2:非集客类")
+    private Integer approvalType_;
+
+    /** 事前审批表ID 关联事前审批表ID */
+    @Excel(name = "事前审批表ID 关联事前审批表ID")
+    private String approvalId_;
+
+    /** 项目编号自动关联 */
+    @Excel(name = "项目编号自动关联")
+    private String proNo_;
+
+    /** 项目名称 */
+    @Excel(name = "项目名称")
+    private String proName_;
+
+    /** 合同ID  */
+    @Excel(name = "合同ID ")
+    private String contractId_;
+
+    /** 合同编号 */
+    @Excel(name = "合同编号")
+    private String contractNo_;
+
+    /** 合同名称 */
+    @Excel(name = "合同名称")
+    private String contractName_;
+
+    /** 发票种类  存储于系统字典表：增值税专票、增值税普票 */
+    @Excel(name = "发票种类  存储于系统字典表：增值税专票、增值税普票")
+    private String invoiceType_;
+
+    /** 申请部门编号 */
+    @Excel(name = "申请部门编号")
+    private String reqDeptid_;
+
+    /** 申请部门名称 */
+    @Excel(name = "申请部门名称")
+    private String reqDeptname_;
+
+    /** 申请人编号 */
+    @Excel(name = "申请人编号")
+    private String reqUserid_;
+
+    /** 申请人姓名 */
+    @Excel(name = "申请人姓名")
+    private String reqUsername_;
+
+    /** 申请日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "申请日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date reqDate_;
+
+    /** 付款单位名称 */
+    @Excel(name = "付款单位名称")
+    private String payerName_;
+
+    /** 纳税人识别号 */
+    @Excel(name = "纳税人识别号")
+    private String creditCode_;
+
+    /** 付款单位地址 */
+    @Excel(name = "付款单位地址")
+    private String payerAddress_;
+
+    @Override
+    public String toString() {
+        return "CtBuInvoiceReqVo{" +
+                "state='" + state + '\'' +
+                ", invoiceMount=" + invoiceMount +
+                ", ctBuInvoiceReqDetail=" + ctBuInvoiceReqDetail +
+                ", instanceId_='" + instanceId_ + '\'' +
+                ", id_='" + id_ + '\'' +
+                ", approvalType_=" + approvalType_ +
+                ", approvalId_='" + approvalId_ + '\'' +
+                ", proNo_='" + proNo_ + '\'' +
+                ", proName_='" + proName_ + '\'' +
+                ", contractId_='" + contractId_ + '\'' +
+                ", contractNo_='" + contractNo_ + '\'' +
+                ", contractName_='" + contractName_ + '\'' +
+                ", invoiceType_='" + invoiceType_ + '\'' +
+                ", reqDeptid_='" + reqDeptid_ + '\'' +
+                ", reqDeptname_='" + reqDeptname_ + '\'' +
+                ", reqUserid_='" + reqUserid_ + '\'' +
+                ", reqUsername_='" + reqUsername_ + '\'' +
+                ", reqDate_=" + reqDate_ +
+                ", payerName_='" + payerName_ + '\'' +
+                ", creditCode_='" + creditCode_ + '\'' +
+                ", payerAddress_='" + payerAddress_ + '\'' +
+                ", payerPhone_='" + payerPhone_ + '\'' +
+                ", payerOpeningBank_='" + payerOpeningBank_ + '\'' +
+                ", payerAccount_='" + payerAccount_ + '\'' +
+                ", invoiceAmountTax_=" + invoiceAmountTax_ +
+                ", invoiceAmountNtax_=" + invoiceAmountNtax_ +
+                ", expectedCollectionTime_=" + expectedCollectionTime_ +
+                ", status_=" + status_ +
+                ", statusps_='" + statusps_ + '\'' +
+                ", delFlag_='" + delFlag_ + '\'' +
+                ", invoiceProName_='" + invoiceProName_ + '\'' +
+                ", invoiceSpec_='" + invoiceSpec_ + '\'' +
+                ", invoiceTypes_='" + invoiceTypes_ + '\'' +
+                ", unit_='" + unit_ + '\'' +
+                ", invoicePrice_=" + invoicePrice_ +
+                ", invoiceAmountTaxs_=" + invoiceAmountTaxs_ +
+                '}';
+    }
+
+    public String getInstanceId_() {
+        return instanceId_;
+    }
+
+    public void setInstanceId_(String instanceId_) {
+        this.instanceId_ = instanceId_;
+    }
+
+    public String getId_() {
+        return id_;
+    }
+
+    public void setId_(String id_) {
+        this.id_ = id_;
+    }
+
+    public Integer getApprovalType_() {
+        return approvalType_;
+    }
+
+    public void setApprovalType_(Integer approvalType_) {
+        this.approvalType_ = approvalType_;
+    }
+
+    public String getApprovalId_() {
+        return approvalId_;
+    }
+
+    public void setApprovalId_(String approvalId_) {
+        this.approvalId_ = approvalId_;
+    }
+
+    public String getProNo_() {
+        return proNo_;
+    }
+
+    public void setProNo_(String proNo_) {
+        this.proNo_ = proNo_;
+    }
+
+    public String getProName_() {
+        return proName_;
+    }
+
+    public void setProName_(String proName_) {
+        this.proName_ = proName_;
+    }
+
+    public String getContractId_() {
+        return contractId_;
+    }
+
+    public void setContractId_(String contractId_) {
+        this.contractId_ = contractId_;
+    }
+
+    public String getContractNo_() {
+        return contractNo_;
+    }
+
+    public void setContractNo_(String contractNo_) {
+        this.contractNo_ = contractNo_;
+    }
+
+    public String getContractName_() {
+        return contractName_;
+    }
+
+    public void setContractName_(String contractName_) {
+        this.contractName_ = contractName_;
+    }
+
+    public String getInvoiceType_() {
+        return invoiceType_;
+    }
+
+    public void setInvoiceType_(String invoiceType_) {
+        this.invoiceType_ = invoiceType_;
+    }
+
+    public String getReqDeptid_() {
+        return reqDeptid_;
+    }
+
+    public void setReqDeptid_(String reqDeptid_) {
+        this.reqDeptid_ = reqDeptid_;
+    }
+
+    public String getReqDeptname_() {
+        return reqDeptname_;
+    }
+
+    public void setReqDeptname_(String reqDeptname_) {
+        this.reqDeptname_ = reqDeptname_;
+    }
+
+    public String getReqUserid_() {
+        return reqUserid_;
+    }
+
+    public void setReqUserid_(String reqUserid_) {
+        this.reqUserid_ = reqUserid_;
+    }
+
+    public String getReqUsername_() {
+        return reqUsername_;
+    }
+
+    public void setReqUsername_(String reqUsername_) {
+        this.reqUsername_ = reqUsername_;
+    }
+
+    public Date getReqDate_() {
+        return reqDate_;
+    }
+
+    public void setReqDate_(Date reqDate_) {
+        this.reqDate_ = reqDate_;
+    }
+
+    public String getPayerName_() {
+        return payerName_;
+    }
+
+    public void setPayerName_(String payerName_) {
+        this.payerName_ = payerName_;
+    }
+
+    public String getCreditCode_() {
+        return creditCode_;
+    }
+
+    public void setCreditCode_(String creditCode_) {
+        this.creditCode_ = creditCode_;
+    }
+
+    public String getPayerAddress_() {
+        return payerAddress_;
+    }
+
+    public void setPayerAddress_(String payerAddress_) {
+        this.payerAddress_ = payerAddress_;
+    }
+
+    public String getPayerPhone_() {
+        return payerPhone_;
+    }
+
+    public void setPayerPhone_(String payerPhone_) {
+        this.payerPhone_ = payerPhone_;
+    }
+
+    public String getPayerOpeningBank_() {
+        return payerOpeningBank_;
+    }
+
+    public void setPayerOpeningBank_(String payerOpeningBank_) {
+        this.payerOpeningBank_ = payerOpeningBank_;
+    }
+
+    public String getPayerAccount_() {
+        return payerAccount_;
+    }
+
+    public void setPayerAccount_(String payerAccount_) {
+        this.payerAccount_ = payerAccount_;
+    }
+
+    public BigDecimal getInvoiceAmountTax_() {
+        return invoiceAmountTax_;
+    }
+
+    public void setInvoiceAmountTax_(BigDecimal invoiceAmountTax_) {
+        this.invoiceAmountTax_ = invoiceAmountTax_;
+    }
+
+    public BigDecimal getInvoiceAmountNtax_() {
+        return invoiceAmountNtax_;
+    }
+
+    public void setInvoiceAmountNtax_(BigDecimal invoiceAmountNtax_) {
+        this.invoiceAmountNtax_ = invoiceAmountNtax_;
+    }
+
+    public Date getExpectedCollectionTime_() {
+        return expectedCollectionTime_;
+    }
+
+    public void setExpectedCollectionTime_(Date expectedCollectionTime_) {
+        this.expectedCollectionTime_ = expectedCollectionTime_;
+    }
+
+    public Integer getStatus_() {
+        return status_;
+    }
+
+    public void setStatus_(Integer status_) {
+        this.status_ = status_;
+    }
+
+    public String getStatusps_() {
+        return statusps_;
+    }
+
+    public void setStatusps_(String statusps_) {
+        this.statusps_ = statusps_;
+    }
+
+    public String getDelFlag_() {
+        return delFlag_;
+    }
+
+    public void setDelFlag_(String delFlag_) {
+        this.delFlag_ = delFlag_;
+    }
+
+    public String getInvoiceProName_() {
+        return invoiceProName_;
+    }
+
+    public void setInvoiceProName_(String invoiceProName_) {
+        this.invoiceProName_ = invoiceProName_;
+    }
+
+    public String getInvoiceSpec_() {
+        return invoiceSpec_;
+    }
+
+    public void setInvoiceSpec_(String invoiceSpec_) {
+        this.invoiceSpec_ = invoiceSpec_;
+    }
+
+    public String getInvoiceTypes_() {
+        return invoiceTypes_;
+    }
+
+    public void setInvoiceTypes_(String invoiceTypes_) {
+        this.invoiceTypes_ = invoiceTypes_;
+    }
+
+    public String getUnit_() {
+        return unit_;
+    }
+
+    public void setUnit_(String unit_) {
+        this.unit_ = unit_;
+    }
+
+    public BigDecimal getInvoicePrice_() {
+        return invoicePrice_;
+    }
+
+    public void setInvoicePrice_(BigDecimal invoicePrice_) {
+        this.invoicePrice_ = invoicePrice_;
+    }
+
+    public BigDecimal getInvoiceAmountTaxs_() {
+        return invoiceAmountTaxs_;
+    }
+
+    public void setInvoiceAmountTaxs_(BigDecimal invoiceAmountTaxs_) {
+        this.invoiceAmountTaxs_ = invoiceAmountTaxs_;
+    }
+
+    /** 付款单位电话 */
+    @Excel(name = "付款单位电话")
+    private String payerPhone_;
+
+    /** 付款单位开户行 */
+    @Excel(name = "付款单位开户行")
+    private String payerOpeningBank_;
+
+    /** 付款单位账号 */
+    @Excel(name = "付款单位账号")
+    private String payerAccount_;
+
+    /** 开票金额（含税） */
+    @Excel(name = "开票金额", readConverterExp = "含=税")
+    private BigDecimal invoiceAmountTax_;
+
+    /** 开票金额（不含税） */
+    @Excel(name = "开票金额", readConverterExp = "不=含税")
+    private BigDecimal invoiceAmountNtax_;
+
+    /** 预计回款时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "预计回款时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date expectedCollectionTime_;
+
+    /** 状态  0:保存1:提交2:审核通过3:审核驳回 */
+    @Excel(name = "状态  0:保存1:提交2:审核通过3:审核驳回")
+    private Integer status_;
+
+    /** 状态说明 */
+    @Excel(name = "状态说明")
+    private String statusps_;
+
+    /** 删除标志 */
+    private String delFlag_;
+
+
+    //发票明细
+    private String invoiceProName_;
+    private String invoiceSpec_;
+
+    private String invoiceTypes_;
+    private String unit_;
+    private BigDecimal invoicePrice_;
+    private BigDecimal invoiceAmountTaxs_;
+
+
+
+
+
+}

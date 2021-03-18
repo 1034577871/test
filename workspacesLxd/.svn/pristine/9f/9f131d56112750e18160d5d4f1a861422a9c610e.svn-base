@@ -1,0 +1,306 @@
+package com.ruoyi.projectApproval.AppNgc.domain;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 非集客项目对象 ct_bu_approval_ngc
+ * 
+ * @author ruoyi
+ * @date 2020-12-11
+ */
+public class AppNgc extends BaseEntity {
+	
+	private static final long serialVersionUID = 1L;
+
+	/** $column.columnComment */
+	private String id;
+
+	/** 申请编号 */
+	@Excel(name = "申请编号")
+	private String reqNo;
+
+	/** 项目名称 */
+	@Excel(name = "项目名称")
+	private String proName;
+
+	/** 项目类型编号 */
+	@Excel(name = "项目类型编号")
+	private String proType;
+
+	/** 项目类型名称 */
+	@Excel(name = "项目类型名称")
+	private String proTypeName;
+
+	/** 项目分类（收入、支出） */
+	@Excel(name = "项目分类", readConverterExp = "收入、支出")
+	private Integer classification;
+
+	/** 合同金额 */
+	@Excel(name = "合同金额")
+	private Long contractAmountTotal;
+
+	/** 不含税金额 */
+	@Excel(name = "不含税金额")
+	private Long contractAmountTax;
+
+	/** 税率 */
+	@Excel(name = "税率")
+	private String taxrate;
+
+	/** 税额 */
+	@Excel(name = "税额")
+	private Long taxamount;
+
+	/** 所属分公司编号 */
+	@Excel(name = "所属分公司编号")
+	private String belongCompanyid;
+
+	/** 所属分公司名称 */
+	@Excel(name = "所属分公司名称")
+	private String belongCompanyname;
+
+	/** 所属部门编号 */
+	@Excel(name = "所属部门编号")
+	private String belongDeptid;
+
+	/** 所属部门名称 */
+	@Excel(name = "所属部门名称")
+	private String belongDeptname;
+
+	/** 申请原因 */
+	@Excel(name = "申请原因")
+	private String reqReason;
+
+	/** 说明 */
+	@Excel(name = "说明")
+	private String explainInfo;
+
+	/** 附件 */
+	@Excel(name = "附件")
+	private String files;
+
+	/** 状态 */
+	@Excel(name = "状态")
+	private Integer status;
+
+	/** 状态说明 */
+	@Excel(name = "状态说明")
+	private String statusPs;
+
+	/** 备注信息 */
+	@Excel(name = "备注信息")
+	private String remarks;
+
+	/** 删除标记 */
+	private Integer delFlag;
+
+	/** 开始时间 **/
+	private String stime;
+
+	/** 结束时间 **/
+	private String etime;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setReqNo(String reqNo) {
+		this.reqNo = reqNo;
+	}
+
+	public String getReqNo() {
+		return reqNo;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProType(String proType) {
+		this.proType = proType;
+	}
+
+	public String getProType() {
+		return proType;
+	}
+
+	public void setProTypeName(String proTypeName) {
+		this.proTypeName = proTypeName;
+	}
+
+	public String getProTypeName() {
+		return proTypeName;
+	}
+
+	public void setClassification(Integer classification) {
+		this.classification = classification;
+	}
+
+	public Integer getClassification() {
+		return classification;
+	}
+
+	public void setContractAmountTotal(Long contractAmountTotal) {
+		this.contractAmountTotal = contractAmountTotal;
+	}
+
+	public Long getContractAmountTotal() {
+		return contractAmountTotal;
+	}
+
+	public void setContractAmountTax(Long contractAmountTax) {
+		this.contractAmountTax = contractAmountTax;
+	}
+
+	public Long getContractAmountTax() {
+		return contractAmountTax;
+	}
+
+	public void setTaxrate(String taxrate) {
+		this.taxrate = taxrate;
+	}
+
+	public String getTaxrate() {
+		return taxrate;
+	}
+
+	public void setTaxamount(Long taxamount) {
+		this.taxamount = taxamount;
+	}
+
+	public Long getTaxamount() {
+		return taxamount;
+	}
+
+	public void setBelongCompanyid(String belongCompanyid) {
+		this.belongCompanyid = belongCompanyid;
+	}
+
+	public String getBelongCompanyid() {
+		return belongCompanyid;
+	}
+
+	public void setBelongCompanyname(String belongCompanyname) {
+		this.belongCompanyname = belongCompanyname;
+	}
+
+	public String getBelongCompanyname() {
+		return belongCompanyname;
+	}
+
+	public void setBelongDeptid(String belongDeptid) {
+		this.belongDeptid = belongDeptid;
+	}
+
+	public String getBelongDeptid() {
+		return belongDeptid;
+	}
+
+	public void setBelongDeptname(String belongDeptname) {
+		this.belongDeptname = belongDeptname;
+	}
+
+	public String getBelongDeptname() {
+		return belongDeptname;
+	}
+
+	public void setReqReason(String reqReason) {
+		this.reqReason = reqReason;
+	}
+
+	public String getReqReason() {
+		return reqReason;
+	}
+
+	public void setExplainInfo(String explainInfo) {
+		this.explainInfo = explainInfo;
+	}
+
+	public String getExplainInfo() {
+		return explainInfo;
+	}
+
+	public void setFiles(String files) {
+		this.files = files;
+	}
+
+	public String getFiles() {
+		return files;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatusPs(String statusPs) {
+		this.statusPs = statusPs;
+	}
+
+	public String getStatusPs() {
+		return statusPs;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+
+	public String getStime() {
+		return stime;
+	}
+
+	public void setStime(String stime) {
+		this.stime = stime;
+	}
+
+	public String getEtime() {
+		return etime;
+	}
+
+	public void setEtime(String etime) {
+		this.etime = etime;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("id", getId())
+				.append("createBy", getCreateBy()).append("createTime", getCreateTime())
+				.append("updateBy", getUpdateBy()).append("updateTime", getUpdateTime()).append("reqNo", getReqNo())
+				.append("proName", getProName()).append("proType", getProType()).append("proTypeName", getProTypeName())
+				.append("classification", getClassification()).append("contractAmountTotal", getContractAmountTotal())
+				.append("contractAmountTax", getContractAmountTax()).append("taxrate", getTaxrate())
+				.append("taxamount", getTaxamount()).append("belongCompanyid", getBelongCompanyid())
+				.append("belongCompanyname", getBelongCompanyname()).append("belongDeptid", getBelongDeptid())
+				.append("belongDeptname", getBelongDeptname()).append("reqReason", getReqReason())
+				.append("explainInfo", getExplainInfo()).append("files", getFiles()).append("status", getStatus())
+				.append("statusPs", getStatusPs()).append("remarks", getRemarks()).append("delFlag", getDelFlag())
+				.toString();
+	}
+}

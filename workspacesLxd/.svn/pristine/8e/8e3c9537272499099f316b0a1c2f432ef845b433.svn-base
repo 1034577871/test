@@ -1,0 +1,27 @@
+import request from '@/utils/request'
+
+// 查询项目信息  非极客
+export function listApplyCollection(query) {
+  return request({
+    url: '/projectApproval/appNgc/list',
+    method: 'get',
+    params: query
+  })
+}
+// 查询项目详情信息  非极客
+export function detailNgcApproval(id) {
+  alert(id);
+  return request({
+   url: '/projectApproval/appNgc/' + id,
+   method: 'get'
+  })
+}
+
+// 查询合同信息 zck
+export function findContract(query) {
+  return request({
+    url: '/contract/contractInfo/list',
+   method: 'get',
+   params: query
+  })
+}

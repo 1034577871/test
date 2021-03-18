@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.paymentManagement.payinfoDt.mapper.CtBuPayinfoDtMapper">
+
+    <resultMap type="CtBuPayinfoDt" id="CtBuPayinfoDtResult">
+        <result property="id" column="id"/>
+        <result property="bid" column="bid"/>
+        <result property="ticketRecordId" column="ticket_record_id"/>
+        <result property="payMoney" column="pay_money"/>
+        <result property="notaxmoney" column="notaxmoney"/>
+        <result property="taxmoney" column="taxmoney"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectCtBuPayinfoDtVo">
+        select id, bid, ticket_record_id, pay_money, notaxmoney, taxmoney, del_flag, remark, create_by, create_time, update_by, update_time from ct_bu_payinfo_dt
+    </sql>
+
+    <select id="selectCtBuPayinfoDtList" parameterType="CtBuPayinfoDt" resultMap="CtBuPayinfoDtResult">
+        <include refid="selectCtBuPayinfoDtVo"/>
+        <where>
+            del_flag = '1'
+            <if test="bid != null  and bid != ''">and bid = #{bid}</if>
+            <if test="ticketRecordId != null  and ticketRecordId != ''">and ticket_record_id = #{ticketRecordId}</if>
+            <if test="payMoney != null ">and pay_money = #{payMoney}</if>
+            <if test="notaxmoney != null ">and notaxmoney = #{notaxmoney}</if>
+            <if test="taxmoney != null ">and taxmoney = #{taxmoney}</if>
+        </where>
+    </select>
+
+    <select id="selectCtBuPayinfoDtById" parameterType="String" resultMap="CtBuPayinfoDtResult">
+        <include refid="selectCtBuPayinfoDtVo"/>
+        where id = #{id} AND del_flag = '1'
+    </select>
+
+    <select id="selectCtBuPayinfoDtByBid" parameterType="String" resultMap="CtBuPayinfoDtResult">
+        <include refid="selectCtBuPayinfoDtVo"/>
+        where bid = #{bid} AND del_flag = '1'
+    </select>
+
+    <insert id="insertCtBuPayinfoDt" parameterType="CtBuPayinfoDt">
+        insert into ct_bu_payinfo_dt
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="bid != null">bid,</if>
+            <if test="ticketRecordId != null">ticket_record_id,</if>
+            <if test="payMoney != null">pay_money,</if>
+            <if test="notaxmoney != null">notaxmoney,</if>
+            <if test="taxmoney != null">taxmoney,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="bid != null">#{bid},</if>
+            <if test="ticketRecordId != null">#{ticketRecordId},</if>
+            <if test="payMoney != null">#{payMoney},</if>
+            <if test="notaxmoney != null">#{notaxmoney},</if>
+            <if test="taxmoney != null">#{taxmoney},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtBuPayinfoDt" parameterType="CtBuPayinfoDt">
+        update ct_bu_payinfo_dt
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bid != null">bid = #{bid},</if>
+            <if test="ticketRecordId != null">ticket_record_id = #{ticketRecordId},</if>
+            <if test="payMoney != null">pay_money = #{payMoney},</if>
+            <if test="notaxmoney != null">notaxmoney = #{notaxmoney},</if>
+            <if test="taxmoney != null">taxmoney = #{taxmoney},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtBuPayinfoDtById" parameterType="String">
+        delete from ct_bu_payinfo_dt where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuPayinfoDtByIds" parameterType="String">
+        delete from ct_bu_payinfo_dt where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateCtBuPayinfoDtByBid" parameterType="String">
+        update ct_bu_payinfo_dt set del_flag= '2' where bid = #{bid}
+    </update>
+
+    <update id="updateCtBuPayinfoDtById" parameterType="String">
+        update ct_bu_payinfo_dt set del_flag= '2' where id = #{id}
+    </update>
+
+</mapper>

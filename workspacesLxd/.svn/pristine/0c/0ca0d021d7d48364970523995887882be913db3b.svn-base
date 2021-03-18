@@ -1,0 +1,97 @@
+<template>
+  <div>
+    <el-form ref="elForm" :model="formData" size="medium" label-width="100px">
+      <table class="curr-table ">
+        <tbody>
+          <tr>
+            <th width="13%">项目类型</th>
+            <th width="18%">类型名称</th>
+            <th width="12%">类型税率</th>
+            <th width="10%">含税金额</th>
+            <th width="10%">不含税金额</th>
+            <th width="20%">备注</th>
+            <th><el-button size="mini" type="success" @click="loadMore()" style="margin: 0.625rem;">新增</el-button></th>
+          </tr>
+          <tr v-for="(value, index) in dataList" :key="index">
+            <td>
+              <el-select v-model="value.contentType" placeholder="请选择项目类型">
+                <el-option v-for="dict in contentTypeList" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+              </el-select>
+            </td>
+            <!-- <td><el-input v-model="value.contentType" :name="'appMateList[' + index + '].condition'" /></td> -->
+
+            <td><el-input v-model="value.contentName" :name="'appMateList[' + index + '].contentName'"  /></td>
+            <td><el-input v-model="value.contentTaxrate" :name="'appMateList[' + index + '].contentTaxrate'" v-on:input="changeNum(index)" oninput="value=value.replace(/[^0-9.]/g,'')"/></td>
+            <td><el-input v-model="value.intaxAmount" :name="'appMateList[' + index + '].intaxAmount'" v-on:input="changeNum(index)" oninput="value=value.replace(/[^0-9.]/g,'')"/></td>
+            <td><el-input v-model="value.extaxAmount" :name="'appMateList[' + index + '].extaxAmount'" oninput="value=value.replace(/[^0-9.]/g,'')"/></td>
+            <td><el-input v-model="value.remark" :name="'appMateList[' + index + '].remark'" /></td>
+
+            <td><el-button size="mini" type="warning" @click.prevent="removeTodo(index)">删除</el-button></td>
+            <!-- <td><el-input type="hidden" v-model="value.id" :name="'appMateList[' + index + '].id'" /></td> -->
+          </tr>
+        </tbody>
+      </table>
+
+    </el-form>
+
+  </div>
+</template>
+
+<script>
+
+export default {
+  components: {
+  },
+  props: [],
+  data() {
+    return {
+      formData: null,
+      dataList: [],
+      contentTypeList:[],
+    };
+  },
+  computed: {},
+  watch: {},
+  created() {
+    //项目类型
+    this.getDicts("content_type").then((response) => {
+      this.contentTypeList = response.data;
+    });
+  },
+  mounted() {},
+  methods: {
+    /** 添加行 **/
+    loadMore: function() {
+      this.dataList.push({
+        id:null,
+        contentType: null,
+        contentTaxrate: null,
+        contentName: null,
+        intaxAmount: null,
+        extaxAmount: null,
+        remark: null
+      });
+    },
+    /** 删除行 **/
+    removeTodo: function(index) {
+      this.dataList.splice(index, 1);
+    },
+
+    //监听输入框输入值
+    changeNum(index){
+      //税率
+      let contentTaxrate = this.dataList[index].contentTaxrate;
+      //含税金额
+      let intaxAmount = this.dataList[index].intaxAmount
+
+      if(contentTaxrate != null && intaxAmount != null){
+        //获得不含税金额
+        this.dataList[index].extaxAmount = (intaxAmount / (contentTaxrate * 0.01 + 1)).toFixed(2);
+      }
+
+    }
+  }
+};
+</script>
+
+<style></style>

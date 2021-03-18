@@ -1,0 +1,402 @@
+package com.ruoyi.collection.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.collection.domain.CtBuInvoiceReqDetail;
+import com.ruoyi.collection.domain.CtBuInvoiceReqDto;
+import com.ruoyi.collection.mapper.CtBuInvoiceReqDetailMapper;
+import com.ruoyi.projectApproval.ApprovalNg.domain.CtBuApprovalNg;
+import com.ruoyi.projectApproval.ApprovalNg.mapper.CtBuApprovalNgMapper;
+import com.ruoyi.system.service.ISysUserService;
+import com.sun.jmx.snmp.tasks.TaskServer;
+import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
+import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.task.model.builders.TaskPayloadBuilder;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.engine.*;
+import org.activiti.engine.task.Task;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.collection.mapper.CtBuInvoiceReqMapper;
+import com.ruoyi.collection.domain.CtBuInvoiceReq;
+import com.ruoyi.collection.service.ICtBuInvoiceReqService;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 发票申请Service业务层处理
+ * 
+ * @author ruoyi
+ * @date 2020-12-09
+ */
+
+@Service
+public class CtBuInvoiceReqServiceImpl implements ICtBuInvoiceReqService 
+{
+    @Autowired
+    private CtBuInvoiceReqMapper ctBuInvoiceReqMapper;
+
+    @Autowired
+    private CtBuInvoiceReqDetailMapper ctBuInvoiceReqDetailMapper;
+
+    @Autowired
+    private ProcessRuntime processRuntime;
+
+    @Autowired
+    private TaskRuntime taskRuntime;
+    @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private ISysUserService iSysUserService;
+
+    @Autowired
+    private CtBuApprovalNgMapper ctBuApprovalNgMapper;
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+
+    @Override
+    public CtBuApprovalNg getApproNgByid(String id){
+        CtBuApprovalNg ctBuApprovalNg = ctBuApprovalNgMapper.selectCtBuApprovalNgById(id);
+        return ctBuApprovalNg;
+    }
+    /**
+     * 获取当前用户信息
+     *
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public LoginUser getUserInfo() {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        return loginUser;
+    }
+
+
+
+    /**
+     * 查询发票申请
+     * 
+     * @param id 发票申请ID
+     * @return 发票申请
+     */
+    @Override
+    public CtBuInvoiceReqDto selectCtBuInvoiceReqById(String id)
+    {
+        CtBuInvoiceReqDto dto = ctBuInvoiceReqMapper.selectCtBuInvoiceReqDtoById(id);
+//        CtBuInvoiceReq req = ctBuInvoiceReqMapper.selectCtBuInvoiceReqById(id);
+//        if(req!=null && req.getId()!=null){
+//            CtBuInvoiceReqDetail detail = new CtBuInvoiceReqDetail();
+//            detail.setInvoiceId(req.getId());
+//           List<CtBuInvoiceReqDetail> list =  ctBuInvoiceReqDetailMapper.selectCtBuInvoiceReqDetailList(detail);
+//           if(list!=null && list.size()>0){
+//               req.setCtBuInvoiceReqDetail(list.get(0));
+//           }
+//        }
+        return dto;
+    }
+
+    /**
+     * 查询发票申请列表
+     * 
+     * @param ctBuInvoiceReq 发票申请
+     * @return 发票申请
+     */
+    @Override
+    public List<CtBuInvoiceReq> selectCtBuInvoiceReqList(CtBuInvoiceReq ctBuInvoiceReq)
+    {
+        return ctBuInvoiceReqMapper.selectCtBuInvoiceReqList(ctBuInvoiceReq);
+    }
+
+    /**
+     * 新增发票申请
+     *
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int insertCtBuInvoiceReq(CtBuInvoiceReqDto ctBuInvoiceReq)
+    {
+        String uuid = UUID.fastUUID().toString(true);
+        ctBuInvoiceReq.setCreateTime(DateUtils.getNowDate());
+        ctBuInvoiceReq.setId(uuid);
+        ctBuInvoiceReq.setDelFlag("1");
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceReq.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        //实列
+        if("1".equals(ctBuInvoiceReq.getState())){
+            Map<String, Object> variables = new HashMap<String, Object>();
+            variables.put("apply",loginUser.getUsername());
+            //获取当前登陆人的所属部门
+            long dept_id = loginUser.getUser().getDept().getDeptId();
+            //查询部门为当前登陆人，角色为分公司负责人,角色临时写死
+            List<String> ulist = new ArrayList();
+            Map params = new HashMap();
+            params.put("roleId","103");
+            params.put("deptId",dept_id);
+            List<SysUser> users = iSysUserService.selectUserByRoleDept(params);
+            SysUser sysUser = new SysUser();
+            if(users!=null && users.size()>0){
+                for (SysUser user:users)  {
+                    ulist.add(user.getUserName());
+                }
+                //sysUser = users.get(0) ;
+            }
+            String str = org.apache.commons.lang.StringUtils.join(ulist.toArray(),",");
+            variables.put("fcwgroup",str);
+
+            //查询部门为当前登陆人，角色为分公司负责人,角色临时写死
+             ulist = new ArrayList();
+             params = new HashMap();
+            params.put("roleId","104");
+            params.put("deptId",dept_id);
+            users = iSysUserService.selectUserByRoleDept(params);
+            if(users!=null && users.size()>0){
+                for (SysUser user:users)  {
+                    ulist.add(user.getUserName());
+                }
+                variables.put("fgsgroup",org.apache.commons.lang.StringUtils.join(ulist.toArray(),","));
+            }
+
+
+            //查询本部财务审核，角色临时写死
+            ulist = new ArrayList();
+            params = new HashMap();
+            params.put("roleId","105");
+            //params.put("deptId",dept_id);
+            users = iSysUserService.selectUserByRoleDept(params);
+            if(users!=null && users.size()>0){
+                for (SysUser user:users)  {
+                    ulist.add(user.getUserName());
+                }
+                variables.put("bcwgroup",org.apache.commons.lang.StringUtils.join(ulist.toArray(),","));
+            }
+
+            ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
+                    .start()
+                    .withProcessDefinitionKey("invoiceApply")
+                    .withName("开票申请")
+                    .withBusinessKey(uuid)
+                    .withVariables(variables)
+                    //.withVariable("companyFinaAudit",sysUser.getUserName())
+                    .build());
+            ctBuInvoiceReq.setInstanceId(processInstance.getId());
+            ctBuInvoiceReq.setState("1");
+
+
+            //
+            // 根据流程实例Id查询任务
+            Task task =  taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+//            Task task1 = taskService.createTaskQuery()
+//                    .processDefinitionKey("invoiceApply")
+//                    .taskAssignee(loginUser.getUsername())
+//                    .singleResult();
+
+
+
+            //完成任务
+            taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(task.getId())
+                    .build());
+
+        }
+        ctBuInvoiceReq.setStatus(Integer.parseInt(ctBuInvoiceReq.getState()));
+        int num = ctBuInvoiceReqMapper.insertCtBuInvoiceReq(ctBuInvoiceReq);
+        if(num>0){
+            //添加字表
+            CtBuInvoiceReqDetail detail = new CtBuInvoiceReqDetail();
+            detail.setId(UUID.fastUUID().toString(true));
+            detail.setInvoiceId(uuid);
+            detail.setInvoiceProName(ctBuInvoiceReq.getInvoiceProName());
+            detail.setInvoiceSpec(ctBuInvoiceReq.getInvoiceSpec());
+            detail.setInvoiceType(ctBuInvoiceReq.getInvoiceTypes());
+            detail.setUnit(ctBuInvoiceReq.getUnit());
+            detail.setInvoicePrice(ctBuInvoiceReq.getInvoicePrice());
+            if (loginUser != null && loginUser.getUser() != null) {
+                detail.setCreateBy(loginUser.getUser().getUserId().toString());
+            }
+            detail.setDelFlag("1");
+            detail.setCreateTime(DateUtils.getNowDate());
+            ctBuInvoiceReqDetailMapper.insertCtBuInvoiceReqDetail(detail);
+        }
+        return num;
+    }
+
+
+    /**
+     * 新增发票申请
+     * 
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public int insertCtBuInvoiceReq_(CtBuInvoiceReqDto ctBuInvoiceReq)
+    {
+        String uuid = UUID.fastUUID().toString(true);
+        ctBuInvoiceReq.setCreateTime(DateUtils.getNowDate());
+        ctBuInvoiceReq.setId(uuid);
+        ctBuInvoiceReq.setDelFlag("1");
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceReq.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        //实列
+        if("1".equals(ctBuInvoiceReq.getState())){
+            Map<String, Object> variables = new HashMap<String, Object>();
+            variables.put("apply",loginUser.getUsername());
+            //获取当前登陆人的所属部门
+           long dept_id = loginUser.getUser().getDept().getDeptId();
+           //查询部门为当前登陆人，角色为分公司负责人,角色临时写死
+            List<String> ulist = new ArrayList();
+            Map params = new HashMap();
+            params.put("roleId","103");
+            params.put("deptId",dept_id);
+            List<SysUser> users = iSysUserService.selectUserByRoleDept(params);
+            SysUser sysUser = new SysUser();
+            if(users!=null && users.size()>0){
+                for (SysUser user:users)  {
+                    ulist.add(user.getUserName());
+                }
+                sysUser = users.get(0) ;
+            }
+            variables.put("companyFinaAudit",sysUser.getUserName());
+            ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
+                    .start()
+                    .withProcessDefinitionKey("invoiceApply")
+                    .withName("开票申请")
+                    .withBusinessKey(uuid)
+                    .withVariables(variables)
+                    //.withVariable("companyFinaAudit",sysUser.getUserName())
+                    .build());
+            ctBuInvoiceReq.setInstanceId(processInstance.getId());
+            ctBuInvoiceReq.setState("1");
+
+            // 根据流程实例Id查询任务
+            Task task =  taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+//            Task task1 = taskService.createTaskQuery()
+//                    .processDefinitionKey("invoiceApply")
+//                    .taskAssignee(loginUser.getUsername())
+//                    .singleResult();
+            //完成任务
+            taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(task.getId())
+                    .build());
+
+        }
+        ctBuInvoiceReq.setStatus(Integer.parseInt(ctBuInvoiceReq.getState()));
+        int num = ctBuInvoiceReqMapper.insertCtBuInvoiceReq(ctBuInvoiceReq);
+        if(num>0){
+            //添加字表
+            CtBuInvoiceReqDetail detail = new CtBuInvoiceReqDetail();
+            detail.setId(UUID.fastUUID().toString(true));
+            detail.setInvoiceId(uuid);
+            detail.setInvoiceProName(ctBuInvoiceReq.getInvoiceProName());
+            detail.setInvoiceSpec(ctBuInvoiceReq.getInvoiceSpec());
+            detail.setInvoiceType(ctBuInvoiceReq.getInvoiceTypes());
+            detail.setUnit(ctBuInvoiceReq.getUnit());
+            detail.setInvoicePrice(ctBuInvoiceReq.getInvoicePrice());
+            if (loginUser != null && loginUser.getUser() != null) {
+                detail.setCreateBy(loginUser.getUser().getUserId().toString());
+            }
+            detail.setDelFlag("1");
+            detail.setCreateTime(DateUtils.getNowDate());
+            ctBuInvoiceReqDetailMapper.insertCtBuInvoiceReqDetail(detail);
+        }
+        return num;
+    }
+
+    /**
+     * 修改发票申请
+     * 
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuInvoiceReq(CtBuInvoiceReqDto ctBuInvoiceReq)
+    {
+        ctBuInvoiceReq.setUpdateTime(DateUtils.getNowDate());
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceReq.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        //实列
+        if("1".equals(ctBuInvoiceReq.getState())){
+            ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
+                    .start()
+                    .withProcessDefinitionKey("invoiceApply")
+                    .withName("开票申请")
+                    .withBusinessKey(ctBuInvoiceReq.getId())
+                    .withVariable("billApply",loginUser.getUser().getUserName())
+                    .build());
+            ctBuInvoiceReq.setInstanceId(processInstance.getId());
+            ctBuInvoiceReq.setState("1");
+        }
+        ctBuInvoiceReq.setStatus(Integer.parseInt(ctBuInvoiceReq.getState()));
+
+        int num = ctBuInvoiceReqMapper.updateCtBuInvoiceReq(ctBuInvoiceReq);
+        if(num>0){
+            //添加字表
+            CtBuInvoiceReqDetail detail = new CtBuInvoiceReqDetail();
+           // detail.setInvoiceId(uuid);
+            detail.setInvoiceProName(ctBuInvoiceReq.getInvoiceProName());
+            detail.setInvoiceSpec(ctBuInvoiceReq.getInvoiceSpec());
+            detail.setInvoiceType(ctBuInvoiceReq.getInvoiceTypes());
+            detail.setUnit(ctBuInvoiceReq.getUnit());
+            detail.setInvoicePrice(ctBuInvoiceReq.getInvoicePrice());
+            if (loginUser != null && loginUser.getUser() != null) {
+                detail.setUpdateBy(loginUser.getUser().getUserId().toString());
+            }
+            detail.setInvoiceId(ctBuInvoiceReq.getId());
+            detail.setDelFlag("1");
+            detail.setUpdateTime(DateUtils.getNowDate());
+            ctBuInvoiceReqDetailMapper.updateCtBuInvoiceReqDetail(detail);
+        }
+        return num;
+    }
+
+    /**
+     * 批量删除发票申请
+     * 
+     * @param ids 需要删除的发票申请ID
+     * @return 结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteCtBuInvoiceReqByIds(String[] ids)
+    {
+        int num = ctBuInvoiceReqMapper.deleteCtBuInvoiceReqByIds(ids);
+        if(num>0){
+            ctBuInvoiceReqDetailMapper.deleteCtBuInvoiceReqDetailByIds(ids);
+        }
+        return num;
+    }
+
+    /**
+     * 删除发票申请信息
+     * 
+     * @param id 发票申请ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuInvoiceReqById(String id)
+    {
+        return ctBuInvoiceReqMapper.deleteCtBuInvoiceReqById(id);
+    }
+}

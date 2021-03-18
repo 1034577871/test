@@ -1,0 +1,366 @@
+package com.ruoyi.collection.service.impl;
+
+import java.util.*;
+
+import com.ruoyi.base.fileManage.domain.CtBuFile;
+import com.ruoyi.base.fileManage.service.ICtBuFileService;
+import com.ruoyi.collection.domain.CtBuInvoiceReq;
+import com.ruoyi.collection.domain.CtBuReceiptInfo;
+import com.ruoyi.collection.mapper.CtBuInvoiceReqMapper;
+import com.ruoyi.collection.mapper.CtBuReceiptInfoMapper;
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.contract.payinfoInvoice.domain.CtBuPayinfoInvoice;
+import com.ruoyi.contract.payinfoInvoice.mapper.CtBuPayinfoInvoiceMapper;
+import com.ruoyi.system.mapper.SysDeptMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.collection.mapper.CtBuInvoiceInfoMapper;
+import com.ruoyi.collection.domain.CtBuInvoiceInfo;
+import com.ruoyi.collection.service.ICtBuInvoiceInfoService;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 财务开票Service业务层处理
+ * 
+ * @author ruoyi
+ * @date 2020-12-11
+ */
+@Service
+public class CtBuInvoiceInfoServiceImpl implements ICtBuInvoiceInfoService 
+{
+    @Autowired
+    private CtBuInvoiceInfoMapper ctBuInvoiceInfoMapper;
+    @Autowired
+    private CtBuReceiptInfoMapper ctBuReceiptInfoMapper;
+    @Autowired
+    private CtBuInvoiceReqMapper ctBuInvoiceReqMapper;
+
+    @Autowired
+    private ICtBuFileService fileService;
+
+    @Autowired
+    private CtBuPayinfoInvoiceMapper ctBuPayinfoInvoiceMapper;
+
+    @Autowired
+    private SysDeptMapper sysDeptMapper;
+
+
+
+    /**
+     * 凭证号录入
+     *
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int updateVocherInfoByIds(String[] ids, String vocher, Date date,String vodept)
+    {
+        Map map = new HashMap();
+        map.put("ids",ids);
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            map.put("voucherUserid",loginUser.getUser().getUserId());
+            map.put("voucherUsername",loginUser.getUser().getUserName());
+            map.put("voucherTime",date);
+            map.put("voucherNo",vocher);
+            map.put("voucherDept",vodept);
+            map.put("status","4");
+
+        }else{
+            return 0;
+        }
+
+        return ctBuInvoiceInfoMapper.updateCtBuInvoiceInfoByIds(map);
+    }
+
+    /**
+     * 移交财务开票
+     *
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuInvoiceInfoByIds(String[] ids,String flag)
+    {
+        Map map = new HashMap();
+        map.put("ids",ids);
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            if("0".equals(flag)){
+                map.put("handoverUserid",loginUser.getUser().getUserId());
+                map.put("handoverUsername",loginUser.getUser().getUserName());
+                map.put("handoverTime",DateUtils.getNowDate());
+                map.put("status","2");
+            }else if("100".equals(flag)){
+                map.put("status","8");
+            } else{
+                map.put("confirmerUserid",loginUser.getUser().getUserId());
+                map.put("confirmerUsername",loginUser.getUser().getUserName());
+                map.put("confirmerTime",DateUtils.getNowDate());
+                map.put("status","3");
+            }
+        }else{
+            return 0;
+        }
+
+        int num = ctBuInvoiceInfoMapper.updateCtBuInvoiceInfoByIds(map);
+        if(num>0 && "100".equals(flag)){
+            //String str1= StringUtils.join(ids, ",");
+           // ctBuReceiptInfoMapper.updateCtBuReceiptInfoByIds( ids);
+        }
+
+        return num;
+    }
+
+
+    /**
+     * 凭证号录入
+     * 
+     * @param id 财务开票ID
+     * @return 财务开票
+     */
+    @Override
+    public CtBuInvoiceInfo selectCtBuInvoiceInfoById(String id)
+    {
+        return ctBuInvoiceInfoMapper.selectCtBuInvoiceInfoById(id);
+    }
+
+    /**
+ * 查询财务开票列表
+ *
+ * @param ctBuInvoiceInfo 财务开票
+ * @return 财务开票
+ */
+@Override
+public List<CtBuInvoiceInfo> selectCtBuInvoiceInfoList(CtBuInvoiceInfo ctBuInvoiceInfo)
+{
+    return ctBuInvoiceInfoMapper.selectCtBuInvoiceQrInfoandReqsList(ctBuInvoiceInfo);
+//    if(role==101){
+//            ctBuInvoiceInfo.setStatus(2);
+//        return ctBuInvoiceInfoMapper.selectCtBuInvoiceQrInfoList(ctBuInvoiceInfo);
+//    }else{
+//        return ctBuInvoiceInfoMapper.selectCtBuInvoiceInfoList(ctBuInvoiceInfo);
+//    }
+
+}
+
+
+
+    /**
+     * 新增财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int insertCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceInfo.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuInvoiceInfo.setDelFlag("1");
+        String uuid = UUID.fastUUID().toString(true);
+        ctBuInvoiceInfo.setId(uuid);
+        ctBuInvoiceInfo.setCreateTime(DateUtils.getNowDate());
+
+        /** 处理文件 **/
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(ctBuInvoiceInfo.getCompanyImg())) {
+            String[] str = ctBuInvoiceInfo.getCompanyImg().split(",");
+            for (int i = 0; i < str.length; i++) {
+                /** 判断传入文件ID是否为空 **/
+                if (StringUtils.isNotBlank(str[i])) {
+                    CtBuFile file = new CtBuFile();
+                    file.setId(str[i]);
+                    file.setPtype(1);   //合同归档资料 ptype:1
+                    file.setPid(ctBuInvoiceInfo.getId());
+                    fileService.updateCtBuFile(file);
+                }
+            }
+        }
+        //发票图片
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(ctBuInvoiceInfo.getInvoiceImg())) {
+            String[] str = ctBuInvoiceInfo.getInvoiceImg().split(",");
+            for (int i = 0; i < str.length; i++) {
+                /** 判断传入文件ID是否为空 **/
+                if (StringUtils.isNotBlank(str[i])) {
+                    CtBuFile file = new CtBuFile();
+                    file.setId(str[i]);
+                    file.setPtype(2);   //合同归档资料 ptype:1
+                    file.setPid(ctBuInvoiceInfo.getId());
+                    fileService.updateCtBuFile(file);
+                }
+            }
+        }
+        int num = ctBuInvoiceInfoMapper.insertCtBuInvoiceInfo(ctBuInvoiceInfo);
+        if(num>0){
+            CtBuInvoiceReq ctBuInvoiceReq = ctBuInvoiceReqMapper.selectCtBuInvoiceReqById(ctBuInvoiceInfo.getReqId());
+            if(ctBuInvoiceReq.getYskid()!=null && !"".equals(ctBuInvoiceReq.getYskid()) && ctBuInvoiceInfo.getStatus()==1){
+                CtBuReceiptInfo ctBuReceiptInfo = new CtBuReceiptInfo();
+                ctBuReceiptInfo.setId(ctBuInvoiceReq.getYskid());
+                ctBuReceiptInfo.setInvoiceCode(ctBuInvoiceInfo.getInvoiceCode());
+                ctBuReceiptInfo.setInvoiceNo(ctBuInvoiceInfo.getInvoiceNo());
+                ctBuReceiptInfo.setInvoiceId(ctBuInvoiceInfo.getId());
+                ctBuReceiptInfoMapper.updateCtBuReceiptInfo(ctBuReceiptInfo);
+            }
+            //修改合同收款信息表
+            if(ctBuInvoiceInfo.getStatus()==1){
+                CtBuPayinfoInvoice ctBuPayinfoInvoice = new CtBuPayinfoInvoice();
+                ctBuPayinfoInvoice.setId(UUID.fastUUID().toString(true));
+                ctBuPayinfoInvoice.setCreateTime(new Date());
+                ctBuPayinfoInvoice.setContractId(ctBuInvoiceReq.getContractId());
+                ctBuPayinfoInvoice.setPaymentCycleId(ctBuInvoiceReq.getPayinfoid());
+                ctBuPayinfoInvoice.setBid(uuid);
+                ctBuPayinfoInvoice.setInvoiceNo(ctBuInvoiceInfo.getInvoiceNo());
+                ctBuPayinfoInvoice.setInvoiceCode(ctBuInvoiceInfo.getInvoiceCode());
+                ctBuPayinfoInvoice.setInvoiceMoney(ctBuInvoiceInfo.getInvoiceAmountTax());
+                ctBuPayinfoInvoice.setInvoiceNomoney(ctBuInvoiceInfo.getInvoiceAmountNtax());
+                ctBuPayinfoInvoice.setInvoiceTime(new Date());
+                ctBuPayinfoInvoice.setDelFlag(1);
+                ctBuPayinfoInvoice.setCreateBy(loginUser.getUser().getUserName());
+                ctBuPayinfoInvoiceMapper.insertCtBuPayinfoInvoice(ctBuPayinfoInvoice);
+            }
+
+        }
+        return num;
+    }
+
+    /**
+     * 修改财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo)
+    {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuInvoiceInfo.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuInvoiceInfo.setUpdateTime(DateUtils.getNowDate());
+
+
+        /** 处理文件 **/
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(ctBuInvoiceInfo.getCompanyImg())) {
+            String[] str = ctBuInvoiceInfo.getCompanyImg().split(",");
+            for (int i = 0; i < str.length; i++) {
+                /** 判断传入文件ID是否为空 **/
+                if (StringUtils.isNotBlank(str[i])) {
+                    CtBuFile file = new CtBuFile();
+                    file.setId(str[i]);
+                    file.setPtype(1);   //合同归档资料 ptype:1
+                    file.setPid(ctBuInvoiceInfo.getId());
+                    fileService.updateCtBuFile(file);
+                }
+            }
+        }
+        //发票图片
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(ctBuInvoiceInfo.getInvoiceImg())) {
+            String[] str = ctBuInvoiceInfo.getInvoiceImg().split(",");
+            for (int i = 0; i < str.length; i++) {
+                /** 判断传入文件ID是否为空 **/
+                if (StringUtils.isNotBlank(str[i])) {
+                    CtBuFile file = new CtBuFile();
+                    file.setId(str[i]);
+                    file.setPtype(2);   //合同归档资料 ptype:1
+                    file.setPid(ctBuInvoiceInfo.getId());
+                    fileService.updateCtBuFile(file);
+                }
+            }
+        }
+
+        int num = ctBuInvoiceInfoMapper.updateCtBuInvoiceInfo(ctBuInvoiceInfo);
+        if(num>0){
+            CtBuInvoiceReq ctBuInvoiceReq = ctBuInvoiceReqMapper.selectCtBuInvoiceReqById(ctBuInvoiceInfo.getReqId());
+            if(ctBuInvoiceReq!=null && ctBuInvoiceReq.getYskid()!=null && !"".equals(ctBuInvoiceReq.getYskid()) && ctBuInvoiceInfo.getStatus()==1){
+                CtBuReceiptInfo ctBuReceiptInfo = new CtBuReceiptInfo();
+                ctBuReceiptInfo.setId(ctBuInvoiceReq.getYskid());
+                ctBuReceiptInfo.setInvoiceCode(ctBuInvoiceInfo.getInvoiceCode());
+                ctBuReceiptInfo.setInvoiceNo(ctBuInvoiceInfo.getInvoiceNo());
+                ctBuReceiptInfo.setInvoiceId(ctBuInvoiceInfo.getId());
+                ctBuReceiptInfoMapper.updateCtBuReceiptInfo(ctBuReceiptInfo);
+            }
+
+            //修改合同收款信息表
+            if(ctBuInvoiceInfo.getStatus()==1){
+                CtBuPayinfoInvoice ctBuPayinfoInvoice = new CtBuPayinfoInvoice();
+                ctBuPayinfoInvoice.setId(UUID.fastUUID().toString(true));
+                ctBuPayinfoInvoice.setCreateTime(new Date());
+                ctBuPayinfoInvoice.setContractId(ctBuInvoiceReq.getContractId());
+                ctBuPayinfoInvoice.setPaymentCycleId(ctBuInvoiceReq.getPayinfoid());
+                ctBuPayinfoInvoice.setBid(ctBuInvoiceInfo.getId());
+                ctBuPayinfoInvoice.setInvoiceNo(ctBuInvoiceInfo.getInvoiceNo());
+                ctBuPayinfoInvoice.setInvoiceCode(ctBuInvoiceInfo.getInvoiceCode());
+                ctBuPayinfoInvoice.setInvoiceMoney(ctBuInvoiceInfo.getInvoiceAmountTax());
+                ctBuPayinfoInvoice.setInvoiceNomoney(ctBuInvoiceInfo.getInvoiceAmountNtax());
+                ctBuPayinfoInvoice.setInvoiceTime(new Date());
+                ctBuPayinfoInvoice.setDelFlag(1);
+                ctBuPayinfoInvoice.setCreateBy(loginUser.getUser().getUserName());
+                ctBuPayinfoInvoiceMapper.insertCtBuPayinfoInvoice(ctBuPayinfoInvoice);
+            }
+
+        }
+        return num;
+    }
+
+    /**
+     * 批量删除财务开票
+     * 
+     * @param ids 需要删除的财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuInvoiceInfoByIds(String[] ids)
+    {
+        return ctBuInvoiceInfoMapper.deleteCtBuInvoiceInfoByIds(ids);
+    }
+
+    /**
+     * 删除财务开票信息
+     * 
+     * @param id 财务开票ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuInvoiceInfoById(String id)
+    {
+        return ctBuInvoiceInfoMapper.deleteCtBuInvoiceInfoById(id);
+    }
+
+    @Override
+    public List invoiceStatistics(Date startDate, Date endDate) {
+        List<SysDept> sysDepts = sysDeptMapper.selectDeptByParentId(200L);
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+        if (sysDepts != null && sysDepts.size() != 0){
+            for (SysDept sd : sysDepts){
+                if (sd.getDeptId() != null){
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    int i1 = ctBuInvoiceInfoMapper.invoiceStatistics(sd.getDeptId(), 1, startDate, endDate);
+                    int i2 = ctBuInvoiceInfoMapper.invoiceStatistics(sd.getDeptId(), 2, startDate, endDate);
+                    map.put("companyId",sd.getDeptId());
+                    map.put("companyName",sd.getDeptName());
+                    //专票
+                    map.put("specialInvoiceCount",i1);
+                    //普票
+                    map.put("plainInvoiceCount",i2);
+                    list.add(map);
+                }
+            }
+        }
+
+        return list;
+    }
+}

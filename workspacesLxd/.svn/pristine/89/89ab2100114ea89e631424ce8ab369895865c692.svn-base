@@ -1,0 +1,70 @@
+package com.ruoyi.dictionary.taxrate.domain;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 税率字典对象 ct_dic_taxrate
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+public class CtDicTaxrate extends BaseEntity {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * $column.columnComment
+     */
+    private String id;
+
+    /**
+     * 税率%
+     */
+    @Excel(name = "税率%")
+    private String taxrate;
+
+    /**
+     * 删除标志
+     */
+    private Long delFlag;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setTaxrate(String taxrate) {
+        this.taxrate = taxrate;
+    }
+
+    public String getTaxrate() {
+        return taxrate;
+    }
+
+    public void setDelFlag(Long delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Long getDelFlag() {
+        return delFlag;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("taxrate", getTaxrate())
+                .append("delFlag", getDelFlag())
+                .append("remark", getRemark())
+                .toString();
+    }
+}

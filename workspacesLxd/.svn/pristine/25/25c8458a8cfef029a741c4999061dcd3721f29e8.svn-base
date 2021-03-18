@@ -1,0 +1,111 @@
+package com.ruoyi.dictionary.taxrate.controller;
+
+import java.util.List;
+
+import com.ruoyi.dictionary.taxrate.domain.CtDicTaxrate;
+import com.ruoyi.dictionary.taxrate.service.ICtDicTaxrateService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.BusinessType;
+
+
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.core.page.TableDataInfo;
+
+/**
+ * 税率字典Controller
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+@RestController
+@RequestMapping("/dictionary/taxrate")
+public class CtDicTaxrateController extends BaseController {
+    @Autowired
+    private ICtDicTaxrateService ctDicTaxrateService;
+
+    /**
+     * 查询税率字典列表
+     */
+    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(CtDicTaxrate ctDicTaxrate) {
+        startPage();
+        List<CtDicTaxrate> list = ctDicTaxrateService.selectCtDicTaxrateList(ctDicTaxrate);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出税率字典列表
+     */
+    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:export')")
+    @Log(title = "税率字典", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(CtDicTaxrate ctDicTaxrate) {
+        List<CtDicTaxrate> list = ctDicTaxrateService.selectCtDicTaxrateList(ctDicTaxrate);
+        ExcelUtil<CtDicTaxrate> util = new ExcelUtil<CtDicTaxrate>(CtDicTaxrate.class);
+        return util.exportExcel(list, "taxrate");
+    }
+
+    /**
+     * 获取税率字典详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") String id) {
+        return AjaxResult.success(ctDicTaxrateService.selectCtDicTaxrateById(id));
+    }
+
+    /**
+     * 新增税率字典
+     */
+    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:add')")
+    @Log(title = "税率字典", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody CtDicTaxrate ctDicTaxrate) {
+        return toAjax(ctDicTaxrateService.insertCtDicTaxrate(ctDicTaxrate));
+    }
+
+    /**
+     * 修改税率字典
+     */
+    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:edit')")
+    @Log(title = "税率字典", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody CtDicTaxrate ctDicTaxrate) {
+        return toAjax(ctDicTaxrateService.updateCtDicTaxrate(ctDicTaxrate));
+    }
+
+    /**
+     * 删除税率字典
+     */
+//    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:remove')")
+//    @Log(title = "税率字典", businessType = BusinessType.DELETE)
+//	@DeleteMapping("/{ids}")
+//    public AjaxResult remove(@PathVariable String[] ids)
+//    {
+//        return toAjax(ctDicTaxrateService.deleteCtDicTaxrateByIds(ids));
+//    }
+
+
+    /**
+     * 逻辑删除税率字典
+     */
+    @PreAuthorize("@ss.hasPermi('dictionary:taxrate:remove')")
+    @Log(title = "税率字典", businessType = BusinessType.UPDATE)
+    @PutMapping("/{ids}")
+    public AjaxResult editRemove(@PathVariable String[] ids) {
+        System.err.println(ids);
+        return toAjax(ctDicTaxrateService.updateCtDicTaxrateByIds(ids));
+    }
+}

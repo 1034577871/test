@@ -1,0 +1,70 @@
+import request from '@/utils/request'
+
+// 查询收票记录列表
+export function listTicketRecord(query) {
+  return request({
+    url: '/paymentManagement/ticketRecord/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询收票记录列表(合同与收票记录全联)
+export function listTicketRecord1(query) {
+  return request({
+    url: '/paymentManagement/ticketRecord/list1',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询收票记录详细
+export function getTicketRecord(id) {
+  return request({
+    url: '/paymentManagement/ticketRecord/' + id,
+    method: 'get'
+  })
+}
+
+// 新增收票记录
+export function addTicketRecord(data) {
+  return request({
+    url: '/paymentManagement/ticketRecord',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改收票记录
+export function updateTicketRecord(data) {
+  return request({
+    url: '/paymentManagement/ticketRecord',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除收票记录
+export function delTicketRecord(id) {
+  return request({
+    url: '/paymentManagement/ticketRecord/' + id,
+    method: 'delete'
+  })
+}
+
+// 导出收票记录
+export function exportTicketRecord(query) {
+  return request({
+    url: '/paymentManagement/ticketRecord/export',
+    method: 'get',
+    params: query
+  })
+}
+
+// 逻辑删除收票记录
+export function editRemove(id) {
+  return request({
+    url: '/paymentManagement/ticketRecord/' + id,
+    method: 'put'
+  })
+}

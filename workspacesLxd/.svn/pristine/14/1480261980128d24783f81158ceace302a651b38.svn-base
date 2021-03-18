@@ -1,0 +1,295 @@
+<template>
+  <div>
+     <el-form ref="form" :model="form"  label-width="100px">
+          <el-dialog title="发票申请" :visible.sync="modalShow" width="80%" :before-close="modalClose">
+            <el-row :gutter="15">
+              <el-col :span="24" style="margin-top: 0;">
+                <el-divider content-position="center" ><el-link type="primary"><b>申请信息</b></el-link></el-divider>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="项目类型" prop="ApprovalType">
+                  <el-input v-model="form.approvalType" :readonly="true" class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="项目编号" prop="proNo">
+                  <el-input v-model="form.proNo" :readonly="true" class="input-noborder" />
+                </el-form-item>
+               </el-col>
+               <el-col :span="8">
+                <el-form-item label="项目名称" prop="proName" >
+                  <el-input v-model="form.proName"  :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+               <el-col :span="8">
+                 <el-form-item label="事前审批表ID 关联事前审批表ID" prop="approvalId" v-if="show">
+                    <el-input v-model="form.contractId" class="input-noborder"/>
+                 </el-form-item>
+                <el-form-item label="合同编号"     prop="contractNo">
+                    <el-input v-model="form.contractNo"  :readonly="true" class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="合同名称"    prop="contractName">
+                  <el-input v-model="form.contractName" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="发票种类" prop="invoiceType" >
+                  <el-input v-model="form.invoiceType"  :readonly="true"  class="input-noborder" />
+                </el-form-item>
+               </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="部门编号" prop="reqDeptid">
+                  <el-input v-model="form.reqDeptid"    :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+               <el-form-item label="部门名称" prop="reqDeptname">
+                 <el-input v-model="form.reqDeptname"   :readonly="true"  class="input-noborder"/>
+               </el-form-item>
+              </el-col>
+              <el-col :span="8">
+
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item  label="申请人编号" prop="reqUserid">
+                  <el-input v-model="form.reqUserid"   :readonly="true"  class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+               <el-col :span="8">
+                <el-form-item label="申请人姓名" prop="reqUsername">
+                  <el-input v-model="form.reqUsername"  :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="申请日期" prop="reqDate">
+                  <el-input v-model="form.reqDate"  :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="单位名称" prop="payerName">
+                  <el-input v-model="form.payerName"  :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位地址" prop="payerAddress">
+                  <el-input v-model="form.payerAddress"  :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="纳税人识别号" prop="creditCode" >
+                  <el-input v-model="form.creditCode" :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="单位电话"    prop="payerPhone">
+                  <el-input v-model="form.payerPhone"   :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位开户行"    prop="payerOpeningBank">
+                  <el-input v-model="form.payerOpeningBank" :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位账号"    prop="payerAccount">
+                  <el-input v-model="form.payerAccount" :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+                  <el-col :span="8">
+                    <el-form-item label="开票金额(含税)" prop="invoiceAmountTax" label-width="120px">
+                      <el-input v-model="form.invoiceAmountTax" :readonly="true" class="input-noborder" @blur='takeAcc(this)' oninput="value=value.replace(/[^0-9.]/g,'')"/>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="开票金额(不含税)"  prop="invoiceAmountNtax" label-width="130px">
+                      <el-input v-model="form.invoiceAmountNtax"  :readonly="true" class="input-noborder"/>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="预计回款时间" prop="expectedCollectionTime" >
+                      <el-input v-model="form.expectedCollectionTime" :readonly="true" class="input-noborder"/>
+                    </el-form-item>
+                  </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24" style="margin-top: 0;">
+               <el-divider content-position="center" ><el-link type="primary"><b>开票信息</b></el-link></el-divider>
+              </el-col>
+            </el-row>
+            <table class="curr-table ">
+              <tbody>
+                <tr>
+                  <th width="5%"></th>
+                  <th width="20%">项目名称</th>
+                  <th width="10%">规格</th>
+                  <th width="10%">型号</th>
+                  <th width="10%">单价</th>
+                  <th width="8%">数量</th>
+                  <th width="12%">金额(含税)</th>
+                  <th width="8%">税率</th>
+                  <th >金额(不含税)</th>
+                </tr>
+                <tr v-for="(value, index) in dataList" :key="index">
+                  <td>
+                    {{index+1}}
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceProName"
+                      :name="'appMateList[' + index + '].invoiceProName'"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceSpec"
+                      :name="'appMateList[' + index + '].invoiceSpec'"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceType"
+                      :name="'appMateList[' + index + '].invoiceType'"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoicePrice"
+                      :name="'appMateList[' + index + '].invoicePrice'"
+                      v-on:input="changeNum(index)" oninput="value=value.replace(/[^0-9.]/g,'')"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceMount"
+                      :name="'appMateList[' + index + '].invoiceMount'"
+                      v-on:input="changeNum(index)" oninput="value=value.replace(/[^0-9.]/g,'')"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceAmountTax"
+                      :name="'appMateList[' + index + '].invoiceAmountTax'"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceTaxrate"
+                      :name="'appMateList[' + index + '].invoiceTaxrate'"
+                    />
+                  </td>
+                  <td>
+                    <el-input
+                      v-model="value.invoiceAmountNtax"
+                      :name="'appMateList[' + index + '].invoiceAmountNtax'"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <el-row>
+              <el-col :span="24" style="margin-top: 0;">
+               <el-divider content-position="center" ><el-link type="primary"><b>审批记录</b></el-link></el-divider>
+              </el-col>
+            </el-row>
+        <el-row :gutter="15">
+          <el-table :data="tableData">
+            <el-table-column label="任务节点" prop="taskNodeName" header-align="center" align="center">
+            </el-table-column>
+            <el-table-column label="审批人" prop="createName" header-align="center" align="center">
+            </el-table-column>
+            <el-table-column label="审批意见" prop="controlValue" header-align="center" align="center">
+            </el-table-column>
+            <el-table-column label="审批时间" prop="createTime"   header-align="center" align="center">
+            </el-table-column>
+          </el-table>
+        </el-row>
+      </el-dialog>
+     </el-form>
+  </div>
+</template>
+
+<script>
+  import { findWorkFlowFormData ,listApplyCollection,detailNgcApproval,findContract,detailhtCon,getUserInfo  } from "@/api/collection/common";
+    export default {
+        name: "index",
+        data() {
+            return {
+               tableData:[],
+               dataList: [],  //开票信息
+              show:false,
+                modalShow:false,
+                 projectCategoryTypeList:[],
+                 form: {
+                   proNo: null,
+                    proName:null,
+                    contractNo:null,
+                    contractName:null,
+                    reqUsername:null,
+                    reqDeptname:null,
+                    reqDate:null,
+                    invoiceAmountTax:null,
+                    invoiceAmountNtax:null,
+                    businessKey:null
+                  },
+            }
+        },
+        methods:{
+            init(row){
+              this.form.businessKey = row.id;
+              findWorkFlowFormData(this.addDateRange(this.form, this.dateRange)).then(response => {
+
+                this.tableData = response;
+              });
+
+
+              //项目类型列表
+              this.getDicts("project_category_type").then((response) => {
+                this.projectCategoryTypeList = response.data;
+              });
+                this.modalShow = true
+                this.$nextTick(() =>{
+                    this.form.proNo = row.proNo;
+                    this.form.proName = row.proName;
+                    this.form.contractNo = row.contractNo;
+                    this.form.contractName = row.contractName;
+                    this.form.reqUsername = row.reqUsername;
+                    this.form.reqDeptname = row.reqDeptname;
+                    this.form.reqDate = row.reqDate;
+                    this.form.invoiceAmountTax = row.invoiceAmountTax;
+                    this.form.invoiceAmountNtax = row.invoiceAmountNtax;
+                })
+            },
+            modalClose(){
+                this.modalShow = false;
+            }
+        },
+    }
+
+</script>
+
+<style scoped lang="scss">
+  .input-noborder ::v-deep {
+    .el-input__inner {
+      border: 0;
+
+      background-color: #f8f8f9;
+    }
+  }
+
+</style>

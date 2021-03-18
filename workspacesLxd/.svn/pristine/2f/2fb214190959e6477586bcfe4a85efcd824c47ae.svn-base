@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.collection.mapper.CtBuReceiptInfoMapper">
+    
+    <resultMap type="CtBuReceiptInfo" id="CtBuReceiptInfoResult">
+        <result property="id"    column="id"    />
+        <result property="approvalId"    column="approval_id"    />
+        <result property="proNo"    column="pro_no"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="invoiceCode"    column="invoice_code"    />
+        <result property="invoiceNo"    column="invoice_no"    />
+        <result property="collectionTime"    column="collection_time"    />
+        <result property="collectionAmount"    column="collection_amount"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="voucher"    column="voucher"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="payType"    column="pay_Type"    />
+        <result property="payTypeName"    column="pay_Type_Name"    />
+        <association property="ctBuInvoiceReqVo" javaType="com.ruoyi.collection.domain.CtBuInvoiceReqVo">
+            <result property="id_"    column="id_"    />
+            <result property="approvalType_"    column="approvalType_"    />
+            <result property="approvalId_"    column="approvalId_"    />
+            <result property="proNo_"    column="proNo_"    />
+            <result property="proName_"    column="proName_"    />
+            <result property="contractId_"    column="contractId_"    />
+            <result property="contractNo_"    column="contractNo_"    />
+            <result property="contractName_"    column="contractName_"    />
+            <result property="invoiceType_"    column="invoiceType_"    />
+            <result property="reqDeptid_"    column="reqDeptid_"    />
+            <result property="reqDeptname_"    column="reqDeptname_"    />
+            <result property="reqUserid_"    column="reqUserid_"    />
+            <result property="reqUsername_"    column="reqUsername_"    />
+            <result property="reqDate_"    column="reqDate_"    />
+            <result property="payerName_"    column="payerName_"    />
+            <result property="creditCode_"    column="creditCode_"    />
+            <result property="payerAddress_"    column="payerAddress_"    />
+            <result property="payerPhone_"    column="payerPhone_"    />
+            <result property="payerOpeningBank_"    column="payerOpeningBank_"    />
+            <result property="payerAccount_"    column="payerAccount_"    />
+            <result property="invoiceAmountTax_"    column="invoiceAmountTax_"    />
+            <result property="invoiceAmountNtax_"    column="invoiceAmountNtax_"    />
+            <result property="expectedCollectionTime_"    column="expectedCollectionTime_"    />
+            <result property="status_"    column="status_"    />
+            <result property="statusps_"    column="statusps_"    />
+            <result property="delFlag_"    column="delFlag_"    />
+            <result property="remark_"    column="remark_"    />
+            <result property="createBy_"    column="createBy_"    />
+            <result property="createTime_"    column="createTime_"    />
+            <result property="updateBy_"    column="updateBy_"    />
+            <result property="updateTime_"    column="updateTime_"    />
+        </association>
+        <association property="ctBuInvoiceInfoVo" javaType="com.ruoyi.collection.domain.CtBuInvoiceInfoVo">
+            <result property="ids"    column="ids"    />
+            <result property="contractCategorys"    column="contractCategorys"    />
+            <result property="reqIds"    column="reqIds"    />
+            <result property="invoiceCodes"    column="invoiceCodes"    />
+            <result property="invoiceNos"    column="invoiceNos"    />
+            <result property="invoiceDates"    column="invoiceDates"    />
+            <result property="invoiceDrawers"    column="invoiceDrawers"    />
+            <result property="invoiceReviewers"    column="invoiceReviewers"    />
+            <result property="invoicePayees"    column="invoicePayees"    />
+            <result property="invoiceAmountTaxs"    column="invoiceAmountTaxs"    />
+            <result property="invoiceTaxrates"    column="invoiceTaxrates"    />
+            <result property="invoiceAmountNtaxs"    column="invoiceAmountNtaxs"    />
+            <result property="invoiceImgs"    column="invoiceImgs"    />
+            <result property="companyImgs"    column="companyImgs"    />
+            <result property="handoverUserids"    column="handoverUserids"    />
+            <result property="handoverUsernames"    column="handoverUsernames"    />
+            <result property="handoverTimes"    column="handoverTimes"    />
+            <result property="confirmerUserids"    column="confirmerUserids"    />
+            <result property="confirmerUsernames"    column="confirmerUsernames"    />
+            <result property="confirmerTimes"    column="confirmerTimes"    />
+            <result property="voucherNos"    column="voucherNos"    />
+            <result property="voucherUserids"    column="voucherUserids"    />
+            <result property="voucherUsernames"    column="voucherUsernames"    />
+            <result property="voucherTimes"    column="voucherTimes"    />
+            <result property="statuss"    column="statuss"    />
+            <result property="statuspss"    column="statuspss"    />
+            <result property="delFlags"    column="delFlags"    />
+            <result property="remarks"    column="remarks"    />
+            <result property="createBys"    column="createBys"    />
+            <result property="createTimes"    column="createTimes"    />
+            <result property="updateBys"    column="updateBys"    />
+            <result property="updateTimes"    column="updateTimes"    />
+        </association>
+    </resultMap>
+    <resultMap type="CtBuReceiptInfoDto" id="CtBuReceiptInfoResult_">
+        <result property="id"    column="id"    />
+        <result property="approvalId"    column="approval_id"    />
+        <result property="proNo"    column="pro_no"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="invoiceCode"    column="invoice_code"    />
+        <result property="invoiceNo"    column="invoice_no"    />
+        <result property="collectionTime"    column="collection_time"    />
+        <result property="collectionAmount"    column="collection_amount"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="voucher"    column="voucher"    />
+        <result property="status"    column="status"    />
+        <result property="statusps"    column="statusPS"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="instanceId"    column="instance_id"    />
+        <result property="payType"    column="pay_Type"    />
+        <result property="payTypeName"    column="pay_Type_Name"    />
+        <result property="statuss"    column="statuss"    />
+    </resultMap>
+
+
+    <sql id="selectCtBuReceiptInfoVo">
+        select pay_Type_Name,pay_Type,id, approval_id, pro_no, pro_name, contract_id, contract_no, contract_name, invoice_id, invoice_code, invoice_no, collection_time, collection_amount, document_number, payment_method, voucher, status, statusPS, del_flag, remark, create_by, create_time, update_by, update_time,instance_id from ct_bu_receipt_info
+    </sql>
+
+    <select id="selectHxCtBuReceiptInfoList" parameterType="CtBuReceiptInfo" resultMap="CtBuReceiptInfoResult_">
+        select
+
+        i.id,
+        i.approval_id,
+        i.pro_no,
+        i.pro_name,
+        i.contract_id,
+        i.contract_no,
+        i.contract_name,
+        i.invoice_id,
+        i.invoice_code,
+        i.invoice_no,
+        i.collection_time,
+        i.collection_amount,
+        i.document_number,
+        i.payment_method,
+        i.voucher,
+
+        ctBuInvoiceInfoVo.id ids , ctBuInvoiceInfoVo.contract_category contractCategorys, ctBuInvoiceInfoVo.req_id reqIds, ctBuInvoiceInfoVo.invoice_code invoiceCodes, ctBuInvoiceInfoVo.invoice_no invoiceNos, ctBuInvoiceInfoVo.invoice_date invoiceDates, ctBuInvoiceInfoVo.invoice_drawer invoiceDrawers, ctBuInvoiceInfoVo.invoice_reviewer invoicereviewers, ctBuInvoiceInfoVo.invoice_payee invoicePayees, ctBuInvoiceInfoVo.invoice_amount_tax invoiceAmountTaxs, ctBuInvoiceInfoVo.invoice_taxrate invoiceTaxrates, ctBuInvoiceInfoVo.invoice_amount_ntax invoiceAmountNtaxs,
+        ctBuInvoiceInfoVo.status  statuss
+        from ct_bu_receipt_info i  join ct_bu_invoice_info ctBuInvoiceInfoVo on ctBuInvoiceInfoVo.id = i.invoice_id
+
+        <where>
+            i.del_flag = 1  and  i.`status`=2
+            <if test="createBy != null  and createBy != ''"> and i.create_by = #{createBy}</if>
+
+            <if test="proName != null">and i.pro_name like concat('%', #{proName}, '%') </if>
+            <if test="contractName != null">and i.contract_name  like concat('%', #{contractName}, '%')  </if>
+
+            <if test="createBy != null  and createBy != ''"> and i.create_by = #{createBy}</if>
+
+            <if test="invoiceCode != null  and invoiceCode != ''"> and ctBuInvoiceInfoVo.invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and ctBuInvoiceInfoVo.invoice_no = #{invoiceNo}</if>
+            <if test="createTime != null">and ctBuInvoiceInfoVo.create_time= #{createTime}</if>
+            <if test="documentNumber != null  and documentNumber != ''"> and i.document_number = #{documentNumber}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and i.payment_method = #{paymentMethod}</if>
+            <if test="payType != null  and payType != ''"> and i.pay_type = #{payType}</if>
+
+        </where>
+
+
+    </select>
+
+    <select id="selectNewCtBuReceiptInfoList" parameterType="CtBuReceiptInfo" resultMap="CtBuReceiptInfoResult">
+        select i.*,
+        f.id ids , f.contract_category contractCategorys, f.req_id reqIds, f.invoice_code invoiceCodes, f.invoice_no invoiceNos, f.invoice_date invoiceDates, f.invoice_drawer invoiceDrawers, f.invoice_reviewer invoicereviewers, f.invoice_payee invoicePayees, f.invoice_amount_tax invoiceAmountTaxs, f.invoice_taxrate invoiceTaxrates, f.invoice_amount_ntax invoiceAmountNtaxs,
+        f.status  statuss,
+        r.id id_, r.approval_type approvalType_, r.approval_id approvalId_, r.pro_no proNo_, r.pro_name proName_, r.contract_id contractId_, r.contract_no contractNo_, r.contract_name contractName_,
+        r.invoice_type invoiceType_, r.req_deptid reqDeptid_, r.req_deptname reqDeptname_, r.req_userid reqUserid_, r.req_username reqUsername_, r.req_date reqDate_, r.payer_name payerName_,
+        r.credit_code creditCode_, r.payer_address payerAddress_, r.payer_phone payerPhone_, r.payer_opening_bank payerOpeningBank_, r.payer_account payerAccount_, r.invoice_amount_tax invoiceAmountTax_,
+        r.invoice_amount_ntax invoiceAmountNtax_, r.status status_
+        from ct_bu_invoice_req r left join ct_bu_invoice_info f on r.id = f.req_id
+        left join ct_bu_receipt_info i on f.id=i.invoice_id
+        <where>
+            r.del_flag = 1  and  r.`status`=2  and f.del_flag=1
+            and (i.pay_type=2 or i.pay_type is null)
+            <if test="createBy != null  and createBy != ''"> and r.create_by = #{createBy}</if>
+            <if test="status != null  and status != ''"> and f.status &gt;=  #{status}</if>
+            <if test="id_ != null  and id_ != ''"> and r.id = #{id_}</if>
+
+            <if test="proName != null">and r.pro_name like concat('%', #{proName}, '%') </if>
+            <if test="contractName != null">and r.contract_name  like concat('%', #{contractName}, '%')  </if>
+
+            <if test="createBy != null  and createBy != ''"> and i.create_by = #{createBy}</if>
+            <if test="status != null  and status != ''"> and f.status &gt;= #{status}</if>
+
+            <if test="invoiceCode != null  and invoiceCode != ''"> and f.invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and f.invoice_no = #{invoiceNo}</if>
+            <if test="createTime != null">and f.create_time= #{createTime}</if>
+            <if test="documentNumber != null  and documentNumber != ''"> and i.document_number = #{documentNumber}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and i.payment_method = #{paymentMethod}</if>
+            <if test="payType != null  and payType != ''"> and i.pay_type = #{payType}</if>
+
+        </where>
+
+
+    </select>
+    <select id="selectCtBuReceiptInfoList" parameterType="CtBuReceiptInfo" resultMap="CtBuReceiptInfoResult">
+<!--        <include refid="selectCtBuReceiptInfoVo"/>-->
+        SELECT
+        pay_Type_Name,
+        pay_Type,
+        i.id,
+        i.approval_id,
+        r.pro_no,
+        r.pro_name proName_,
+        r.contract_id,
+        r.contract_no,
+        r.contract_name contractName_,
+        r.invoice_type invoiceType_,
+        r.req_deptname reqDeptname_,
+        r.req_username reqUsername_,
+        r.invoice_amount_tax invoiceAmountTax_,
+        r.req_date reqDate_,
+        r.payer_name payerName_,
+        invoice_id,
+        invoice_code,
+        invoice_no,
+        collection_time,
+        collection_amount,
+        document_number,
+        payment_method,
+        voucher,
+        i.STATUS,
+        i.statusPS,
+        i.del_flag,
+        i.remark,
+        i.create_by,
+        i.create_time,
+        i.update_by,
+        i.update_time,
+        i.instance_id
+        FROM
+        ct_bu_receipt_info i left join ct_bu_invoice_req r on i.id=r.yskid
+        <where>
+            i.del_flag = 1
+            <if test="approvalId != null  and approvalId != ''"> and i.approval_id = #{approvalId}</if>
+            <if test="proNo != null  and proNo != ''"> and r.pro_no = #{proNo}</if>
+            <if test="proName != null  and proName != ''"> and r.pro_name like concat('%', #{proName}, '%')</if>
+            <if test="contractId != null  and contractId != ''"> and r.contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and r.contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''"> and r.contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="invoiceId != null  and invoiceId != ''"> and i.invoice_id = #{invoiceId}</if>
+            <if test="invoiceCode != null  and invoiceCode != ''"> and i.invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and i.invoice_no = #{invoiceNo}</if>
+            <if test="collectionTime != null "> and i.collection_time = #{collectionTime}</if>
+            <if test="collectionAmount != null "> and i.collection_amount = #{collectionAmount}</if>
+            <if test="documentNumber != null  and documentNumber != ''"> and document_number = #{documentNumber}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and payment_method = #{paymentMethod}</if>
+            <if test="voucher != null  and voucher != ''"> and voucher = #{voucher}</if>
+            <if test="status != null "> and i.status = #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and i.statusPS = #{statusps}</if>
+            <if test="instanceId != null  and instanceId != ''"> and i.instance_id = #{instanceId}</if>
+            <if test="payType != null  and payType != ''"> and i.pay_type = #{payType}</if>
+
+        </where>
+    </select>
+
+
+
+    <select id="selectCtBuReceiptInfoList_" parameterType="CtBuReceiptInfo" resultMap="CtBuReceiptInfoResult">
+        <include refid="selectCtBuReceiptInfoVo"/>
+        <where>
+            del_flag = 1 and id not in( select yskid from ct_bu_invoice_req  r where r.del_flag=1 and r.yskid is not null) and pay_type = 1
+             and status = 2
+            <if test="approvalId != null  and approvalId != ''"> and approval_id = #{approvalId}</if>
+            <if test="proNo != null  and proNo != ''"> and pro_no = #{proNo}</if>
+            <if test="proName != null  and proName != ''"> and pro_name like concat('%', #{proName}, '%')</if>
+            <if test="contractId != null  and contractId != ''"> and contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="invoiceId != null  and invoiceId != ''"> and invoice_id = #{invoiceId}</if>
+            <if test="invoiceCode != null  and invoiceCode != ''"> and invoice_code = #{invoiceCode}</if>
+            <if test="invoiceNo != null  and invoiceNo != ''"> and invoice_no = #{invoiceNo}</if>
+            <if test="collectionTime != null "> and collection_time = #{collectionTime}</if>
+            <if test="collectionAmount != null "> and collection_amount = #{collectionAmount}</if>
+            <if test="documentNumber != null  and documentNumber != ''"> and document_number = #{documentNumber}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and payment_method = #{paymentMethod}</if>
+            <if test="voucher != null  and voucher != ''"> and voucher = #{voucher}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="statusps != null  and statusps != ''"> and statusPS = #{statusps}</if>
+            <if test="instanceId != null  and instanceId != ''"> and instance_id = #{instanceId}</if>
+            <if test="payType != null  and payType != ''"> and pay_type = #{payType}</if>
+
+        </where>
+    </select>
+
+    
+    <select id="selectCtBuReceiptInfoById" parameterType="String" resultMap="CtBuReceiptInfoResult">
+        <include refid="selectCtBuReceiptInfoVo"/>
+        where id = #{id} and del_flag = 1
+    </select>
+        
+    <insert id="insertCtBuReceiptInfo" parameterType="CtBuReceiptInfo">
+        insert into ct_bu_receipt_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="approvalId != null">approval_id,</if>
+            <if test="proNo != null">pro_no,</if>
+            <if test="proName != null">pro_name,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="invoiceId != null">invoice_id,</if>
+            <if test="invoiceCode != null">invoice_code,</if>
+            <if test="invoiceNo != null">invoice_no,</if>
+            <if test="collectionTime != null">collection_time,</if>
+            <if test="collectionAmount != null">collection_amount,</if>
+            <if test="documentNumber != null">document_number,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="voucher != null">voucher,</if>
+            <if test="status != null">status,</if>
+            <if test="statusps != null">statusPS,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="instanceId != null  and instanceId != ''"> instance_id ,</if>
+            <if test="payType != null  and payType != ''"> pay_Type ,</if>
+            <if test="payTypeName != null  and payTypeName != ''"> pay_Type_Name ,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="approvalId != null">#{approvalId},</if>
+            <if test="proNo != null">#{proNo},</if>
+            <if test="proName != null">#{proName},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="invoiceId != null">#{invoiceId},</if>
+            <if test="invoiceCode != null">#{invoiceCode},</if>
+            <if test="invoiceNo != null">#{invoiceNo},</if>
+            <if test="collectionTime != null">#{collectionTime},</if>
+            <if test="collectionAmount != null">#{collectionAmount},</if>
+            <if test="documentNumber != null">#{documentNumber},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="voucher != null">#{voucher},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusps != null">#{statusps},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="instanceId != null  and instanceId != ''"> #{instanceId},</if>
+            <if test="payType != null  and payType != ''"> #{payType},</if>
+            <if test="payTypeName != null  and payTypeName != ''"> #{payTypeName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuReceiptInfo" parameterType="CtBuReceiptInfo">
+        update ct_bu_receipt_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="approvalId != null">approval_id = #{approvalId},</if>
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="invoiceId != null">invoice_id = #{invoiceId},</if>
+            <if test="invoiceCode != null">invoice_code = #{invoiceCode},</if>
+            <if test="invoiceNo != null">invoice_no = #{invoiceNo},</if>
+            <if test="collectionTime != null">collection_time = #{collectionTime},</if>
+            <if test="collectionAmount != null">collection_amount = #{collectionAmount},</if>
+            <if test="documentNumber != null">document_number = #{documentNumber},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="voucher != null">voucher = #{voucher},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="instanceId != null  and instanceId != ''"> instance_Id=#{instanceId},</if>
+            <if test="payType != null  and payType != ''"> pay_type = #{payType},</if>
+            <if test="payTypeName != null  and payTypeName != ''"> pay_type_name = #{payTypeName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateEndCtBuReceiptInfo" parameterType="CtBuReceiptInfo">
+        update ct_bu_receipt_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="approvalId != null">approval_id = #{approvalId},</if>
+            <if test="proNo != null">pro_no = #{proNo},</if>
+            <if test="proName != null">pro_name = #{proName},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="invoiceId != null">invoice_id = #{invoiceId},</if>
+            <if test="invoiceCode != null">invoice_code = #{invoiceCode},</if>
+            <if test="invoiceNo != null">invoice_no = #{invoiceNo},</if>
+            <if test="collectionTime != null">collection_time = #{collectionTime},</if>
+            <if test="collectionAmount != null">collection_amount = #{collectionAmount},</if>
+            <if test="documentNumber != null">document_number = #{documentNumber},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="voucher != null">voucher = #{voucher},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusps != null">statusPS = #{statusps},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="instanceId != null  and instanceId != ''"> instance_Id=#{instanceId},</if>
+            <if test="payType != null  and payType != ''"> pay_type = #{payType},</if>
+            <if test="payTypeName != null  and payTypeName != ''"> pay_type_name = #{payTypeName},</if>
+        </trim>
+        where instance_Id = #{instanceId}
+    </update>
+
+<!--    <delete id="deleteCtBuReceiptInfoById" parameterType="String">-->
+<!--        delete from ct_bu_receipt_info where id = #{id}-->
+<!--    </delete>-->
+    <update id="deleteCtBuReceiptInfoById" parameterType="String">
+        update ct_bu_receipt_info set del_flag = 2 where id = #{id}
+    </update>
+<!--    <delete id="deleteCtBuReceiptInfoByIds" parameterType="String">-->
+<!--        delete from ct_bu_receipt_info where id in -->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+    <update id="deleteCtBuReceiptInfoByIds" parameterType="String">
+        update ct_bu_receipt_info set del_flag = 2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateCtBuReceiptInfoByIds" parameterType="String">
+        update ct_bu_receipt_info set status = 4 where invoice_Id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

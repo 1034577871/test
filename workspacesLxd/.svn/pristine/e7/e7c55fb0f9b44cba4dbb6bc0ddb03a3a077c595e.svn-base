@@ -1,0 +1,22 @@
+package com.ruoyi.broadcast.Impl;
+
+import java.io.Serializable;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import com.ruoyi.broadcast.TestService;
+
+@Service
+public class TestServiceImpl implements TestService {
+
+	@Autowired
+	private RedisTemplate<String, Serializable> redis4;
+
+	@Override
+	public String findSelect(String id) {
+		redis4.opsForValue().set("LOLOLOL", "9999999999999999999999");
+		return id;
+	}
+}

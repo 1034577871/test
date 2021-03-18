@@ -1,0 +1,228 @@
+<!-- 审批详情弹出页 -->
+<template>
+  <div>
+     <el-form ref="form" :model="form"  label-width="100px">
+          <el-dialog title="收款记录审核" :visible.sync="modalShow" width="80%" :before-close="modalClose">
+            <el-row :gutter="15">
+              <el-col :span="24" style="margin-top: 0;">
+                <el-divider content-position="center" ><el-link type="primary"><b>合同信息</b></el-link></el-divider>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8" >
+                <el-form-item label="项目编号" prop="proNo" >
+                  <el-input v-model="form.proNo" :readonly="true" class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="项目名称" prop="proName" v-if="show">
+                  <el-input v-model="form.proName" :readonly="true" class="input-noborder" />
+                </el-form-item>
+               </el-col>
+               <el-col :span="8">
+                 <el-form-item label="合同类别"    prop="contractNo">
+                   <el-input v-model="form.contractNo" :readonly="true"  class="input-noborder" />
+                 </el-form-item>
+               </el-col>
+               <el-col :span="8">
+                <el-form-item label="合同名称" prop="contractName" >
+                  <el-input v-model="form.contractName"  :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="对方单位名称" prop="oppositeName">
+                  <el-input v-model="form.oppositeName" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="对方银行账户" prop="oppositeBank">
+                  <el-input v-model="form.oppositeBank" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="对方银行账号" prop="oppositeBankId">
+                  <el-input v-model="form.oppositeBankId"    :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="对方联系人" prop="oppositeContacts">
+                  <el-input v-model="form.oppositeContacts" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="对方联系电话" prop="oppositePhone">
+                  <el-input v-model="form.oppositeBank" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="对方联系地址" prop="oppositeAddress">
+                  <el-input v-model="form.oppositeAddress"    :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="付款周期" prop="paymentPeriod">
+                  <el-input v-model="form.paymentPeriod" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="开票日期" prop="invoiceDate">
+                  <el-input v-model="form.invoiceDate" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="发票代码" prop="invoiceCode">
+                  <el-input v-model="form.invoiceCode"    :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="发票号码" prop="invoiceNo">
+                  <el-input v-model="form.invoiceNo"    :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="发票金额（含税）" prop="notTaxMoney" >
+                  <el-input v-model="form.notTaxMoney" :readonly="true" class="input-noborder"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="税率" prop="taxrate">
+                  <el-input v-model="form.taxrate" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="15">
+              <el-col :span="8">
+                <el-form-item label="发票金额（不含税）" prop="invoiceNomoney">
+                  <el-input v-model="form.invoiceNomoney" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="发票凭证" prop="invoiceVoucher">
+                  <el-input v-model="form.invoiceVoucher" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="对方单位资质" prop="unitQualification">
+                  <el-input v-model="form.unitQualification" :readonly="true"  class="input-noborder" />
+                </el-form-item>
+              </el-col>
+
+            </el-row>
+        <el-row :gutter="15">
+          <el-table :data="tableData">
+            <el-table-column label="任务节点" prop="taskNodeName" header-align="center" align="center">
+            </el-table-column>
+            <el-table-column label="审批人" prop="createName" header-align="center" align="center">
+            </el-table-column>
+            <el-table-column label="审批意见" prop="controlValue" header-align="center" align="center">
+            </el-table-column>
+            <el-table-column label="审批时间" prop="createTime"   header-align="center" align="center">
+            </el-table-column>
+          </el-table>
+        </el-row>
+      </el-dialog>
+     </el-form>
+  </div>
+</template>
+
+<script>
+  import { findWorkFlowFormData ,listApplyCollection,detailNgcApproval,findContract,detailhtCon,getUserInfo  } from "@/api/collection/common";
+	import {
+		listTicketRecord,
+		getTicketRecord,
+		delTicketRecord,
+		addTicketRecord,
+		updateTicketRecord,
+		exportTicketRecord
+	} from "@/api/paymentManagement/ticketRecord";
+  import { getByBusinessKey } from '@/api/activiti/historyFormdata.js';
+    export default {
+        name: "index",
+        data() {
+          return {
+            tableData:[], //审批信息
+            invoiceDataList:[], //开票信息
+            show:false,
+            modalShow:false,
+            projectCategoryTypeList:[],
+            form: {
+             id: null,
+             proNo: null,
+             proName: null,
+             contractId: null,
+             contractNo: null,
+             contractName: null,
+             payinfoid: null,
+             paymentPeriod: null,
+             invoiceDate: null,
+             invoiceCode: null,
+             invoiceNo: null,
+             invoiceMoney: null,
+             taxrate: null,
+             invoiceNomoney: null,
+             oppositeName: null,
+             oppositeBank: null,
+             oppositeBankId: null,
+             oppositeContacts: null,
+             oppositePhone: null,
+             oppositeAddress: null,
+             invoiceVoucher: null,
+             unitQualification: null,
+             status: 0,
+             statusps: null,
+             delFlag: null,
+             remark: null,
+             createBy: null,
+             createTime: null,
+             updateBy: null,
+             updateTime: null,
+
+            },
+          }
+        },
+        created() {},
+        methods:{
+          init(row){
+            this.tableData=[];
+            getTicketRecord(row.businessKey).then(response => {
+              this.form = response.data
+              let proName_ = response.data;
+              this.modalShow = true;
+              getByBusinessKey(row.businessKey).then(response1 =>{
+                this.tableData = response1;
+                console.log( this.tableData)
+              })
+
+            })
+          },
+          modalClose(){
+              this.modalShow = false;
+          }
+        },
+    }
+
+</script>
+
+<style scoped lang="scss">
+  ::v-deep .input-noborder {
+    .el-input__inner {
+      border: 0;
+      background-color: #f8f8f9;
+    }
+  }
+  ::v-deep .el-dialog {
+    .el-dialog__body {
+      padding: 0px 20px !important;
+    }
+  }
+</style>

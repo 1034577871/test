@@ -1,0 +1,618 @@
+
+
+package com.ruoyi.activiti.service.impl;
+
+import com.github.pagehelper.Page;
+import com.ruoyi.activiti.domain.ActWorkflowFormData;
+import com.ruoyi.activiti.domain.dto.ActTaskDTO;
+import com.ruoyi.activiti.domain.dto.ActTaskVO;
+import com.ruoyi.activiti.domain.dto.ActWorkflowFormDataDTO;
+import com.ruoyi.activiti.domain.dto.SearchTodoTaskVo;
+import com.ruoyi.activiti.mapper.ActWorkflowFormDataMapper;
+import com.ruoyi.activiti.mapper.PublicMapper;
+import com.ruoyi.activiti.service.IActTaskService;
+import com.ruoyi.activiti.service.IActWorkflowFormDataService;
+import com.ruoyi.collection.domain.CtBuInvoiceInfo;
+import com.ruoyi.collection.domain.CtBuInvoiceReqDto;
+import com.ruoyi.collection.domain.CtBuReceiptInfo;
+import com.ruoyi.collection.service.ICtBuInvoiceInfoService;
+import com.ruoyi.collection.service.ICtBuInvoiceReqService;
+import com.ruoyi.collection.service.ICtBuReceiptInfoService;
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.projectApproval.ApprovalNg.domain.CtBuApprovalNg;
+import com.ruoyi.projectApproval.ApprovalNg.service.ICtBuApprovalNgService;
+import com.ruoyi.system.service.ISysUserService;
+import org.activiti.api.runtime.shared.query.Pageable;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.builders.TaskPayloadBuilder;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.*;
+import org.activiti.engine.query.QueryProperty;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
+import org.activiti.image.ProcessDiagramGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+public class ActTaskServiceImpl implements IActTaskService {
+
+    @Autowired
+    private RepositoryService repositoryService;
+
+    @Autowired
+    private TaskRuntime taskRuntime;
+    @Autowired
+    private RuntimeService runtimeService;
+    @Autowired
+    private IActWorkflowFormDataService actWorkflowFormDataService;
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private HistoryService historyService;
+    @Autowired
+    private ActWorkflowFormDataMapper actWorkflowFormDataMapper;
+    @Autowired
+    private ProcessDiagramGenerator processDiagramGenerator;
+    @Autowired
+    private ICtBuInvoiceReqService iCtBuInvoiceReqService;
+
+    @Autowired
+    private ICtBuReceiptInfoService iCtBuReceiptInfoService;
+
+    @Autowired
+    PublicMapper publicMapper;
+
+    @Autowired
+    private ICtBuInvoiceInfoService iCtBuInvoiceInfoService;
+
+    @Autowired
+    private RedisTemplate<String, Serializable> redis1;
+    @Autowired
+    private ISysUserService iSysUserService;
+    @Autowired
+    private ICtBuApprovalNgService iCtBuApprovalNgService;
+
+
+
+    @Override
+    public void exportImage(HttpServletResponse response, String processInstanceId) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
+        String processDefinitionId = "";
+        boolean flag = false;
+        //如果执行中的查询不到，查询历史记录
+        if(processInstance==null){
+            List<HistoricActivityInstance>  list=historyService // 历史相关Service
+                    .createHistoricActivityInstanceQuery() // 创建历史活动实例查询
+                    .processInstanceId(processInstanceId) // 执行流程实例id
+                    .finished()
+                    .list();
+            HistoricActivityInstance hai = list.get(0);
+            processDefinitionId = hai.getProcessDefinitionId();
+            flag = true;
+
+        }else{
+            processDefinitionId = processInstance.getProcessDefinitionId();
+        }
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
+        HistoricActivityInstanceQuery historyInstanceQuery = historyService.createHistoricActivityInstanceQuery()
+                .processInstanceId(processInstanceId);
+
+        response.setContentType("text/html;charset=utf-8");
+        // 查询历史节点
+        List<HistoricActivityInstance> historicActivityInstanceList = historyInstanceQuery
+                .orderByHistoricActivityInstanceStartTime().asc().list();
+        List<String> executedActivityIdList = historicActivityInstanceList.stream().map(item -> item.getActivityId())
+                .collect(Collectors.toList());
+
+        InputStream imageStream = null;
+        if(flag){
+            imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "宋体", "宋体", "宋体");
+        }else{
+             imageStream = processDiagramGenerator.generateDiagram(bpmnModel,runtimeService.getActiveActivityIds(processInstanceId),Collections.<String>emptyList(), "宋体", "宋体", "宋体");
+        }
+        byte[] b = new byte[1024];
+        int len;
+        try {
+            while ((len = imageStream.read(b, 0, 1024)) != -1) {
+                response.getOutputStream().write(b, 0, len);
+            }
+            response.setCharacterEncoding("utf-8");
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally { // 流关闭
+            try {
+                imageStream.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public InputStream findProcessPic(String procDefId) {
+       // ProcessDefinition definition = getProcessDefinition(procDefId);
+        ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey("invoiceApply").processDefinitionVersion(7)
+                .singleResult();
+        String source = definition.getDiagramResourceName();
+        InputStream inputStream = repositoryService.getResourceAsStream(definition.getDeploymentId(),source);
+        return inputStream;
+    }
+
+
+    /**
+     * 查询业务表id。
+     *
+     * @param assignee 用户
+     * @return 已处理任务列表
+     */
+
+    @Override
+    public Map selectBuessKeyByExe(String id){
+        return actWorkflowFormDataMapper.selectBuessKeyByExe(id);
+    }
+    /**
+     * 查询已处理任务列表。
+     *
+     * @param assignee 用户
+     * @return 已处理任务列表
+     */
+
+    @Override
+    public Page<ActTaskDTO> queryDoneTasks(PageDomain pageDomain,String processDefinitionName,String taskName
+    ,String startDueDate,String endDueDate) {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        SearchTodoTaskVo searchTodoTaskVo  = new SearchTodoTaskVo();
+        String processDefinitionNameLike="";
+        String taskNameLike="";
+        //模糊查询字符串前后一定要加  %%
+        if(StringUtils.isNotEmpty(processDefinitionName)) {
+            StringBuffer buf=new StringBuffer();
+            buf.append("%");
+            buf.append(processDefinitionName);
+            buf.append("%");
+            processDefinitionNameLike=buf.toString();
+        }
+        if(StringUtils.isNotEmpty(taskName)) {
+            StringBuffer buf1=new StringBuffer();
+            buf1.append("%");
+            buf1.append(taskName);
+            buf1.append("%");
+            taskNameLike=buf1.toString();
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        //查询摸个时间是否在时间区间
+        if(!StringUtils.isEmpty(startDueDate)) {
+            Date startDueDate1 = null;
+            try {
+                startDueDate1 = formatter.parse(startDueDate);
+                searchTodoTaskVo.setStartDueDate(startDueDate1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if(!StringUtils.isEmpty(endDueDate)) {
+            Date endDueDate1 = null;
+            try {
+                endDueDate1 = formatter.parse(endDueDate);
+                Calendar calendar = Calendar.getInstance(); //得到日历
+                calendar.setTime(endDueDate1);//把当前时间赋给日历
+                calendar.add(Calendar.DAY_OF_MONTH, +1);  //设置为后一天
+                String day2 = formatter.format(calendar.getTime());
+                endDueDate1=formatter.parse(day2);
+                searchTodoTaskVo.setEndDueDate(endDueDate1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        searchTodoTaskVo.setProcessDefinitionName(processDefinitionNameLike);
+        searchTodoTaskVo.setTaskName(taskNameLike);
+        //已办列表根据流程处理时间排序，添加过滤查询条件调用getTaskDoneQuery
+        HistoricTaskInstanceQuery  taskQuery =getTaskDoneQuery(searchTodoTaskVo).taskAssignee(loginUser.getUser().getUserName()).orderByHistoricTaskInstanceEndTime().desc();;
+        List<HistoricTaskInstance> historicTaskInstances_ = taskQuery.finished().list();
+       //查询已经完成的任务要加.finished()
+        List<HistoricTaskInstance> historicTaskInstances = taskQuery.finished().listPage((pageDomain.getPageNum() - 1) * pageDomain.getPageSize(), pageDomain.getPageSize());
+        int num = 0;
+        List<ActTaskDTO> lists= new ArrayList<>();
+        if(historicTaskInstances!=null && historicTaskInstances.size()>0){
+            for(HistoricTaskInstance historicTaskInstance:historicTaskInstances) {
+                ActTaskDTO dto = new ActTaskDTO();
+                HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery().
+                        processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
+                //查询审核意见
+                ActWorkflowFormData data = new ActWorkflowFormData();
+                data.setBusinessKey(processInstance.getBusinessKey());
+                data.setFormKey(historicTaskInstance.getFormKey()==null?"xxx":historicTaskInstance.getFormKey());
+                data.setExecutionId(historicTaskInstance.getExecutionId());
+
+                List<ActWorkflowFormData> dlist = actWorkflowFormDataMapper.selectGroupActWorkflowFormDataList(data);
+                if(dlist!=null && dlist.size()>0){
+                    ActWorkflowFormData actWorkflowFormData = dlist.get(0);
+                    if(actWorkflowFormData.getControlValue()!=null){
+                        String agree = actWorkflowFormData.getControlValue();
+                        if(!"".equals(agree)){
+                            String[] agrees = agree.split(":");
+                            if("同意".equals(agrees[0])){
+                                dto.setStatus("同意");
+                            }
+                            if("不同意".equals(agrees[0])){
+                                dto.setStatus("退回");
+                            }
+                        }
+                    }
+                }else{
+                    dto.setStatus("退回");
+                }
+                dto.setRemark(historicTaskInstance.getAssignee());
+                dto.setInstanceName(processInstance.getName());
+                dto.setId(processInstance.getId());
+                dto.setName(historicTaskInstance.getName());
+//                dto.setStatus(historicTaskInstance.get);
+                dto.setBusinessKey(processInstance.getBusinessKey());
+                dto.setCreatedDate(historicTaskInstance.getEndTime());
+                //查看申请人信息
+//                CtBuApprovalNg ctBuApprovalNg = iCtBuApprovalNgService.selectCtBuApprovalNgById(processInstance.getBusinessKey());
+//                 if(ctBuApprovalNg!=null && ctBuApprovalNg.getCreateBy()!=null && (loginUser.getUser().getUserId()!=(Long.parseLong(ctBuApprovalNg.getCreateBy())))){
+//                     lists.add(dto);
+//                 }else{
+//                     num++;
+//                 }
+                lists.add(dto);
+            }
+        }
+        //Page<HistoricTaskInstance> list = new Page<HistoricTaskInstance>();
+        Page<ActTaskDTO> list = new Page<ActTaskDTO>();
+        int totalItems_ = historicTaskInstances_.size()
+;
+        list.setTotal(totalItems_-num);
+
+        list.addAll(lists);
+
+
+        return list;
+    }
+
+
+
+    public SysUser getUser(String userName){
+        SysUser sysUser = iSysUserService.selectUserByUserName(userName);
+        return sysUser;
+    }
+    @Override
+    public Page<ActTaskVO> selectProcessDefinitionList(PageDomain pageDomain,SearchTodoTaskVo searchTodoTaskVo) {
+        Page<ActTaskVO> list = new Page<ActTaskVO>();
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        org.activiti.api.runtime.shared.query.Page<Task> pageTasks = taskRuntime.tasks(Pageable.of((pageDomain.getPageNum() - 1) * pageDomain.getPageSize(), pageDomain.getPageSize()));
+        List<Task> tasks = pageTasks.getContent();
+//        String assgin = "";
+//        //获取办理人姓名
+//        if(!CollectionUtils.isEmpty(tasks)){
+//            for (Task task:tasks) {
+//                assgin = task.getAssignee();
+//                if(StringUtils.isEmpty(assgin)){
+//                    assgin = loginUser.getUser().getUserName();
+//                }
+//                //获取姓名
+//                SysUser user = this.getUser(assgin);
+//                assgin = user.getNickName();
+//            }
+//        }
+        int totalItems = pageTasks.getTotalItems();
+        list.setTotal(totalItems);
+        if (totalItems != 0) {
+            Set<String> processInstanceIdIds = tasks.parallelStream().map(t -> t.getProcessInstanceId()).collect(Collectors.toSet());
+            QueryProperty pro = new QueryProperty() {
+                @Override
+                public String getName() {
+                    return "start_time_";
+                }
+            };
+            ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery().orderBy(pro).desc();
+            List<ProcessInstance> processInstanceList = query.processInstanceIds(processInstanceIdIds).list();
+            List<ActTaskVO> actNewTask = new ArrayList<>();
+            List<ActTaskVO> actTaskDTOS = tasks.stream()
+                    .map(t -> new ActTaskVO(t, processInstanceList.parallelStream().filter(pi -> t.getProcessInstanceId().equals(pi.getId())).findAny().get()))
+                    .collect(Collectors.toList());
+            if(actTaskDTOS!=null && actTaskDTOS.size()>0){
+                Collections.sort(actTaskDTOS);
+                for (ActTaskVO dto:actTaskDTOS) {
+                  //  dto.setAssignee(assgin);
+                    dto.setFlag(false);
+                    String instanceName = dto.getInstanceName();
+                    String[] names = instanceName.split("-");
+                    dto.setInstanceName(names[0]);
+                    dto.setApplyName(names[1]);
+                    if(searchTodoTaskVo.getProcessInstanceName()!=null && !"".equals(searchTodoTaskVo.getProcessInstanceName())){
+                        if(dto.getInstanceName().contains(searchTodoTaskVo.getProcessInstanceName())){
+                            for (SysRole role: roles) {
+                                if(role.getRoleId()==109){
+                                    dto.setFlag(true);
+                                    break;
+                                }
+                            }
+                            actNewTask.add(dto);
+                        }
+                    }else{
+                        for (SysRole role: roles) {
+                            if(role.getRoleId()==109){
+                                dto.setFlag(true);
+                                break;
+                            }
+                        }
+                        if("ASSIGNED".equals(dto.getStatus()) || "CREATED".equals(dto.getStatus())){
+                            dto.setStatusName("未审核");
+                        }
+                        actNewTask.add(dto);
+                    }
+                }
+            }
+            list.addAll(actNewTask);
+//            list.addAll(actTaskDTOS);
+        }
+        totalItems = list==null?0:list.size();
+        list.setTotal(totalItems);
+        return list;
+    }
+
+    @Override
+    public List<String> formDataShow(String taskID) {
+        Task task = taskRuntime.task(taskID);
+/*  ------------------------------------------------------------------------------
+            FormProperty_0ueitp2--__!!类型--__!!名称--__!!是否参数--__!!默认值
+            例子：
+            FormProperty_0lovri0--__!!string--__!!姓名--__!!f--__!!同意!!__--驳回
+            FormProperty_1iu6onu--__!!int--__!!年龄--__!!s
+
+            默认值：无、字符常量、FormProperty_开头定义过的控件ID
+            是否参数：f为不是参数，s是字符，t是时间(不需要int，因为这里int等价于string)
+            注：类的，但是为了统一配置原则，型是可以获取到都配置到
+            */
+
+
+
+
+
+        //注意!!!!!!!!:表单Key必须要任务编号一模一样，因为参数需要任务key，但是无法获取，只能获取表单key“task.getFormKey()”当做任务key
+        UserTask userTask = (UserTask) repositoryService.getBpmnModel(task.getProcessDefinitionId())
+                .getFlowElement(task.getFormKey());
+
+        if (userTask == null) {
+            return null;
+        }
+        List<FormProperty> formProperties = userTask.getFormProperties();
+        List<String> collect = formProperties.stream().map(fp -> fp.getId()).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    @Override
+    public int formDataSave(String taskID, List<ActWorkflowFormDataDTO> awfs) throws ParseException {
+        redis1.delete("CtBuApprovalNg");
+        Task task = taskRuntime.task(taskID);
+        org.activiti.engine.task.Task task1 = taskService.createNativeTaskQuery().sql("select * from act_ru_task where id_='"+taskID+"'").singleResult();
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+        Boolean hasVariables = false;//没有任何参数
+        HashMap<String, Object> variables = new HashMap<String, Object>();
+        //前端传来的字符串，拆分成每个控件
+        List<ActWorkflowFormData> acwfds = new ArrayList<>();
+        for (ActWorkflowFormDataDTO awf : awfs) {
+            ActWorkflowFormData actWorkflowFormData = new ActWorkflowFormData(processInstance.getBusinessKey(), awf, task);
+            if(task1!=null){
+                actWorkflowFormData.setExecutionId(task1.getExecutionId());
+            }
+            acwfds.add(actWorkflowFormData);
+            //构建参数集合
+            if (!"f".equals(awf.getControlIsParam())) {
+                variables.put(awf.getControlId(), awf.getControlValue());
+                hasVariables = true;
+
+                if("xmlx2".equals(processInstance.getProcessDefinitionKey()) || "xmlx3".equals(processInstance.getProcessDefinitionKey()) || "xmlx4".equals(processInstance.getProcessDefinitionKey())){
+                    //处理代办
+                  if("同意".equals(actWorkflowFormData.getControlValue())){
+                        variables.put("pass", true);
+                    }
+                    if("不同意".equals(actWorkflowFormData.getControlValue())){
+                        variables.put("pass", false);
+                    }
+                }
+            }
+        }//for结束
+
+        //审核不通过修改主表状态
+        String content = "";
+        if(acwfds!=null && acwfds.size()>0){
+            ActWorkflowFormData data = acwfds.get(0);
+            content = data.getControlValue();
+        }
+
+            if (task.getAssignee() == null) {
+                taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(task.getId()).build());
+            }
+            if (hasVariables) {
+                //带参数完成任务
+                taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(taskID)
+                        .withVariables(variables)
+                        .build());
+            } else {
+                taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(taskID)
+                        .build());
+            }
+
+
+        //审核不通过修改主表状态
+        if(acwfds!=null && acwfds.size()>0){
+            for (ActWorkflowFormData data:acwfds) {
+
+                if("不同意".equals(data.getControlValue())){
+                    if("invoiceAudit".equals(processInstance.getProcessDefinitionKey())){
+                        //修改业务表 状态
+                        CtBuReceiptInfo req = new CtBuReceiptInfo();
+                        req.setInstanceId(processInstance.getId());
+                        req.setStatus((long)3);
+                        iCtBuReceiptInfoService.updateEndCtBuReceiptInfo(req);
+
+                        req = new CtBuReceiptInfo();
+                        req.setInstanceId(processInstance.getId());
+                        List<CtBuReceiptInfo> list = iCtBuReceiptInfoService.selectCtBuReceiptInfoList(req);
+                        if(list!=null && list.size()>0){
+                            CtBuReceiptInfo ctinfo = list.get(0);
+                            //修改info表信息
+                            CtBuInvoiceInfo info = new CtBuInvoiceInfo();
+                            info.setId(ctinfo.getInvoiceId());
+                            info.setStatus(7);
+                            iCtBuInvoiceInfoService.updateCtBuInvoiceInfo(info);
+
+                        }
+                    }
+                    if("invoiceApply".equals(processInstance.getProcessDefinitionKey())){
+                        //修改业务表 状态
+                        CtBuInvoiceReqDto req = new CtBuInvoiceReqDto();
+                        req.setStatus(3);
+                        req.setInstanceId(processInstance.getId());
+                        iCtBuInvoiceReqService.updatesCtBuInvoiceReq(req);
+                    }
+                    if("contractAudit".equals(processInstance.getProcessDefinitionKey())){
+                        //合同审核修改业务表 状态
+                        publicMapper.updateColumnBy("ct_bu_contract","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_contract","status_ps","审核驳回","instance_id",processInstance.getId());
+                    }
+
+                    if("cliquish_project".equals(processInstance.getProcessDefinitionKey()) || "important_project".equals(processInstance.getProcessDefinitionKey())){
+                        //集客类项目（针对框架类协议业务点位新增、小集客业务政策申请）修改业务表 状态
+                        publicMapper.updateColumnBy("ct_bu_approval_ng","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_approval_ng","status_ps","审核驳回","instance_id",processInstance.getId());
+                    }
+
+                    if("fjkxmUp".equals(processInstance.getProcessDefinitionKey())){
+                        //合同审核修改业务表 状态
+                        publicMapper.updateColumnBy("ct_bu_approval_ngc","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_approval_ngc","status_ps","审核驳回","instance_id",processInstance.getId());
+                    }
+                    if("fjkxmDown".equals(processInstance.getProcessDefinitionKey())){
+                        //合同审核修改业务表 状态
+                        publicMapper.updateColumnBy("ct_bu_approval_ngc","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_approval_ngc","status_ps","审核驳回","instance_id",processInstance.getId());
+                    }
+                    if("xmlx2".equals(processInstance.getProcessDefinitionKey()) || "xmlx3".equals(processInstance.getProcessDefinitionKey())
+                    || "xmlx4".equals(processInstance.getProcessDefinitionKey())){
+                        //合同审核修改业务表 状态
+                        publicMapper.updateColumnBy("ct_bu_approval_ng","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_approval_ng","status_ps","审核驳回","instance_id",processInstance.getId());
+                    }
+                    if("ticket_record_audit".equals(processInstance.getProcessDefinitionKey())){
+                        //收票记录审核
+                        publicMapper.updateColumnBy("ct_bu_ticket_record","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_ticket_record","statusps","审核驳回","instance_id",processInstance.getId());
+                    }
+                    if("payinfo_audit".equals(processInstance.getProcessDefinitionKey())){
+                        //收票记录审核
+                        publicMapper.updateColumnBy("ct_bu_payinfo","status",3,"instance_id",processInstance.getId());
+                        publicMapper.updateColumnBy("ct_bu_payinfo","statusPS","审核驳回","instance_id",processInstance.getId());
+                    }
+
+                }
+            }
+        }
+        //写入数据库
+        return actWorkflowFormDataService.insertActWorkflowFormDatas(acwfds);
+    }
+
+    private HistoricTaskInstanceQuery getTaskDoneQuery(SearchTodoTaskVo searchTodoTaskVo) {
+
+        HistoricTaskInstanceQuery hisTask =		historyService.createHistoricTaskInstanceQuery();
+        if (searchTodoTaskVo != null) {
+            String processDefinitionKey = searchTodoTaskVo.getProcessDefinitionKey();
+            if (StringUtils.isNotEmpty(processDefinitionKey)) {
+                hisTask = hisTask.processDefinitionKey(processDefinitionKey);
+            }
+            String processDefinitionName = searchTodoTaskVo.getProcessDefinitionName();
+            if (StringUtils.isNotEmpty(processDefinitionName)) {
+                hisTask = hisTask.processDefinitionNameLike(processDefinitionName);
+            }
+            String taskName = searchTodoTaskVo.getTaskName();
+            if (StringUtils.isNotEmpty(taskName)) {
+                hisTask = hisTask.taskNameLike(taskName);
+            }
+            //before,after 调用官方api查询时间
+            Date startDueDate = searchTodoTaskVo.getStartDueDate();
+            if ( startDueDate!= null) {
+                hisTask.taskCompletedAfter(startDueDate);
+            }
+
+            Date endDueDate = searchTodoTaskVo.getEndDueDate();
+            if ( endDueDate!= null) {
+                hisTask.taskCompletedBefore(endDueDate);
+
+            }
+
+        }
+        return hisTask;
+    }
+
+    /**
+     * 完结任务
+     * @param processId
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteTaskByProcessId(String processId){
+        runtimeService.deleteProcessInstance(processId, "结束");
+        CtBuApprovalNg ng = new CtBuApprovalNg();
+        ng.setStatus(6);
+        ng.setStatusPs("终止");
+        ng.setInstanceId(processId);
+        iCtBuApprovalNgService.updateCtBuApprovalNgByInstanceId(ng);
+
+    }
+    /**
+     * 转派任务
+     * @param taskID
+     * @param userName
+     */
+    @Override
+    public int setAssign(String taskID,String userName) {
+        int num =0;
+        try{
+            taskService.setAssignee(taskID, userName);
+            num = 1;
+        }catch (Exception e){
+            num =0;
+        }
+       return num;
+    }
+
+
+
+
+}

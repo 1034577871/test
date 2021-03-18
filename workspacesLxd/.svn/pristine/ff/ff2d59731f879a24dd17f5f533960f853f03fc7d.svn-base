@@ -1,0 +1,441 @@
+package com.ruoyi.collection.domain;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 财务开票对象 ct_bu_invoice_info
+ * 
+ * @author ruoyi
+ * @date 2020-12-11
+ */
+public class CtBuInvoiceInfo extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+
+    public CtBuInvoiceReq getCtBuInvoiceReq() {
+        return ctBuInvoiceReq;
+    }
+
+    public void setCtBuInvoiceReq(CtBuInvoiceReq ctBuInvoiceReq) {
+        this.ctBuInvoiceReq = ctBuInvoiceReq;
+    }
+
+    private CtBuInvoiceReq ctBuInvoiceReq;
+
+
+    private String proName;
+
+    public String getProName() {
+        return proName;
+    }
+
+    public void setProName(String proName) {
+        this.proName = proName;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
+    }
+
+    private String contractName;
+    /** 主键 */
+    private String id;
+
+    /** 合同类别 */
+    @Excel(name = "合同类别")
+    private String contractCategory;
+
+    /** 申请单号 */
+    @Excel(name = "申请单号")
+    private String reqId;
+
+    /** 发票代码 */
+    @Excel(name = "发票代码")
+    private String invoiceCode;
+
+    /** 发票号码 */
+    @Excel(name = "发票号码")
+    private String invoiceNo;
+
+    /** 发票开具日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "发票开具日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date invoiceDate;
+
+    /** 开票人 */
+    @Excel(name = "开票人")
+    private String invoiceDrawer;
+
+    /** 复核人 */
+    @Excel(name = "复核人")
+    private String invoiceReviewer;
+
+    /** 收款人xx */
+    @Excel(name = "收款人xx")
+    private String invoicePayee;
+
+    /** 发票金额（含税） */
+    @Excel(name = "发票金额", readConverterExp = "含=税")
+    private BigDecimal invoiceAmountTax;
+
+    /** 税率 */
+    @Excel(name = "税率")
+    private String invoiceTaxrate;
+
+    /** 金额（不含税） */
+    @Excel(name = "金额", readConverterExp = "不=含税")
+    private BigDecimal invoiceAmountNtax;
+
+    /** 发票图片 */
+    @Excel(name = "发票图片")
+    private byte[] invoiceImg;
+
+    /** 企业资质图片 */
+    @Excel(name = "企业资质图片")
+    private byte[] companyImg;
+
+    /** 移交人编号 */
+    @Excel(name = "移交人编号")
+    private String handoverUserid;
+
+    /** 移交人姓名 */
+    @Excel(name = "移交人姓名")
+    private String handoverUsername;
+
+    /** 移交时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "移交时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date handoverTime;
+
+    /** 移交确认人编号 */
+    @Excel(name = "移交确认人编号")
+    private String confirmerUserid;
+
+    /** 移交确认人姓名 */
+    @Excel(name = "移交确认人姓名")
+    private String confirmerUsername;
+
+    /** 移交确认时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "移交确认时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date confirmerTime;
+
+    /** 凭证号 */
+    @Excel(name = "凭证号")
+    private String voucherNo;
+
+    /** 凭证号录入人员编号 */
+    @Excel(name = "凭证号录入人员编号")
+    private String voucherUserid;
+
+    /** 凭证号录入人员姓名 */
+    @Excel(name = "凭证号录入人员姓名")
+    private String voucherUsername;
+
+    /** 凭证号录入时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "凭证号录入时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date voucherTime;
+
+    /** 状态 */
+    @Excel(name = "状态")
+    private Integer status;
+
+    /** 状态说明 */
+    @Excel(name = "状态说明")
+    private String statusps;
+
+    /** 删除标志 */
+    private String delFlag;
+
+    public void setId(String id) 
+    {
+        this.id = id;
+    }
+
+    public String getId() 
+    {
+        return id;
+    }
+    public void setContractCategory(String contractCategory) 
+    {
+        this.contractCategory = contractCategory;
+    }
+
+    public String getContractCategory() 
+    {
+        return contractCategory;
+    }
+    public void setReqId(String reqId) 
+    {
+        this.reqId = reqId;
+    }
+
+    public String getReqId() 
+    {
+        return reqId;
+    }
+    public void setInvoiceCode(String invoiceCode) 
+    {
+        this.invoiceCode = invoiceCode;
+    }
+
+    public String getInvoiceCode() 
+    {
+        return invoiceCode;
+    }
+    public void setInvoiceNo(String invoiceNo) 
+    {
+        this.invoiceNo = invoiceNo;
+    }
+
+    public String getInvoiceNo() 
+    {
+        return invoiceNo;
+    }
+    public void setInvoiceDate(Date invoiceDate) 
+    {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public Date getInvoiceDate() 
+    {
+        return invoiceDate;
+    }
+    public void setInvoiceDrawer(String invoiceDrawer) 
+    {
+        this.invoiceDrawer = invoiceDrawer;
+    }
+
+    public String getInvoiceDrawer() 
+    {
+        return invoiceDrawer;
+    }
+    public void setInvoiceReviewer(String invoiceReviewer) 
+    {
+        this.invoiceReviewer = invoiceReviewer;
+    }
+
+    public String getInvoiceReviewer() 
+    {
+        return invoiceReviewer;
+    }
+    public void setInvoicePayee(String invoicePayee) 
+    {
+        this.invoicePayee = invoicePayee;
+    }
+
+    public String getInvoicePayee() 
+    {
+        return invoicePayee;
+    }
+    public void setInvoiceAmountTax(BigDecimal invoiceAmountTax) 
+    {
+        this.invoiceAmountTax = invoiceAmountTax;
+    }
+
+    public BigDecimal getInvoiceAmountTax() 
+    {
+        return invoiceAmountTax;
+    }
+    public void setInvoiceTaxrate(String invoiceTaxrate) 
+    {
+        this.invoiceTaxrate = invoiceTaxrate;
+    }
+
+    public String getInvoiceTaxrate() 
+    {
+        return invoiceTaxrate;
+    }
+    public void setInvoiceAmountNtax(BigDecimal invoiceAmountNtax) 
+    {
+        this.invoiceAmountNtax = invoiceAmountNtax;
+    }
+
+    public byte[] getInvoiceImg() {
+        return invoiceImg;
+    }
+
+    public void setInvoiceImg(byte[] invoiceImg) {
+        this.invoiceImg = invoiceImg;
+    }
+
+    public byte[] getCompanyImg() {
+        return companyImg;
+    }
+
+    public void setCompanyImg(byte[] companyImg) {
+        this.companyImg = companyImg;
+    }
+
+    public BigDecimal getInvoiceAmountNtax()
+    {
+        return invoiceAmountNtax;
+    }
+    public void setHandoverUserid(String handoverUserid)
+    {
+        this.handoverUserid = handoverUserid;
+    }
+
+    public String getHandoverUserid() 
+    {
+        return handoverUserid;
+    }
+    public void setHandoverUsername(String handoverUsername) 
+    {
+        this.handoverUsername = handoverUsername;
+    }
+
+    public String getHandoverUsername() 
+    {
+        return handoverUsername;
+    }
+    public void setHandoverTime(Date handoverTime) 
+    {
+        this.handoverTime = handoverTime;
+    }
+
+    public Date getHandoverTime() 
+    {
+        return handoverTime;
+    }
+    public void setConfirmerUserid(String confirmerUserid) 
+    {
+        this.confirmerUserid = confirmerUserid;
+    }
+
+    public String getConfirmerUserid() 
+    {
+        return confirmerUserid;
+    }
+    public void setConfirmerUsername(String confirmerUsername) 
+    {
+        this.confirmerUsername = confirmerUsername;
+    }
+
+    public String getConfirmerUsername() 
+    {
+        return confirmerUsername;
+    }
+    public void setConfirmerTime(Date confirmerTime) 
+    {
+        this.confirmerTime = confirmerTime;
+    }
+
+    public Date getConfirmerTime() 
+    {
+        return confirmerTime;
+    }
+    public void setVoucherNo(String voucherNo) 
+    {
+        this.voucherNo = voucherNo;
+    }
+
+    public String getVoucherNo() 
+    {
+        return voucherNo;
+    }
+    public void setVoucherUserid(String voucherUserid) 
+    {
+        this.voucherUserid = voucherUserid;
+    }
+
+    public String getVoucherUserid() 
+    {
+        return voucherUserid;
+    }
+    public void setVoucherUsername(String voucherUsername) 
+    {
+        this.voucherUsername = voucherUsername;
+    }
+
+    public String getVoucherUsername() 
+    {
+        return voucherUsername;
+    }
+    public void setVoucherTime(Date voucherTime) 
+    {
+        this.voucherTime = voucherTime;
+    }
+
+    public Date getVoucherTime() 
+    {
+        return voucherTime;
+    }
+    public void setStatus(Integer status) 
+    {
+        this.status = status;
+    }
+
+    public Integer getStatus() 
+    {
+        return status;
+    }
+    public void setStatusps(String statusps) 
+    {
+        this.statusps = statusps;
+    }
+
+    public String getStatusps() 
+    {
+        return statusps;
+    }
+    public void setDelFlag(String delFlag) 
+    {
+        this.delFlag = delFlag;
+    }
+
+    public String getDelFlag() 
+    {
+        return delFlag;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
+            .append("contractCategory", getContractCategory())
+            .append("reqId", getReqId())
+            .append("invoiceCode", getInvoiceCode())
+            .append("invoiceNo", getInvoiceNo())
+            .append("invoiceDate", getInvoiceDate())
+            .append("invoiceDrawer", getInvoiceDrawer())
+            .append("invoiceReviewer", getInvoiceReviewer())
+            .append("invoicePayee", getInvoicePayee())
+            .append("invoiceAmountTax", getInvoiceAmountTax())
+            .append("invoiceTaxrate", getInvoiceTaxrate())
+            .append("invoiceAmountNtax", getInvoiceAmountNtax())
+            .append("invoiceImg", getInvoiceImg())
+            .append("companyImg", getCompanyImg())
+            .append("handoverUserid", getHandoverUserid())
+            .append("handoverUsername", getHandoverUsername())
+            .append("handoverTime", getHandoverTime())
+            .append("confirmerUserid", getConfirmerUserid())
+            .append("confirmerUsername", getConfirmerUsername())
+            .append("confirmerTime", getConfirmerTime())
+            .append("voucherNo", getVoucherNo())
+            .append("voucherUserid", getVoucherUserid())
+            .append("voucherUsername", getVoucherUsername())
+            .append("voucherTime", getVoucherTime())
+            .append("status", getStatus())
+            .append("statusps", getStatusps())
+            .append("delFlag", getDelFlag())
+            .append("remark", getRemark())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .toString();
+    }
+}

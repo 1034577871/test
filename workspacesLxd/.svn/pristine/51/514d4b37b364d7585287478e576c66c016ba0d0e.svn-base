@@ -1,0 +1,83 @@
+package com.ruoyi.collection.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.collection.domain.CtBuInvoiceInfo;
+
+/**
+ * 财务开票Mapper接口
+ * 
+ * @author ruoyi
+ * @date 2020-12-11
+ */
+public interface CtBuInvoiceInfoMapper 
+{
+    /**
+     * 查询列表
+     *
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 财务开票集合
+     */
+    public List<CtBuInvoiceInfo>selectCtBuInvoiceQrInfoandReqsList(CtBuInvoiceInfo ctBuInvoiceInfo);
+    /**
+     * 移交发票
+     * @param map
+     * @return
+     */
+    public int updateCtBuInvoiceInfoByIds(Map map);
+    /**
+     * 查询财务开票
+     * 
+     * @param id 财务开票ID
+     * @return 财务开票
+     */
+    public CtBuInvoiceInfo selectCtBuInvoiceInfoById(String id);
+
+    /**
+     * 查询确认列表
+     *
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 财务开票集合
+     */
+    public List<CtBuInvoiceInfo>selectCtBuInvoiceQrInfoList(CtBuInvoiceInfo ctBuInvoiceInfo);
+    /**
+     * 查询财务开票列表
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 财务开票集合
+     */
+    public List<CtBuInvoiceInfo> selectCtBuInvoiceInfoList(CtBuInvoiceInfo ctBuInvoiceInfo);
+
+    /**
+     * 新增财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    public int insertCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo);
+
+    /**
+     * 修改财务开票
+     * 
+     * @param ctBuInvoiceInfo 财务开票
+     * @return 结果
+     */
+    public int updateCtBuInvoiceInfo(CtBuInvoiceInfo ctBuInvoiceInfo);
+
+    /**
+     * 删除财务开票
+     * 
+     * @param id 财务开票ID
+     * @return 结果
+     */
+    public int deleteCtBuInvoiceInfoById(String id);
+
+    /**
+     * 批量删除财务开票
+     * 
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteCtBuInvoiceInfoByIds(String[] ids);
+}

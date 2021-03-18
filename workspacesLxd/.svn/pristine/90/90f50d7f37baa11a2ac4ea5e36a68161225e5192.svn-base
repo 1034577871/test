@@ -1,0 +1,652 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams"
+       ref="queryForm"
+       v-show="showSearch"
+       label-width="90px">
+
+         <el-row :gutter="15">
+           <el-col :span="6">
+              <el-form-item label="流程名称" prop="processInstanceName">
+                <el-input
+                  v-model="queryParams.processInstanceName"
+                  placeholder="请输入流程名称"
+                  clearable
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+           </el-col>
+          <!-- <el-col :span="6">
+              <el-form-item label="流程名称" prop="processInstanceName">
+                <el-input
+                  v-model="queryParams.processInstanceName"
+                  placeholder="请输入流程名称"
+                  clearable
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+           </el-col> -->
+
+
+           <el-col :span="6">
+             <el-form-item>
+               <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+             </el-form-item>
+           </el-col>
+         </el-row>
+       </el-form>
+    <el-table v-loading="loading" :data="tastList">
+      <el-table-column label="流程id" align="center" prop="id" v-if="show"/>
+      <el-table-column label="流程KEY" align="center" prop="definitionKey" v-if="show"/>
+      <el-table-column label="流程名称" align="center" prop="instanceName"/>
+      <el-table-column label="任务节点名称" align="center" prop="name"/>
+      <el-table-column label="任务状态" align="center" prop="statusName"/>
+      <el-table-column label="办理人" align="center" prop="assignee"/>
+      <el-table-column label="创建时间" align="center" prop="createdDate"/>
+<!-- v-hasPermi="['workflow:leave:edit']" -->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <span v-if="(scope.row.definitionKey == 'fjkxmDown' || scope.row.definitionKey == 'fjkxmUp' ) && scope.row.name == '本部部门主任审核'
+           && scope.row.flag==true">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="getTask(scope.row)"
+              >转派
+              </el-button>
+          </span>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+           @click="examineAndApprove (scope.row)"
+          >审批
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="examineAndApproves (scope.row)"
+
+          >查看流程图
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 审批对话框 -->
+    <el-dialog :title="title" :visible.sync="open" v-if="open" width="80%" append-to-body>
+      <leaveHistoryForm :businessKey="businessKey"  v-if="audit"/>
+      <collectOrder :businessKey="businessKey"  v-if="collectAudit"/>
+      <contractInfo :businessKey="businessKey" v-if="contractAudit"/>
+      <ngcInfo :businessKey="businessKey"  v-if="ngcAudit"/>
+ <el-form :model="forms" ref="forms" label-width="100px" class="demo-dynamic">
+      <div v-if="ngAudit">
+        <el-row :gutter="15">
+          <el-col :span="6">
+            <el-form-item label="分公司名称" prop="belongCompanyName">
+              <el-input v-model="forms.belongCompanyName" placeholder="请输入项目名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="所属部门" prop="belongDeptName">
+              <el-input v-model="forms.belongDeptName" placeholder="请输入项目名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="项目类型" prop="proTypeName">
+              <el-input v-model="forms.proTypeName" placeholder="请输入项目名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="项目名称" prop="proName">
+              <el-input v-model="forms.proName" placeholder="请输入项目名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="6">
+            <el-form-item label="合同金额" prop="contractAmountTotal">
+              <el-input
+                v-model="forms.contractAmountTotal"
+                v-on:input="changeNum()"
+                clearable
+                placeholder="请输入合同金额"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="税率(%)" prop="taxrate">
+              <el-input
+                v-model="forms.taxrate"
+                v-on:input="changeNum()"
+                placeholder="请输入税率"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="不含税额" prop="contractAmountTax">
+              <el-input
+                v-model="forms.contractAmountTax"
+                placeholder="请输入不含税金额"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="税额" prop="taxamount">
+              <el-input
+                v-model="forms.taxamount"
+                placeholder="请输入税额"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      <el-tabs v-model="activeName" >
+        <el-tab-pane label="基本信息" name="base" prop="appNgBase">
+          <basicInfo
+            ref="basicInfo"
+            :baseInfoDate="form.appNgBase"
+          ></basicInfo>
+        </el-tab-pane>
+        <el-tab-pane label="材料信息" name="second" prop="appNgMaterialList"
+          ><materialsInfo
+            ref="materialsInfo"
+            :materialsInfoDate="form.appNgMaterialList"
+          ></materialsInfo
+        ></el-tab-pane>
+        <el-tab-pane label="施工费信息" name="third" prop="appNgConstList"
+          ><construcostInfo
+            ref="construcostInfo"
+            :construcostInfoDate="form.appNgConstList"
+          ></construcostInfo
+        ></el-tab-pane>
+        <el-tab-pane label="事前审批表" name="fourth" prop="appxNgReq"
+          ><approvalInfo
+            ref="approvalInfo"
+            :approvalInfoDate="form.appxNgReq"
+          ></approvalInfo
+        ></el-tab-pane>
+      </el-tabs>
+
+      <el-row :gutter="15">
+        <el-col :span="24" >
+          <el-divider content-position="center" ><el-link type="primary"><b>审核信息</b></el-link></el-divider>
+        </el-col>
+      </el-row>
+      <el-row :gutter="15">
+      <el-table
+          :data="fromData"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="taskNodeName"
+            label="审批部门"
+            width="250">
+          </el-table-column>
+          <el-table-column
+            prop="createName"
+            label="审批人"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="createdDate"
+            width="180"
+            label="审批时间">
+          </el-table-column>
+          <el-table-column
+          width="100"
+            prop="formHistoryDataDTO[0].value"
+            label="是否同意">
+          </el-table-column>
+          <el-table-column
+            prop="formHistoryDataDTO[1].value"
+            label="审批意见(批注)">
+          </el-table-column>
+        </el-table>
+       </el-row>
+      <!-- <el-card class="box-card" v-for="(historyData, index) in fromData"  :key="index" >
+        <div slot="header" class="clearfix">
+          <span>{{historyData.taskNodeName}}</span>
+        </div>
+        <el-alert  type="success"  :closable="false" style="margin-bottom: 10px;">
+          <span class="in-text">审批人：{{historyData.createName}}</span>
+          <span class="in-text">审批时间：{{historyData.createdDate}}</span>
+        </el-alert>
+        <el-form v-for="(fistoryFormData, indexH) in historyData.formHistoryDataDTO" :key="indexH" label-width="80px">
+          <el-form-item :label=fistoryFormData.title >
+            <el-input v-model="fistoryFormData.value" :readonly="true"/>
+          </el-form-item>
+        </el-form>
+      </el-card> -->
+
+      </div>
+</el-form>
+<el-form :model="form" ref="form" label-width="100px" class="demo-dynamic">
+        <el-form-item
+          v-for="(domain, index) in form.formData"
+          :label="domain.controlLable"
+          :key="index"
+        >
+          <el-radio-group v-model="domain.controlValue" v-if="'radio'==domain.controlType">
+            <el-radio v-for="(defaults,indexd) in domain.controlDefault.split('--__--')"
+                      :label=indexd
+                      :key="indexd"
+                      >{{defaults}}
+
+            </el-radio>
+
+          </el-radio-group>
+          <el-input type="textarea" v-model="domain.controlValue" v-if="'textarea'==domain.controlType"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!--部门人员选中-->
+          <el-dialog
+                width="50%"
+                height="70%"
+                title="人员信息"
+                :visible.sync="innerhtVisible"
+                append-to-body>
+
+
+                <el-form
+                  :model="queryParams_"
+                  ref="queryhtForm"
+                  v-show="showSearch"
+                  label-width="90px"
+                >
+                  <el-row >
+
+                    <el-col :span="8">
+                      <el-form-item label="账号" prop="userName" width="60%">
+                        <el-input
+                          v-model="queryParams.userName"
+                          placeholder="请输入账号"
+                          clearable
+                          size="small"
+                          @keyup.enter.native="handlesQuery_"
+                        />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="姓名" prop="nickName"  width="60%">
+                        <el-input
+                          v-model="queryParams.nickName"
+                          placeholder="请输入项目名称"
+                          clearable
+                          size="small"
+                          @keyup.enter.native="handlesQuery_"
+                        />
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="3">
+                      <el-form-item>
+                        <el-button
+                          type="cyan"
+                          icon="el-icon-search"
+                          size="mini"
+                          @click="handlesQuery_"
+                          >搜索</el-button
+                        >
+
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="2">
+                      <el-form-item>
+                        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+                          >重置</el-button
+                        >
+                      </el-form-item>
+                    </el-col>
+
+                  </el-row>
+
+                </el-form>
+                <el-table  ref="htTable"  v-loading="htloading" :data="userList">
+                   <el-table-column type="selection" width="55" align="center" v-if="show"/>
+                  <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+                  <el-table-column label="账号" align="center" prop="userName" />
+                  <el-table-column label="姓名" align="center" prop="nickName" />
+                  <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                          <template slot-scope="scope">
+                            <el-button
+                              size="mini"
+                              type="text"
+                              icon="el-icon-edit"
+                              @click="submithtForm(scope.row)"
+
+                            >选择</el-button>
+
+                          </template>
+                        </el-table-column>
+                </el-table>
+                <pagination
+                      v-show="total>0"
+                      :total="total"
+                      :page.sync="queryParams_.pageNum"
+                      :limit.sync="queryParams_.pageSize"
+                      @pagination="userList"
+                    />
+
+            <div slot="footer" class="dialog-footer">
+              <!-- <el-button type="primary" @click="submithtForm">确 定</el-button> -->
+              <el-button @click="innerhtVisible=false">取 消</el-button>
+            </div>
+
+        </el-dialog>
+
+  </div>
+</template>
+
+<script>
+  import {
+    findProjectType,
+    findBranchOffice,
+    findLoginbyCompany,
+    findNextAppNo,
+    findDeptByBranchOffice
+  } from "@/api/utils";
+  import {confirmTransfer,getUserByRole,listTask, formDataShow, formDataSave} from "@/api/activiti/task"; //导入接口js文件
+  import leaveHistoryForm from './leaveHistoryForm.vue';  //导入自定义组件页面
+  import collectOrder  from './collectOrder.vue';  //导入自定义组件页面
+  import contractInfo  from './contractInfo.vue';  //导入自定义组件页面
+  import ngcInfo from './ngcInfo.vue';  //导入自定义组件页面
+  import { historyFromData,getCollection } from '@/api/activiti/historyFormdata'
+  import basicInfo from "./nginfo/basicInfo.vue";
+  import materialsInfo from "./nginfo/materialsInfo.vue";
+  import construcostInfo from "./nginfo/construcostInfo.vue";
+  import approvalInfo from "./nginfo/approvalInfo";
+
+import {getCollectProject} from "@/api/projectApproval/collectProject";
+  export default {
+    name: "Leave",
+    components: {leaveHistoryForm,collectOrder,contractInfo,ngcInfo,
+    basicInfo,
+    materialsInfo,
+    construcostInfo,
+    approvalInfo},
+    data() {
+      return {
+ fromData:[],
+ tableDatas_:[],
+          activeName: "base",
+        //极客
+        ngAudit:false,
+        //非极客
+        ngcAudit:false,
+        show:false,
+        // 人员信息列表
+        userList: [],
+        htloading:true,
+        //部门人员选中
+        innerhtVisible:false,
+        audit:false,
+        //收款单
+        collectAudit:false,
+        //合同审核
+        contractAudit:false,
+        id:'',
+        definitionKey: '',
+        businessKey: '',
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 显示搜索条件
+        showSearch: true,
+        // 总条数
+        total: 0,
+        // 请假表格数据
+        tastList: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        // 查询参数
+        queryParams_: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        // 表单参数
+        form: {
+          formData:[]
+        },
+        // 表单参数
+        forms: {
+
+        },
+        // 表单校验
+        rules: {}
+      };
+    },
+    created() {
+      this.getList();
+      this.getUserList();
+    },
+    methods: {
+      historyFromData() {
+        historyFromData(this.businessKey).then(response => {
+          this.fromData = response.data
+          console.log(this.fromData);
+        })
+      },
+      getTask(row){
+        this.id = row.id;
+        this.innerhtVisible = true;
+      },
+      /** 搜索按钮操作 */
+      handlesQuery_() {
+        this.queryParams_.pageNum = 1;
+        this.getUserList();
+      },
+     //获取人员信息
+     getUserList() {
+       this.htloading = true;
+       getUserByRole(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+         console.log(response.rows);
+         this.userList = response.rows;
+         this.total = response.total;
+         this.htloading = false;
+       });
+     },
+     /** 选择人员 */
+     submithtForm(row) {
+       const id = this.id;
+       const userName = row.userName;
+       this.$confirm('是否确认转派'+userName+'进行审核?', "警告", {
+           confirmButtonText: "确定",
+           cancelButtonText: "取消",
+           type: "warning"
+         }).then(function() {
+           return confirmTransfer(id,userName);
+         }).then(() => {
+           this.getList();
+           this.msgSuccess("转派成功");
+           this.innerhtVisible = false;
+         })
+     },
+      /** 查询请假列表 */
+      getList() {
+        this.loading = true;
+        listTask(this.queryParams).then(response => {
+          this.tastList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getList();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+ /** 查看流程图 */
+      examineAndApproves(row) {
+        this.reset();
+        let url = window.location.hostname;
+        if(url.indexOf("http")<0){
+          url = "http://"+url;
+        }
+        let hosturl = url+":9001/task/exportImage?processInstanceId="+row.instanceId;
+        window.open(hosturl,"_blank");
+       },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.definitionKey = '',
+          this.businessKey = '',
+          this.form = {
+            formData:[],
+          };
+        this.resetForm("form");
+      },
+
+      /** 审批按钮操作 */
+      examineAndApprove(row) {
+        this.reset();
+        this.definitionKey = row.definitionKey;
+        this.businessKey = row.businessKey;
+        this.id=row.id;
+        formDataShow(row.id).then(response => {
+          let datas = response.data;
+          let formData = []
+          for (let i = 0; i < datas.length; i++) {
+            let strings = datas[i].split('--__!!')
+            let controlValue = null
+            let controlDefault = null
+            switch (strings[1]) {
+              case 'radio':
+                controlValue = 0;
+                controlDefault = strings[4]
+                break;
+              // default:
+            }
+            formData.push({
+              controlId: strings[0],
+              controlType: strings[1],
+              controlLable: strings[2],
+              controlIsParam: strings[3],
+              controlValue: controlValue,
+              controlDefault: controlDefault
+            })
+          }
+          this.getDioag(row.instanceName);
+          this.form.formData = formData;
+          this.open = true;
+          this.title = "审批详情";
+          //添加表单
+          getCollectProject(this.businessKey).then(response1 => {
+            this.forms = response1.data;
+            this.title = "集客项目";
+            /** 基本信息赋值 **/
+            this.$refs.basicInfo.formData = response1.data.appNgBase;
+            this.$refs.basicInfo.formData.projectTypeId =
+              response1.data.appNgBase.projectTypeId + "";
+            /** 材料信息 **/
+            this.$refs.materialsInfo.dataList = response1.data.appNgMaterialList;
+            /** 施工费信息 **/
+            this.$refs.construcostInfo.dataList = response1.data.appNgConstList;
+            if (response1.data.appxNgReq.dataList) {
+              this.$refs.approvalInfo.rowspanNum =
+                13 + response1.data.appxNgReq.dataList.length;
+            }
+            /** 事前审批 **/
+            this.$refs.approvalInfo.formData = response1.data.appxNgReq;
+
+            this.historyFromData();
+          });
+        });
+      },
+      getDioag(obj){
+        if(obj.indexOf("发票申请")>=0 || obj.indexOf("开票申请")>=0){
+          this.audit = true;
+          this.collectAudit = false;
+          this.contractAudit = false;
+          this.ngcAudit = false;
+          this.ngAudit = false;
+        }
+        if(obj.indexOf("收款单审核")>=0){
+          this.collectAudit = true;
+           this.audit = false;
+           this.contractAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = false;
+        }
+        if(obj.indexOf("合同审核")>=0){
+          this.contractAudit = true;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = false;
+        }
+        if(obj.indexOf("非集客项目(10w限额以下的审批流程)")>=0 || obj.indexOf("非集客项目(10w限额以上的审批流程)")>=0){
+          this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = true;
+           this.ngAudit = false;
+        }
+        if(obj.indexOf("三重一大项目(预算投资金额≥50万元)")>=0
+          || obj.indexOf("小集客业务(预计项目金额＜10万元 或 投资额＜5万元的项目)")>=0
+          || obj.indexOf("跨区项目(金额≥10万元 或 5万元≤投资额＜50万元)")>=0 ||
+          obj.indexOf("非跨区项目(项目金额≥10万元或5万元≤投资额＜50万元)")>=0
+          ||obj.indexOf("不涉及网络自主建设或技术平台建设及应用(项目金额≥10万元（非垫资）)")>=0
+        ){
+            this.contractAudit = false;
+           this.addOrUpdateVisible = false;
+           this.collectAudit = false;
+           this.ngcAudit = false;
+           this.ngAudit = true;
+        }
+
+      },
+      /** 提交按钮 */
+      submitForm() {
+        formDataSave(this.id,this.form.formData).then(response => {
+          this.msgSuccess("审批成功");
+          this.open = false;
+          this.getList();
+        });
+      },
+    }
+  };
+</script>

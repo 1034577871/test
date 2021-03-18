@@ -1,0 +1,110 @@
+package com.ruoyi.paymentManagement.ticketRecord.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.paymentManagement.ticketRecord.domain.TicketRecord;
+import com.ruoyi.paymentManagement.ticketRecord.mapper.TicketRecordMapper;
+import com.ruoyi.paymentManagement.ticketRecord.service.ITicketRecordService;
+
+
+/**
+ * 收票记录Service业务层处理
+ * 
+ * @author lps
+ * @date 2020-12-17
+ */
+@Service
+public class TicketRecordServiceImpl implements ITicketRecordService 
+{
+    @Autowired
+    private TicketRecordMapper ticketRecordMapper;
+
+    /**
+     * 查询收票记录
+     * 
+     * @param id 收票记录ID
+     * @return 收票记录
+     */
+    @Override
+    public TicketRecord selectTicketRecordById(String id)
+    {
+        return ticketRecordMapper.selectTicketRecordById(id);
+    }
+
+    /**
+     * 查询收票记录列表
+     * 
+     * @param ticketRecord 收票记录
+     * @return 收票记录
+     */
+    @Override
+    public List<TicketRecord> selectTicketRecordList(TicketRecord ticketRecord)
+    {
+        return ticketRecordMapper.selectTicketRecordList(ticketRecord);
+    }
+
+    /**
+     * 新增收票记录
+     * 
+     * @param ticketRecord 收票记录
+     * @return 结果
+     */
+    @Override
+    public int insertTicketRecord(TicketRecord ticketRecord)
+    {
+    	ticketRecord.setId(UUID.fastUUID().toString(true));
+		String userId = "";
+		try {
+			userId = SecurityUtils.getLoginUser().getUser().getUserId().toString();
+		} catch (Exception e) {
+
+		}
+		ticketRecord.setCreateBy(userId);
+		ticketRecord.setDelFlag("1");
+        ticketRecord.setCreateTime(DateUtils.getNowDate());
+        return ticketRecordMapper.insertTicketRecord(ticketRecord);
+    }
+
+    /**
+     * 修改收票记录
+     * 
+     * @param ticketRecord 收票记录
+     * @return 结果
+     */
+    @Override
+    public int updateTicketRecord(TicketRecord ticketRecord)
+    {
+        ticketRecord.setUpdateTime(DateUtils.getNowDate());
+        return ticketRecordMapper.updateTicketRecord(ticketRecord);
+    }
+
+    /**
+     * 批量删除收票记录
+     * 
+     * @param ids 需要删除的收票记录ID
+     * @return 结果
+     */
+    @Override
+    public int deleteTicketRecordByIds(String[] ids)
+    {
+        return ticketRecordMapper.deleteTicketRecordByIds(ids);
+    }
+
+    /**
+     * 删除收票记录信息
+     * 
+     * @param id 收票记录ID
+     * @return 结果
+     */
+    @Override
+    public int deleteTicketRecordById(String id)
+    {
+        return ticketRecordMapper.deleteTicketRecordById(id);
+    }
+}

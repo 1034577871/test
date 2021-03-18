@@ -1,0 +1,89 @@
+package com.ruoyi.projectApproval.AppNgReqList.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ruoyi.projectApproval.AppNgReqList.domain.AppNgReqList;
+import com.ruoyi.projectApproval.AppNgReqList.mapper.AppNgReqListMapper;
+import com.ruoyi.projectApproval.AppNgReqList.service.IAppNgReqListService;
+
+/**
+ * 成本子类Service业务层处理
+ * 
+ * @author Mu
+ * @date 2020-12-18
+ */
+@Service
+public class AppNgReqListServiceImpl implements IAppNgReqListService {
+	
+	@Autowired
+	private AppNgReqListMapper appNgReqListMapper;
+
+	/**
+	 * 查询成本子类
+	 * 
+	 * @param id 成本子类ID
+	 * @return 成本子类
+	 */
+	@Override
+	public AppNgReqList selectAppNgReqListById(String id) {
+		return appNgReqListMapper.selectAppNgReqListById(id);
+	}
+
+	/**
+	 * 查询成本子类列表
+	 * 
+	 * @param appNgReqList 成本子类
+	 * @return 成本子类
+	 */
+	@Override
+	public List<AppNgReqList> selectAppNgReqListList(AppNgReqList appNgReqList) {
+		return appNgReqListMapper.selectAppNgReqListList(appNgReqList);
+	}
+
+	/**
+	 * 新增成本子类
+	 * 
+	 * @param appNgReqList 成本子类
+	 * @return 结果
+	 */
+	@Override
+	public int insertAppNgReqList(AppNgReqList appNgReqList) {
+		return appNgReqListMapper.insertAppNgReqList(appNgReqList);
+	}
+
+	/**
+	 * 修改成本子类
+	 * 
+	 * @param appNgReqList 成本子类
+	 * @return 结果
+	 */
+	@Override
+	public int updateAppNgReqList(AppNgReqList appNgReqList) {
+		return appNgReqListMapper.updateAppNgReqList(appNgReqList);
+	}
+
+	/**
+	 * 批量删除成本子类
+	 * 
+	 * @param ids 需要删除的成本子类ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteAppNgReqListByIds(String[] ids) {
+		return appNgReqListMapper.deleteAppNgReqListByIds(ids);
+	}
+
+	/**
+	 * 删除成本子类信息
+	 * 
+	 * @param id 成本子类ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteAppNgReqListById(String id) {
+		return appNgReqListMapper.deleteAppNgReqListById(id);
+	}
+}

@@ -1,0 +1,101 @@
+package com.ruoyi.contract.contractInfo.service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.contract.contractInfo.domain.CtBuContract;
+import org.springframework.stereotype.Component;
+
+/**
+ * 合同信息录入主Service接口
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+@Component
+public interface ICtBuContractService {
+    /**
+     * 查询合同信息录入主
+     *
+     * @param id 合同信息录入主ID
+     * @return 合同信息录入主
+     */
+    public CtBuContract selectCtBuContractById(String id);
+
+    /**
+     * 查询合同信息录入主列表与金额统计
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 合同信息录入主集合
+     */
+    public List<Object> selectCtBuContractListSum(CtBuContract ctBuContract);
+
+    /**
+     * 查询合同信息录入主列表与金额统计
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 合同信息录入主集合
+     */
+    public Map<String , BigDecimal> selectCtBuContractSum(CtBuContract ctBuContract);
+
+    /**
+     * 查询合同信息录入主列表
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 合同信息录入主集合
+     */
+    public List<CtBuContract> selectCtBuContractList(CtBuContract ctBuContract);
+
+    /**
+     * 新增合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    public int insertCtBuContract(CtBuContract ctBuContract);
+
+    /**
+     * 修改合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    public int updateCtBuContract(CtBuContract ctBuContract);
+
+    /**
+     * 批量删除合同信息录入主
+     *
+     * @param ids 需要删除的合同信息录入主ID
+     * @return 结果
+     */
+    public int deleteCtBuContractByIds(String[] ids);
+
+    /**
+     * 删除合同信息录入主信息
+     *
+     * @param id 合同信息录入主ID
+     * @return 结果
+     */
+    public int deleteCtBuContractById(String id);
+
+
+    /**
+     * 批量逻辑删除合同信息录入主
+     *
+     * @param ids 需要删除的合同信息录入主ID
+     * @return 结果
+     */
+    public int updateCtBuContractByIds(String[] ids);
+
+    /**
+     * 查询需预警付款信息
+     */
+    public void selectWarning();
+    /**
+     	* 保存付款记录信息
+     */
+	public int saveTicketInfo(CtBuContract ctBuContract);
+
+}

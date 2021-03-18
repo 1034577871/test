@@ -1,0 +1,69 @@
+import request from '@/utils/request'
+
+// 查询财务开票列表
+export function listFinancial(query) {
+  return request({
+    url: '/collection/financial/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询财务开票详细
+// 查询财务开票详细
+export function getFinancial(id,rid) {
+  return request({
+    url: '/collection/financial/' + id+'/'+rid,
+    method: 'get'
+  })
+}
+
+// 新增财务开票
+export function addFinancial(data) {
+  return request({
+    url: '/collection/financial',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改财务开票
+export function updateFinancial(data) {
+  return request({
+    url: '/collection/financial',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除财务开票
+export function delFinancial(id) {
+  return request({
+    url: '/collection/financial/' + id,
+    method: 'delete'
+  })
+}
+
+// 导出财务开票
+export function exportFinancial(query) {
+  return request({
+    url: '/collection/financial/export',
+    method: 'get',
+    params: query
+  })
+}
+
+// 移交财务开票
+export function moveFinancial(id,flag) {
+  return request({
+    url: '/collection/financial/moveFinal/'+id+'/'+flag,
+    method: 'get'
+  })
+}
+// 查询财务开票详细
+export function getInfoById(rid) {
+  return request({
+    url: '/collection/financial/getInfoById/'+rid,
+    method: 'get'
+  })
+}

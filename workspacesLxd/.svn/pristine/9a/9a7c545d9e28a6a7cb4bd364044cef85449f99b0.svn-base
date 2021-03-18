@@ -1,0 +1,102 @@
+package com.ruoyi.collection.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.collection.domain.CtBuInvoiceReq;
+import com.ruoyi.collection.domain.CtBuInvoiceReqDto;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.projectApproval.ApprovalNg.domain.CtBuApprovalNg;
+
+/**
+ * 发票申请Service接口
+ * 
+ * @author ruoyi
+ * @date 2020-12-09
+ */
+public interface ICtBuInvoiceReqService 
+{
+
+
+    public List<com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfo> selectContractPayinfoById(com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfo info);
+
+        /**
+         * 修改发票申请状态
+         *
+         * @param ctBuInvoiceReq 发票申请
+         * @return 结果
+         */
+    public int updatesCtBuInvoiceReq(CtBuInvoiceReqDto ctBuInvoiceReq);
+    /**
+     * 获取当前用户信息
+     *
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    public LoginUser getUserInfo();
+    public Map getUserInfoCon(String id);
+    /**
+     * 查询发票申请
+     * 
+     * @param id 发票申请ID
+     * @return 发票申请
+     */
+    public CtBuInvoiceReqDto selectCtBuInvoiceReqById(String id);
+    public CtBuInvoiceReqDto selectCtBuInvoiceReqByInstanceId(String id);
+
+    /**
+     * 查询发票申请列表
+     * 
+     * @param ctBuInvoiceReq 发票申请
+     * @return 发票申请集合
+     */
+    public List<CtBuInvoiceReq> selectCtBuInvoiceReqList(CtBuInvoiceReq ctBuInvoiceReq);
+
+    /**
+     * 新增发票申请
+     * 
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    public int insertCtBuInvoiceReq(CtBuInvoiceReqDto ctBuInvoiceReq);
+
+    /**
+     * 修改发票申请
+     * 
+     * @param ctBuInvoiceReq 发票申请
+     * @return 结果
+     */
+    public int updateCtBuInvoiceReq(CtBuInvoiceReqDto ctBuInvoiceReq);
+
+    /**
+     * 批量删除发票申请
+     * 
+     * @param ids 需要删除的发票申请ID
+     * @return 结果
+     */
+    public int deleteCtBuInvoiceReqByIds(String[] ids);
+
+    /**
+     * 删除发票申请信息
+     * 
+     * @param id 发票申请ID
+     * @return 结果
+     */
+    public int deleteCtBuInvoiceReqById(String id);
+
+    public CtBuApprovalNg getApproNgByid(String id);
+
+    /**
+     * 修改发票信息byId
+     * @param ctBuInvoiceReq
+     * @return
+     */
+    public int updatesCtBuInvoiceReqByid(CtBuInvoiceReqDto ctBuInvoiceReq);
+
+    /**
+     * 新增发票审核记录
+     *
+     * @return 结果
+     */
+    public int  insertSubActWorkflowFormData(Map map);
+}

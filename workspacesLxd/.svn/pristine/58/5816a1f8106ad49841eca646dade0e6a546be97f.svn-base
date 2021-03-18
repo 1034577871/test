@@ -1,0 +1,877 @@
+<template>
+  <div class="app-container">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      v-show="showSearch"
+      label-width="90px"
+    >
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <el-form-item label="所属分公司" prop="belongCompanyid">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.belongCompanyid"
+              placeholder="请输入所属分公司"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in belongCompanyNameList"
+                :key="dict.deptId"
+                :label="dict.deptName"
+                :value="dict.deptId"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="所属部门" prop="belongDeptid">
+            <treeselect
+              v-model="queryParams.belongDeptid"
+              :options="deptOptions"
+              :show-count="false"
+              placeholder="请选择所属部门"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="申请编号" prop="reqNo">
+            <el-input
+              v-model="queryParams.reqNo"
+              placeholder="请输入申请编号"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="项目名称" prop="proName">
+            <el-input
+              v-model="queryParams.proName"
+              placeholder="请输入项目名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="15">
+        <el-col :span="6">
+          <el-form-item label="项目类型" prop="proTypeName">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.proTypeName"
+              placeholder="请选择项目类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in proTypeNameList"
+                :key="dict.id"
+                :label="dict.typeName"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="状态" prop="status">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in collectTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button
+              type="cyan"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5"
+        ><el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['projectApproval:collectProject:add']"
+          >新增</el-button
+        ></el-col
+      >
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['projectApproval:collectProject:edit']"
+          >修改</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['projectApproval:collectProject:remove']"
+        >
+          删除
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['projectApproval:collectProject:export']"
+          >导出</el-button
+        >
+      </el-col>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
+    </el-row>
+
+    <el-table
+      v-loading="loading"
+      :data="collectProjectList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+      <el-table-column label="申请编号" align="center" prop="reqNo" />
+      <el-table-column label="项目名称" align="center" prop="proName" />
+      <el-table-column label="项目类型" align="center" prop="proTypeName" />
+      <el-table-column
+        label="所属分公司"
+        align="center"
+        prop="belongCompanyName"
+      />
+      <el-table-column label="所属部门" align="center" prop="belongDeptName" />
+      <el-table-column
+        label="合同金额"
+        align="center"
+        prop="contractAmountTotal"
+        clearable
+      />
+      <el-table-column label="状态说明" align="center" prop="statusPs" />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['projectApproval:collectProject:edit']"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['projectApproval:collectProject:remove']"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+    <!-- 添加或修改事前审批主(集客类)对话框 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="80%"
+      append-to-body
+      @close="closeUserAdd()"
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        size="medium"
+        :rules="rules"
+        label-width="120px"
+      >
+        <el-row :gutter="15">
+          <el-col :span="6">
+            <el-form-item label="分公司名称" prop="belongCompanyid">
+              <el-select
+                v-model="form.belongCompanyid"
+                placeholder="请输入分公司"
+                clearable
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="dict in belongCompanyNameList"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="所属部门" prop="belongDeptid">
+              <treeselect
+                v-model="form.belongDeptid"
+                :options="deptOptions"
+                :show-count="false"
+                placeholder="请选择所属部门"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="项目类型" prop="proType">
+              <el-select
+                v-model="form.proType"
+                placeholder="请选择项目类型"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="dict in proTypeNameList"
+                  :key="dict.id"
+                  :label="dict.typeName"
+                  :value="dict.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="项目名称" prop="proName">
+              <el-input v-model="form.proName" placeholder="请输入项目名称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="6">
+            <el-form-item label="合同金额" prop="contractAmountTotal">
+              <el-input
+                v-model="form.contractAmountTotal"
+                v-on:input="changeNum()"
+                clearable
+                placeholder="请输入合同金额"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="税率(%)" prop="taxrate">
+              <el-input
+                v-model="form.taxrate"
+                v-on:input="changeNum()"
+                placeholder="请输入税率"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="不含税金额" prop="contractAmountTax">
+              <el-input
+                v-model="form.contractAmountTax"
+                placeholder="请输入不含税金额"
+				:disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="税额" prop="taxamount">
+              <el-input v-model="form.taxamount" placeholder="请输入税额" :disabled="true" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="基本信息" name="base" prop="appNgBase">
+            <basicInfo
+              ref="basicInfo"
+              :baseInfoDate="form.appNgBase"
+            ></basicInfo>
+          </el-tab-pane>
+          <el-tab-pane label="材料信息" name="second" prop="appNgMaterialList"
+            ><materialsInfo
+              ref="materialsInfo"
+              :materialsInfoDate="form.appNgMaterialList"
+            ></materialsInfo
+          ></el-tab-pane>
+          <el-tab-pane label="施工费信息" name="third" prop="appNgConst"
+            ><construcostInfo
+              ref="construcostInfo"
+              :construcostInfoDate="form.appNgConst"
+            ></construcostInfo
+          ></el-tab-pane>
+          <el-tab-pane label="事前审批表" name="fourth" prop="appxNgReq"
+            ><approvalInfo
+              ref="approvalInfo"
+              :approvalInfoDate="form.appxNgReq"
+            ></approvalInfo
+          ></el-tab-pane>
+        </el-tabs>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import {
+  listCollectProject,
+  getCollectProject,
+  delCollectProject,
+  addCollectProject,
+  updateCollectProject,
+  exportCollectProject
+} from "@/api/projectApproval/collectProject";
+
+import {
+  findProjectType,
+  findBranchOffice,
+  findLoginbyCompany,
+  findNextAppNo
+} from "@/api/utils";
+
+import { treeselect } from "@/api/system/dept";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import basicInfo from "./basicInfo.vue";
+import materialsInfo from "./materialsInfo.vue";
+import construcostInfo from "./construcostInfo.vue";
+import approvalInfo from "./approvalInfo";
+
+export default {
+  name: "CollectProject",
+  components: {
+    Treeselect,
+    basicInfo,
+    materialsInfo,
+    construcostInfo,
+    approvalInfo
+  },
+  props: {},
+  data() {
+    return {
+      activeName: "base",
+      // 遮罩层
+      loading: true,
+      baseFormData: Object,
+      // 选中数组
+      ids: [],
+      show: false,
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 表格数据
+      collectProjectList: [],
+      collectTypeOptions: [],
+      proTypeNameList: [],
+      belongCompanyNameList: [],
+      // 部门树选项
+      deptOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        belongCompanyid: null,
+        belongCompanyName: null,
+        belongDeptid: null,
+        belongDeptName: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        status: null
+      },
+      // 表单参数
+      form: {
+        id: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        belongCompanyid: null,
+        belongCompanyName: null,
+        belongDeptid: null,
+        belongDeptName: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        status: 0,
+        statusPs: null,
+        remarks: null,
+        delFlag: null,
+        appNgBase: null,
+        appNgMaterialList: [],
+        appNgConst: null,
+        appxNgReq: null
+      },
+      // 表单校验
+      rules: {
+        contractAmountTotal: [
+          {
+            required: true,
+            message: "请输入合同金额",
+            trigger: "blur"
+          },
+          {
+            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^[1-9]$)|(^\d\.[1-9]{1,2}$)|(^\d\.[0]{1}[1-9]{1}$|(^\d\.[1-9]{1}[0]{1}$)$)/,
+            message: "请正确输入合同金额",
+            trigger: "blur"
+          }
+        ],
+        taxrate: [
+          {
+            required: true,
+            message: "请输入税率",
+            trigger: "blur"
+          },
+          {
+            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^[1-9]$)|(^\d\.[1-9]{1,2}$)|(^\d\.[0]{1}[1-9]{1}$|(^\d\.[1-9]{1}[0]{1}$)$)/,
+            message: "请正确输入税率",
+            trigger: "blur"
+          }
+        ],
+        taxamount: [
+          {
+            required: true,
+            message: "请输入税额",
+            trigger: "blur"
+          },
+          {
+            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^[1-9]$)|(^\d\.[1-9]{1,2}$)|(^\d\.[0]{1}[1-9]{1}$|(^\d\.[1-9]{1}[0]{1}$)$)/,
+            message: "请正确输入税额",
+            trigger: "blur"
+          }
+        ],
+        contractAmountTax: [
+          {
+            required: true,
+            message: "请输入不含税金额",
+            trigger: "blur"
+          },
+          {
+            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^[1-9]$)|(^\d\.[1-9]{1,2}$)|(^\d\.[0]{1}[1-9]{1}$|(^\d\.[1-9]{1}[0]{1}$)$)/,
+            message: "请正确输入不含税金额",
+            trigger: "blur"
+          }
+        ]
+      }
+    };
+  },
+  created() {
+    this.getList(); //获取页面数据
+    this.getTreeselect();
+    this.getDicts("collect_type").then(response => {
+      this.collectTypeOptions = response.data;
+    });
+    findProjectType().then(response => {
+      this.proTypeNameList = response.data;
+    });
+    findBranchOffice().then(response => {
+      this.belongCompanyNameList = response.data;
+    });
+  },
+  methods: {
+    /** 查询事前审批主(集客类)列表 */
+    getList() {
+      this.loading = true;
+      listCollectProject(this.queryParams).then(response => {
+        this.collectProjectList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.deptId = data.id;
+      this.getList();
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.activeName = "base";
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        belongCompanyid: null,
+        belongCompanyName: null,
+        belongDeptid: null,
+        belongDeptName: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        status: 0,
+        statusPs: null,
+        remarks: null,
+        delFlag: null,
+        appNgBase: null,
+        appNgMaterialList: [],
+        appNgConst: null,
+        appxNgReq: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    handleClick(tab, event) {},
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "编辑集客项目";
+      findLoginbyCompany().then(response => {
+        this.$refs.approvalInfo.formData.applyCompany = response.msg;
+      });
+      findNextAppNo().then(response => {
+        this.$refs.approvalInfo.formData.appxNgNo = response.msg;
+      });
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      this.open = true;
+      const id = row.id || this.ids;
+      getCollectProject(id).then(response => {
+        this.form = response.data;
+        this.form.belongCompanyid = parseInt(this.form.belongCompanyid);
+        this.title = "编辑集客项目";
+        /** 基本信息赋值 **/
+        this.$refs.basicInfo.formData = this.form.appNgBase;
+        this.$refs.basicInfo.formData.projectTypeId =
+          this.form.appNgBase.projectTypeId + "";
+        /** 材料信息 **/
+        this.$refs.materialsInfo.dataList = this.form.appNgMaterialList;
+        /** 施工费信息 **/
+        this.$refs.construcostInfo.formData = this.form.appNgConst;
+        if (this.form.appxNgReq.dataList) {
+          this.$refs.approvalInfo.rowspanNum =
+            13 + this.form.appxNgReq.dataList.length;
+        }
+        /** 事前审批 **/
+        this.$refs.approvalInfo.formData = this.form.appxNgReq;
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.form.appNgBase = this.$refs.basicInfo.formData;
+      this.form.appNgMaterialList = this.$refs.materialsInfo.dataList;
+      this.form.appNgConst = this.$refs.construcostInfo.formData;
+      this.form.appxNgReq = this.$refs.approvalInfo.formData;
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateCollectProject(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addCollectProject(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm(
+        '是否确认删除事前审批主(集客类)编号为"' + ids + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(function() {
+          return delCollectProject(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        });
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所有事前审批主(集客类)数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return exportCollectProject(queryParams);
+        })
+        .then(response => {
+          this.download(response.msg);
+        });
+    },
+    changeNum() {
+      let contractAmountTotal = this.form.contractAmountTotal;
+      let taxrate = this.form.taxrate;
+      if (contractAmountTotal && taxrate) {
+        /** 税率转换 **/
+        let taxrateStr = taxrate / 100;
+        this.form.contractAmountTax = this.formatPrice(
+          contractAmountTotal / (1 + taxrateStr)
+        );
+        this.form.taxamount = this.formatPrice(
+          contractAmountTotal - this.form.contractAmountTax
+        );
+      }
+    },
+    /** 格式化金额 **/
+    formatPrice(value) {
+      let tempVal = parseFloat(value).toFixed(3);
+      let realVal = tempVal.substring(0, tempVal.length - 1);
+      return realVal;
+    },
+    closeUserAdd() {
+      this.activeName = "base";
+      // materialsInfoDate
+      this.$refs.basicInfo.formData = {
+        branIdStr: [],
+        companyCharge: "",
+        departCharge: "",
+        proCharge: "",
+        projectTypeId: "",
+        buildingsNumber: 0,
+        buildingsInvolvedNumber: 0,
+        digitalTVNumber: 0,
+        broadbandNumber: 0,
+        budgetMaterial: 0,
+        budgetLabor: 0,
+        budgetTotal: 0,
+        designTime: ""
+      };
+      this.$refs.materialsInfo.dataList = [];
+      this.$refs.construcostInfo.formData = {
+        projectName: "",
+        description: "",
+        projectUnit: "",
+        days: 0,
+        daysPrice: 0,
+        daysAmount: 0
+      };
+      this.$refs.approvalInfo.formData = {
+        id: null,
+        appxNgNo: null,
+        appxNgName: null,
+        proType: null,
+        applyDate: null,
+        bid: null,
+        applyCompany: null,
+        tranrevenue: null,
+        trantaxrate: 6,
+        tranrevenueno: null,
+        tranoutput: null,
+        tranremarks: null,
+        devicerevenue: null,
+        devicetaxrate: 13,
+        devicerevenueno: null,
+        deviceoutput: null,
+        deviceremarks: null,
+        serverevenue: null,
+        servetaxrate: 6,
+        serverevenueno: null,
+        serveoutput: null,
+        serveremarks: null,
+        projectrevenue: null,
+        projecttaxrate: 9,
+        projectrevenueno: null,
+        projectoutput: null,
+        projectremarks: null,
+        leaserevenue: null,
+        leasetaxrate: 6,
+        leaserevenueno: null,
+        leaseoutput: null,
+        leaseremarks: null,
+        softwarerevenue: null,
+        softwaretaxrate: 13,
+        softwarerevenueno: null,
+        softwareoutput: null,
+        softwareremarks: null,
+        advertrevenue: null,
+        adverttaxrate: 6,
+        advertrevenueno: null,
+        advertoutput: null,
+        advertremarks: null,
+        incomerevenue: null,
+        incomerevenueno: null,
+        incomeoutput: null,
+        devicecostmoney: null,
+        devicecosttaxrate: 13,
+        devicecostmoneyno: null,
+        devicecostincome: null,
+        devicecostremarks: "无产权工程",
+        stuffcostmoney: null,
+        stuffcosttaxrate: 13,
+        stuffcostmoneyno: null,
+        stuffcostincome: null,
+        stuffcostremarks: "无产权工程",
+        turncostmoney: null,
+        turncosttaxrate: 9,
+        turncostmoneyno: null,
+        turncostincome: null,
+        turncostremarks: "无产权工程",
+        servecostmoney: null,
+        servecosttaxrate: 6,
+        servecostmoneyno: null,
+        servecostincome: null,
+        servecostremarks: "无产权工程",
+        buildcostmoney: null,
+        buildcosttaxrate: 3,
+        buildcostmoneyno: null,
+        buildcostincome: null,
+        buildcostremarks:
+          "无产权工程，小规模纳税人税率3%，一般纳税人税率9%，根据施工方情况可修改税率",
+        havedevicemoney: null,
+        havedevicetaxrate: 13,
+        havedevicemoneyno: null,
+        havedeviceincome: null,
+        havedeviceremarks:
+          "自有产权工程，成本（不含税金额）按折旧计算，按投资形成资产月折旧金额*项目期限，即成本=折旧=设备不含税金额*0.95/折旧年限*服务年份，设备折旧年限8年，线路资产折旧年限15年",
+        havelinemoney: null,
+        havelinetaxrate: 9,
+        havelinemoneyno: null,
+        havelineincome: null,
+        upholdcostmoney: null,
+        upholdcosttaxrate: 6,
+        upholdcostmoneyno: null,
+        upholdcostincome: null,
+        upholdcostremarks: null,
+        othercostmoney: null,
+        othercosttaxrate: null,
+        othercostmoneyno: null,
+        othercostincome: null,
+        othercostremarks: null,
+        interestcostmoney: null,
+        interestcosttaxrate: null,
+        interestcostmoneyno: null,
+        interestcostincome: null,
+        interestcostremarks:
+          "政府采购项目经批准后可以垫资，需计算垫资利息作为项目成本，利率按4.35%计算。其他集客项目原则上不允许垫资。垫资金额   万元，垫资   月，垫资利息=垫资金额*4.35%/12*月份",
+        costmoney: null,
+        costmoneyno: null,
+        costincome: null,
+        incrementtaxrate: null,
+        incrementremarks: null,
+        attachtaxrate: null,
+        attachremarks:
+          "综合税率12.5%（城市维护建设税7%，教育费附加3%，地方教育费附加2%，地方水利建设基金0.5%）",
+        culturebuild: null,
+        culturebuildremarks:
+          "费率3%，暂减按1.5%征收，文化事业建设费=广告收入*1.5%",
+        estimateprofit: null,
+        estimateprofitremarks: null,
+        epmargin: null,
+        epmarginremarks: null,
+        remarks: null,
+        dataList: []
+      };
+      this.reset();
+    }
+  }
+};
+</script>
+<style>
+.el-textarea .el-textarea__inner {
+  resize: none;
+}
+</style>

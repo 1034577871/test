@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contract.contractPayinfo.mapper.CtBuContractPayinfoMapper">
+    
+    <resultMap type="CtBuContractPayinfo" id="CtBuContractPayinfoResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="estimateTime"    column="estimate_time"    />
+        <result property="conditionInfo"    column="condition_info"    />
+        <result property="paymentRatio"    column="payment_ratio"    />
+        <result property="estimateMoney"    column="estimate_money"    />
+        <result property="actualTime"    column="actual_time"    />
+        <result property="actualMoney"    column="actual_money"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="invoiceMoney"    column="invoice_money"    />
+        <result property="invoiceNomoney"    column="invoice_nomoney"    />
+        <result property="invoiceCode"    column="invoice_code"    />
+        <result property="invoiceTime"    column="invoice_time"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCtBuContractPayinfoVo">
+        select id, create_by, create_time, update_by, update_time, contract_id, estimate_time, condition_info, payment_ratio, estimate_money, actual_time, actual_money, invoice_id, invoice_money, invoice_nomoney, invoice_code, invoice_time, remarks, del_flag from ct_bu_contract_payinfo
+    </sql>
+
+    <select id="selectCtBuContractPayinfoList" parameterType="CtBuContractPayinfo" resultMap="CtBuContractPayinfoResult">
+        <include refid="selectCtBuContractPayinfoVo"/>
+        <where>
+            del_flag = '1'
+            <if test="contractId != null  and contractId != ''"> and contract_id = #{contractId}</if>
+            <if test="estimateTime != null "> and estimate_time = #{estimateTime}</if>
+            <if test="conditionInfo != null  and conditionInfo != ''"> and condition_info = #{conditionInfo}</if>
+            <if test="paymentRatio != null "> and payment_ratio = #{paymentRatio}</if>
+            <if test="estimateMoney != null "> and estimate_money = #{estimateMoney}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(actual_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(actual_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="actualMoney != null "> and actual_money = #{actualMoney}</if>
+            <if test="invoiceId != null  and invoiceId != ''"> and invoice_id = #{invoiceId}</if>
+            <if test="invoiceMoney != null "> and invoice_money = #{invoiceMoney}</if>
+            <if test="invoiceNomoney != null "> and invoice_nomoney = #{invoiceNomoney}</if>
+            <if test="invoiceCode != null  and invoiceCode != ''"> and invoice_code = #{invoiceCode}</if>
+            <if test="invoiceTime != null "> and invoice_time = #{invoiceTime}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        </where>
+    </select>
+    
+    <select id="selectCtBuContractPayinfoById" parameterType="String" resultMap="CtBuContractPayinfoResult">
+        <include refid="selectCtBuContractPayinfoVo"/>
+        where id = #{id} AND del_flag = '1'
+    </select>
+        
+    <insert id="insertCtBuContractPayinfo" parameterType="CtBuContractPayinfo">
+        insert into ct_bu_contract_payinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="estimateTime != null">estimate_time,</if>
+            <if test="conditionInfo != null">condition_info,</if>
+            <if test="paymentRatio != null">payment_ratio,</if>
+            <if test="estimateMoney != null">estimate_money,</if>
+            <if test="actualTime != null">actual_time,</if>
+            <if test="actualMoney != null">actual_money,</if>
+            <if test="invoiceId != null">invoice_id,</if>
+            <if test="invoiceMoney != null">invoice_money,</if>
+            <if test="invoiceNomoney != null">invoice_nomoney,</if>
+            <if test="invoiceCode != null">invoice_code,</if>
+            <if test="invoiceTime != null">invoice_time,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="estimateTime != null">#{estimateTime},</if>
+            <if test="conditionInfo != null">#{conditionInfo},</if>
+            <if test="paymentRatio != null">#{paymentRatio},</if>
+            <if test="estimateMoney != null">#{estimateMoney},</if>
+            <if test="actualTime != null">#{actualTime},</if>
+            <if test="actualMoney != null">#{actualMoney},</if>
+            <if test="invoiceId != null">#{invoiceId},</if>
+            <if test="invoiceMoney != null">#{invoiceMoney},</if>
+            <if test="invoiceNomoney != null">#{invoiceNomoney},</if>
+            <if test="invoiceCode != null">#{invoiceCode},</if>
+            <if test="invoiceTime != null">#{invoiceTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCtBuContractPayinfo" parameterType="CtBuContractPayinfo">
+        update ct_bu_contract_payinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="estimateTime != null">estimate_time = #{estimateTime},</if>
+            <if test="conditionInfo != null">condition_info = #{conditionInfo},</if>
+            <if test="paymentRatio != null">payment_ratio = #{paymentRatio},</if>
+            <if test="estimateMoney != null">estimate_money = #{estimateMoney},</if>
+            <if test="actualTime != null">actual_time = #{actualTime},</if>
+            <if test="actualMoney != null">actual_money = #{actualMoney},</if>
+            <if test="invoiceId != null">invoice_id = #{invoiceId},</if>
+            <if test="invoiceMoney != null">invoice_money = #{invoiceMoney},</if>
+            <if test="invoiceNomoney != null">invoice_nomoney = #{invoiceNomoney},</if>
+            <if test="invoiceCode != null">invoice_code = #{invoiceCode},</if>
+            <if test="invoiceTime != null">invoice_time = #{invoiceTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtBuContractPayinfoById" parameterType="String">
+        delete from ct_bu_contract_payinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuContractPayinfoByIds" parameterType="String">
+        delete from ct_bu_contract_payinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateCtBuContractPayinfoByIds" parameterType="String">
+        update ct_bu_contract_payinfo set del_flag= '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateCtBuContractPayinfoByContractId" parameterType="String">
+        update ct_bu_contract_payinfo set del_flag= '2' where contract_id = #{contractId}
+    </update>
+
+    <select id="selectCtBuContractPayinfoByContractId" parameterType="String" resultMap="CtBuContractPayinfoResult">
+        <include refid="selectCtBuContractPayinfoVo"/>
+        where contract_id = #{contractId} AND del_flag = '1'
+    </select>
+    
+</mapper>

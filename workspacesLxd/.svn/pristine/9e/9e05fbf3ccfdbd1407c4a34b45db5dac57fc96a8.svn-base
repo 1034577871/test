@@ -1,0 +1,95 @@
+package com.ruoyi.contract.contractPayinfo.service.impl;
+
+import java.util.List;
+
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.contract.payinfoInvoice.mapper.CtBuPayinfoInvoiceMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.contract.contractPayinfo.mapper.CtBuContractPayinfoMapper;
+import com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfo;
+import com.ruoyi.contract.contractPayinfo.service.ICtBuContractPayinfoService;
+
+/**
+ * 合同付款Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2020-12-10
+ */
+@Service
+public class CtBuContractPayinfoServiceImpl implements ICtBuContractPayinfoService {
+    @Autowired
+    private CtBuContractPayinfoMapper ctBuContractPayinfoMapper;
+
+    @Autowired
+    private CtBuPayinfoInvoiceMapper ctBuPayinfoInvoiceMapper;
+
+    /**
+     * 查询合同付款
+     *
+     * @param id 合同付款ID
+     * @return 合同付款
+     */
+    @Override
+    public CtBuContractPayinfo selectCtBuContractPayinfoById(String id) {
+        return ctBuContractPayinfoMapper.selectCtBuContractPayinfoById(id);
+    }
+
+    /**
+     * 查询合同付款列表
+     *
+     * @param ctBuContractPayinfo 合同付款
+     * @return 合同付款
+     */
+    @Override
+    public List<CtBuContractPayinfo> selectCtBuContractPayinfoList(CtBuContractPayinfo ctBuContractPayinfo) {
+        return ctBuContractPayinfoMapper.selectCtBuContractPayinfoList(ctBuContractPayinfo);
+    }
+
+    /**
+     * 新增合同付款
+     *
+     * @param ctBuContractPayinfo 合同付款
+     * @return 结果
+     */
+    @Override
+    public int insertCtBuContractPayinfo(CtBuContractPayinfo ctBuContractPayinfo) {
+        ctBuContractPayinfo.setCreateTime(DateUtils.getNowDate());
+        return ctBuContractPayinfoMapper.insertCtBuContractPayinfo(ctBuContractPayinfo);
+    }
+
+    /**
+     * 修改合同付款
+     *
+     * @param ctBuContractPayinfo 合同付款
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuContractPayinfo(CtBuContractPayinfo ctBuContractPayinfo) {
+        ctBuContractPayinfo.setUpdateTime(DateUtils.getNowDate());
+        return ctBuContractPayinfoMapper.updateCtBuContractPayinfo(ctBuContractPayinfo);
+    }
+
+    /**
+     * 批量删除合同付款
+     *
+     * @param ids 需要删除的合同付款ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuContractPayinfoByIds(String[] ids) {
+        return ctBuContractPayinfoMapper.deleteCtBuContractPayinfoByIds(ids);
+    }
+
+    /**
+     * 删除合同付款信息
+     *
+     * @param id 合同付款ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuContractPayinfoById(String id) {
+        return ctBuContractPayinfoMapper.deleteCtBuContractPayinfoById(id);
+    }
+
+}

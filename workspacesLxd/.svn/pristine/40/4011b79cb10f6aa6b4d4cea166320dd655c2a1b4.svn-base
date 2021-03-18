@@ -1,0 +1,99 @@
+package com.ruoyi.projectApproval.AppNgReqList.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.projectApproval.AppNgReqList.domain.AppNgReqList;
+import com.ruoyi.projectApproval.AppNgReqList.service.IAppNgReqListService;
+
+/**
+ * 成本子类Controller
+ *
+ * @author Mu
+ * @date 2020-12-18
+ */
+@RestController
+@RequestMapping("/system/list")
+public class AppNgReqListController extends BaseController {
+
+    @Autowired
+    private IAppNgReqListService appNgReqListService;
+
+    /**
+     * 查询成本子类列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:list:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(AppNgReqList appNgReqList) {
+        startPage();
+        List<AppNgReqList> list = appNgReqListService.selectAppNgReqListList(appNgReqList);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出成本子类列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:list:export')")
+    @Log(title = "成本子类", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(AppNgReqList appNgReqList) {
+        List<AppNgReqList> list = appNgReqListService.selectAppNgReqListList(appNgReqList);
+        ExcelUtil<AppNgReqList> util = new ExcelUtil<AppNgReqList>(AppNgReqList.class);
+        return util.exportExcel(list, "list");
+    }
+
+    /**
+     * 获取成本子类详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:list:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") String id) {
+        return AjaxResult.success(appNgReqListService.selectAppNgReqListById(id));
+    }
+
+    /**
+     * 新增成本子类
+     */
+    @PreAuthorize("@ss.hasPermi('system:list:add')")
+    @Log(title = "成本子类", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody AppNgReqList appNgReqList) {
+        return toAjax(appNgReqListService.insertAppNgReqList(appNgReqList));
+    }
+
+    /**
+     * 修改成本子类
+     */
+    @PreAuthorize("@ss.hasPermi('system:list:edit')")
+    @Log(title = "成本子类", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody AppNgReqList appNgReqList) {
+        return toAjax(appNgReqListService.updateAppNgReqList(appNgReqList));
+    }
+
+    /**
+     * 删除成本子类
+     */
+//    @PreAuthorize("@ss.hasPermi('system:list:remove')")
+    @Log(title = "成本子类", businessType = BusinessType.DELETE)
+    @GetMapping("/remove/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids) {
+        return toAjax(appNgReqListService.deleteAppNgReqListByIds(ids));
+    }
+}

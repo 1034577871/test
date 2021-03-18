@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.base.fileManage.mapper.CtBuFileMapper">
+
+	<resultMap type="CtBuFile" id="CtBuFileResult">
+		<result property="id" column="id" />
+		<result property="pid" column="pid" />
+		<result property="ptype" column="ptype" />
+		<result property="path" column="path" />
+		<result property="createTime" column="create_time" />
+		<result property="createBy" column="create_by" />
+		<result property="delFlag" column="del_flag" />
+	</resultMap>
+
+	<sql id="selectCtBuFileVo">
+		select id, pid, ptype, path, create_time, create_by, del_flag from
+		ct_bu_file
+	</sql>
+
+	<select id="selectCtBuFileList" parameterType="CtBuFile"
+		resultMap="CtBuFileResult">
+		<include refid="selectCtBuFileVo" />
+		<where>
+			<if test="ptype != null "> and ptype = #{ptype}</if>
+			<if test="path != null  and path != ''"> and path = #{path}</if>
+		</where>
+	</select>
+
+	<select id="selectCtBuFileById" parameterType="String"
+		resultMap="CtBuFileResult">
+		<include refid="selectCtBuFileVo" />
+		where id = #{id}
+	</select>
+	
+	<select id="findFileListByPid" parameterType="CtBuFile"
+		resultMap="CtBuFileResult">
+		<include refid="selectCtBuFileVo" />
+		<where>
+			<if test="pid != null and pid != '' "> and pid = #{pid}</if>
+		</where>
+	</select>
+
+	<select id="findFileListByPidPtype" parameterType="CtBuFile"
+			resultMap="CtBuFileResult">
+		<include refid="selectCtBuFileVo" />
+		<where>
+			<if test="pid != null and pid != '' "> and pid = #{pid}</if>
+			<if test="ptype != null and ptype != '' "> and ptype = #{ptype}</if>
+		</where>
+	</select>
+	
+	<insert id="insertCtBuFile" parameterType="CtBuFile">
+		insert into ct_bu_file
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="pid != null">pid,</if>
+			<if test="ptype != null">ptype,</if>
+			<if test="path != null">path,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="delFlag != null">del_flag,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="pid != null">#{pid},</if>
+			<if test="ptype != null">#{ptype},</if>
+			<if test="path != null">#{path},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+		</trim>
+	</insert>
+
+	<update id="updateCtBuFile" parameterType="CtBuFile">
+		update ct_bu_file
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="pid != null">pid = #{pid},</if>
+			<if test="ptype != null">ptype = #{ptype},</if>
+			<if test="path != null">path = #{path},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+<!-- 	<delete id="deleteCtBuFileById" parameterType="String">
+		delete from ct_bu_file where id = #{id}
+	</delete> -->
+	
+	<update id="deleteCtBuFileById" parameterType="String">
+		update ct_bu_file set del_flag = '2' where id = #{id}
+	</update>
+	
+	<delete id="deleteCtBuFileByIds" parameterType="String">
+		delete from ct_bu_file where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

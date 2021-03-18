@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.ruoyi.contract.contractWarning.mapper.ContractWarningMapper">
+
+    <resultMap type="ContractWarning" id="ContractWarningResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="contractId" column="contract_id"/>
+        <result property="contractNo" column="contract_no"/>
+        <result property="contractName" column="contract_name"/>
+        <result property="manageDeptment" column="manage_deptment"/>
+        <result property="manageUser" column="manage_user"/>
+        <result property="estimateTime" column="estimate_time"/>
+        <result property="estimateMoney" column="estimate_money"/>
+        <result property="actualMoney" column="actual_money"/>
+        <result property="handleFlag" column="handle_flag"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectContractWarningVo">
+		select id, create_by, create_time, update_by, update_time, contract_id,
+		contract_no, contract_name, manage_deptment, manage_user,
+		estimate_time, estimate_money, actual_money, handle_flag, del_flag,
+		remark from ct_bu_contract_warning
+	</sql>
+
+    <select id="selectContractWarningList"
+            parameterType="ContractWarning" resultMap="ContractWarningResult">
+        <include refid="selectContractWarningVo"/>
+        <where>
+            del_flag = '1'
+            <if test="contractId != null  and contractId != ''">and contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''">and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''">and contract_name like concat('%', #{contractName},
+                '%')
+            </if>
+            <if test="manageDeptment != null  and manageDeptment != ''">and manage_deptment = #{manageDeptment}</if>
+            <if test="manageUser != null  and manageUser != ''">and manage_user = #{manageUser}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(estimate_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(estimate_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="estimateMoney != null ">and estimate_money = #{estimateMoney}</if>
+            <if test="actualMoney != null ">and actual_money = #{actualMoney}</if>
+            <if test="handleFlag != null ">and handle_flag = #{handleFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectContractWarningById" parameterType="String"
+            resultMap="ContractWarningResult">
+        <include refid="selectContractWarningVo"/>
+        where id = #{id} and del_flag = '1'
+    </select>
+
+    <insert id="insertContractWarning"
+            parameterType="ContractWarning">
+        insert into ct_bu_contract_warning
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="manageDeptment != null">manage_deptment,</if>
+            <if test="manageUser != null">manage_user,</if>
+            <if test="estimateTime != null">estimate_time,</if>
+            <if test="estimateMoney != null">estimate_money,</if>
+            <if test="actualMoney != null">actual_money,</if>
+            <if test="handleFlag != null">handle_flag,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="manageDeptment != null">#{manageDeptment},</if>
+            <if test="manageUser != null">#{manageUser},</if>
+            <if test="estimateTime != null">#{estimateTime},</if>
+            <if test="estimateMoney != null">#{estimateMoney},</if>
+            <if test="actualMoney != null">#{actualMoney},</if>
+            <if test="handleFlag != null">#{handleFlag},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateContractWarning"
+            parameterType="ContractWarning">
+        update ct_bu_contract_warning
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="estimateTime != null">estimate_time = #{estimateTime},</if>
+            <if test="estimateMoney != null">estimate_money = #{estimateMoney},</if>
+            <if test="actualMoney != null">actual_money = #{actualMoney},</if>
+            <if test="handleFlag != null">handle_flag = #{handleFlag},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 	<delete id="deleteContractWarningById" parameterType="String">
+            delete from ct_bu_contract_warning where id = #{id}
+        </delete> -->
+
+    <update id="deleteContractWarningById" parameterType="Integer">
+		update ct_bu_contract_warning set del_flag = '2' where id = #{id}
+	</update>
+
+    <delete id="deleteContractWarningByIds" parameterType="String">
+        delete from ct_bu_contract_warning where id in
+        <foreach item="id" collection="array" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contract.contractIncomeType.mapper.CtBuContractIncomeTypeMapper">
+
+    <resultMap type="CtBuContractIncomeType" id="CtBuContractIncomeTypeResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="incomeTypeId"    column="income_type_id"    />
+        <result property="incomeTypeName"    column="income_type_name"    />
+        <result property="incomeTypeMoney"    column="income_type_money"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectCtBuContractIncomeTypeVo">
+        select id, create_by, create_time, update_by, update_time, contract_id, contract_no, contract_name, income_type_id, income_type_name, income_type_money, del_flag from ct_bu_contract_income_type
+    </sql>
+
+    <select id="selectCtBuContractIncomeTypeList" parameterType="CtBuContractIncomeType" resultMap="CtBuContractIncomeTypeResult">
+        <include refid="selectCtBuContractIncomeTypeVo"/>
+        <where>
+            <if test="contractId != null  and contractId != ''"> and contract_id = #{contractId}</if>
+            <if test="contractNo != null  and contractNo != ''"> and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="incomeTypeId != null  and incomeTypeId != ''"> and income_type_id = #{incomeTypeId}</if>
+            <if test="incomeTypeName != null  and incomeTypeName != ''"> and income_type_name like concat('%', #{incomeTypeName}, '%')</if>
+            <if test="incomeTypeMoney != null "> and income_type_money = #{incomeTypeMoney}</if>
+        </where>
+    </select>
+
+    <select id="selectCtBuContractIncomeTypeById" parameterType="String" resultMap="CtBuContractIncomeTypeResult">
+        <include refid="selectCtBuContractIncomeTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCtBuContractIncomeType" parameterType="CtBuContractIncomeType">
+        insert into ct_bu_contract_income_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="contractId != null">contract_id,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="incomeTypeId != null">income_type_id,</if>
+            <if test="incomeTypeName != null">income_type_name,</if>
+            <if test="incomeTypeMoney != null">income_type_money,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="contractId != null">#{contractId},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="incomeTypeId != null">#{incomeTypeId},</if>
+            <if test="incomeTypeName != null">#{incomeTypeName},</if>
+            <if test="incomeTypeMoney != null">#{incomeTypeMoney},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtBuContractIncomeType" parameterType="CtBuContractIncomeType">
+        update ct_bu_contract_income_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="incomeTypeId != null">income_type_id = #{incomeTypeId},</if>
+            <if test="incomeTypeName != null">income_type_name = #{incomeTypeName},</if>
+            <if test="incomeTypeMoney != null">income_type_money = #{incomeTypeMoney},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCtBuContractIncomeTypeById" parameterType="String">
+        delete from ct_bu_contract_income_type where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuContractIncomeTypeByIds" parameterType="String">
+        delete from ct_bu_contract_income_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCtBuContractIncomeTypeByContractIdList" parameterType="String" resultMap="CtBuContractIncomeTypeResult">
+        <include refid="selectCtBuContractIncomeTypeVo"/>
+        WHERE contract_id = #{contractId} AND del_flag = '1'
+    </select>
+
+</mapper>

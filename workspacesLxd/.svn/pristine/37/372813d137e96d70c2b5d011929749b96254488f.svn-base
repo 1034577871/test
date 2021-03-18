@@ -1,0 +1,92 @@
+<template>
+  <div>
+    <el-row :gutter="15">
+      <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
+        <el-col :span="12">
+          <el-form-item label="材料编码" >
+          	<el-input v-model="formData.materialCode" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="材料名称" >
+          	<el-input v-model="formData.materialName" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="单位" >
+          	<el-input v-model="formData.materialUnit" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="单价" >
+          	<el-input v-model="formData.materialPrice" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="数量" >
+          	<el-input v-model="formData.materialMount" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="金额" >
+          	<el-input v-model="formData.materialAmount" ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
+  </div>
+</template>
+<script>
+export default {
+  components: {},
+  props: [],
+  data() {
+    return {
+      formData: {
+        mobile: '',
+        field101: undefined,
+        field102: undefined,
+      },
+      rules: {
+        mobile: [{
+          required: true,
+          message: '请输入手机号',
+          trigger: 'blur'
+        }, {
+          pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+          message: '手机号格式错误',
+          trigger: 'blur'
+        }],
+        field101: [{
+          required: true,
+          message: '请输入单行文本',
+          trigger: 'blur'
+        }],
+        field102: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }],
+      },
+    }
+  },
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {},
+  methods: {
+    submitForm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return
+        // TODO 提交表单
+      })
+    },
+    resetForm() {
+      this.$refs['elForm'].resetFields()
+    },
+  }
+}
+
+</script>
+<style>
+</style>

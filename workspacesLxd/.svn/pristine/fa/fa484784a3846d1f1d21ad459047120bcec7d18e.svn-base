@@ -1,0 +1,235 @@
+package com.ruoyi.contract.contractInfo.service.impl;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.contract.contractContent.domain.CtBuContractContent;
+import com.ruoyi.contract.contractContent.mapper.CtBuContractContentMapper;
+import com.ruoyi.contract.contractPayinfo.domain.CtBuContractPayinfo;
+import com.ruoyi.contract.contractPayinfo.mapper.CtBuContractPayinfoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.ruoyi.contract.contractInfo.mapper.CtBuContractMapper;
+import com.ruoyi.contract.contractInfo.domain.CtBuContract;
+import com.ruoyi.contract.contractInfo.service.ICtBuContractService;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 合同信息录入主Service业务层处理
+ *
+ * @author ruoyi
+ * @date 2020-12-08
+ */
+@Service
+public class CtBuContractServiceImpl implements ICtBuContractService {
+    @Autowired
+    private CtBuContractMapper ctBuContractMapper;
+
+    @Autowired
+    private CtBuContractContentMapper ctBuContractContentMapper;
+
+    @Autowired
+    private CtBuContractPayinfoMapper ctBuContractPayinfoMapper;
+
+
+    /**
+     * 查询合同信息录入主
+     *
+     * @param id 合同信息录入主ID
+     * @return 合同信息录入主
+     */
+    @Override
+    public CtBuContract selectCtBuContractById(String id) {
+        return ctBuContractMapper.selectCtBuContractById(id);
+    }
+
+    /**
+     * 查询合同信息录入主列表
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 合同信息录入主
+     */
+    @Override
+    public List<CtBuContract> selectCtBuContractList(CtBuContract ctBuContract) {
+        return ctBuContractMapper.selectCtBuContractList(ctBuContract);
+    }
+
+    /**
+     * 新增合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int insertCtBuContract(CtBuContract ctBuContract) {
+
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuContract.setCreateBy(loginUser.getUser().getUserId().toString());
+        }
+
+        String s = UUID.fastUUID().toString(true);
+        ctBuContract.setId(s);                              //Id
+        ctBuContract.setCreateTime(DateUtils.getNowDate());//创建时间
+        ctBuContract.setDelFlag(1L);                   //删除标志（1未删除 2已删除）
+
+
+        //获取当前年月
+        Date dt = new Date();
+        SimpleDateFormat matter = new SimpleDateFormat("yyyyMM");
+        String date = matter.format(dt);
+
+        //月份
+        SimpleDateFormat matter1 = new SimpleDateFormat("MM");
+        String date1 = matter1.format(dt);
+        ctBuContract.setMonth(date1);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("GDJ").append(date);
+
+        //获取最新合同编码
+        String s1 = ctBuContractMapper.newestContractNo(stringBuilder + "");
+
+        //生成合同编号
+        if (s1 == null) {
+            ctBuContract.setContractNo(stringBuilder.append("001") + "");
+        } else {
+            int i = Integer.parseInt(s1.substring(s1.length() - 3, s1.length())) + 1;
+            DecimalFormat decimalFormat = new DecimalFormat("000");
+            String format = decimalFormat.format(i);
+            String strm = s1.substring(0, s1.length() - 3);
+            ctBuContract.setContractNo(strm + format);
+        }
+
+
+        //计算合同服务截止日期
+        LocalDate localDate = ctBuContract.getContractServeStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate1 = localDate.plusMonths(ctBuContract.getServiceTerm());
+        ctBuContract.setContractServeEnd(Date.from(localDate1.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+        BigDecimal receipt  = new BigDecimal("0");
+        //合同付款表
+        List<CtBuContractPayinfo> ctBuContractPayinfoList = ctBuContract.getCtBuContractPayinfoList();
+        //计算已收金额
+        for (CtBuContractPayinfo cbp : ctBuContractPayinfoList){
+            receipt = receipt.add(cbp.getActualMoney());
+        }
+
+        ctBuContract.setReceiveAmount(receipt);                 //已收金额
+        ctBuContract.setOutstandingAmount(ctBuContract.getTotalMoney().subtract(receipt));      //未收款金额
+        ctBuContract.setWriteOffAmount(new BigDecimal("0"));            //已核销金额
+        ctBuContract.setNwriteOffAmount(new BigDecimal("0"));           //未核销金额
+
+
+
+        //合同内容表
+        CtBuContractContent ctBuContractContent = ctBuContract.getCtBuContractContent();
+
+        ctBuContractContent.setId(UUID.fastUUID().toString(true));
+        ctBuContractContent.setCreateBy(loginUser.getUser().getUserId().toString());              //创建人
+        ctBuContractContent.setCreateTime(ctBuContract.getCreateTime());            //创建日期
+        ctBuContractContent.setContractId(ctBuContract.getContractNo());            //合同编号
+        BigDecimal bd = ctBuContractContent.getContentTaxrate().add(new BigDecimal("1"));
+        ctBuContractContent.setExtaxAmount(ctBuContractContent.getIntaxAmount().divide(bd));           //不含税金额
+        ctBuContractContent.setDelFlag(1L);             //删除标志
+        //新增合同内容
+        ctBuContractContentMapper.insertCtBuContractContent(ctBuContractContent);
+
+        //合同付款表
+        for (CtBuContractPayinfo cbp : ctBuContractPayinfoList){
+            cbp.setId(UUID.fastUUID().toString(true));          //主键ID
+            cbp.setContractId(ctBuContract.getContractNo());            //合同编号
+            cbp.setCreateBy(loginUser.getUser().getUserId().toString());              //创建人
+            cbp.setCreateTime(ctBuContract.getCreateTime());            //创建日期
+            cbp.setDelFlag(1L);                                         //删除标志 1未删除2已删除
+            cbp.setInvoiceNomoney(cbp.getInvoiceMoney().divide(bd));//不含税金额
+
+            //新增合同付款表
+            ctBuContractPayinfoMapper.insertCtBuContractPayinfo(cbp);
+        }
+
+        return ctBuContractMapper.insertCtBuContract(ctBuContract);
+    }
+
+    /**
+     * 修改合同信息录入主
+     *
+     * @param ctBuContract 合同信息录入主
+     * @return 结果
+     */
+    @Override
+    public int updateCtBuContract(CtBuContract ctBuContract) {
+        /** 判断当前登录人 **/
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser != null && loginUser.getUser() != null) {
+            ctBuContract.setUpdateBy(loginUser.getUser().getUserId().toString());
+        }
+        ctBuContract.setUpdateTime(DateUtils.getNowDate());
+
+
+
+
+
+
+
+
+
+        return ctBuContractMapper.updateCtBuContract(ctBuContract);
+    }
+
+    /**
+     * 批量删除合同信息录入主
+     *
+     * @param ids 需要删除的合同信息录入主ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuContractByIds(String[] ids) {
+        return ctBuContractMapper.deleteCtBuContractByIds(ids);
+    }
+
+    /**
+     * 删除合同信息录入主信息
+     *
+     * @param id 合同信息录入主ID
+     * @return 结果
+     */
+    @Override
+    public int deleteCtBuContractById(String id) {
+        return ctBuContractMapper.deleteCtBuContractById(id);
+    }
+
+    /**
+     * 批量逻辑删除合同信息录入主
+     *
+     * @param ids 需要删除的合同信息录入主ID
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int updateCtBuContractByIds(String[] ids) {
+        if (ids != null && ids.length > 0){
+            for (int i = 0; i < ids.length;i++){
+                CtBuContract ctBuContract = ctBuContractMapper.selectCtBuContractById(ids[i]);
+                int i1 = ctBuContractMapper.updateCtBuContractById(ids[i]);
+                if (i1 > 0){
+                    ctBuContractContentMapper.updateCtBuContractContentByContractId(ctBuContract.getContractNo());
+                    ctBuContractPayinfoMapper.updateCtBuContractPayinfoByContractId(ctBuContract.getContractNo());
+                }
+            }
+        }
+        return 1;
+    }
+}

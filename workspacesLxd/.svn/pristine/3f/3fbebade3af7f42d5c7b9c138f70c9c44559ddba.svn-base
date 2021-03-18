@@ -1,0 +1,139 @@
+package com.ruoyi.activiti.controller;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.activiti.domain.dto.ActTaskVO;
+import com.ruoyi.activiti.domain.dto.SearchTodoTaskVo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.github.pagehelper.Page;
+import com.ruoyi.activiti.domain.dto.ActTaskDTO;
+import com.ruoyi.activiti.domain.dto.ActWorkflowFormDataDTO;
+import com.ruoyi.activiti.service.IActTaskService;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.page.TableSupport;
+
+import javax.servlet.http.HttpServletResponse;
+
+@RestController
+@RequestMapping("/task")
+public class TaskController extends BaseController {
+
+	@Autowired
+	private IActTaskService actTaskService;
+
+
+    @RequestMapping("/exportImage")
+    public void exportImage(HttpServletResponse response, @RequestParam("processInstanceId")  String processInstanceId) {
+		actTaskService.exportImage(response,processInstanceId);
+    }
+	/**
+	 * 查询业务部id
+	 *
+	 * @return 已处理任务列表
+	 */
+	@GetMapping(value = "/findProcessPic/{id}")
+	public void findProcessPic(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
+		InputStream inputStream = actTaskService.findProcessPic(id);
+		byte[] b = new byte[1024];
+		int len = 0;
+		while ((len = inputStream.read(b,0,1024))!=-1){
+			response.getOutputStream().write(b, 0, len);
+		}
+
+	}
+
+	/**
+	 * 查询业务部id
+	 *
+	 * @return 已处理任务列表
+	 */
+	@GetMapping(value = "/selectBuessKeyByExe/{id}")
+	public AjaxResult selectBuessKeyByExe(@PathVariable("id") String id) {
+		Map map = actTaskService.selectBuessKeyByExe(id);
+		String busskey = map.get("BUSINESS_KEY_").toString();
+		return AjaxResult.success(busskey);
+	}
+    /**
+     * 查询已处理任务列表。
+     *
+     * @return 已处理任务列表
+     */
+    @GetMapping(value = "/queryDoneTasks")
+    public TableDataInfo queryDoneTasks(  @RequestParam(required = false) String processDefinitionName,@RequestParam(required = false)  String taskName
+			,@RequestParam(required = false) String startDueDate,@RequestParam(required = false) String endDueDate) {
+		PageDomain pageDomain = TableSupport.buildPageRequest();
+		Page<ActTaskDTO> hashMaps = actTaskService.queryDoneTasks(pageDomain,processDefinitionName,taskName,"","");
+		return getDataTable(hashMaps);
+    }
+
+
+	// 获取我的代办任务formDataShow
+	@GetMapping(value = "/list")
+	public TableDataInfo getTasks(SearchTodoTaskVo searchTodoTaskVo) {
+		PageDomain pageDomain = TableSupport.buildPageRequest();
+		//SearchTodoTaskVo searchTodoTaskVo = new SearchTodoTaskVo();
+//		if(!StringUtils.isEmpty(processInstanceName)){
+//			searchTodoTaskVo.setProcessInstanceName(processInstanceName);
+//		}
+//		if(!StringUtils.isEmpty(processDefinitionName)){
+//			searchTodoTaskVo.setProcessDefinitionName(processDefinitionName);
+//		}
+		Page<ActTaskVO> hashMaps = actTaskService.selectProcessDefinitionList(pageDomain,searchTodoTaskVo);
+		return getDataTable(hashMaps);
+
+	}
+
+	// 渲染表单
+	@GetMapping(value = "/formDataShow/{taskID}")
+	public AjaxResult formDataShow(@PathVariable("taskID") String taskID) {
+
+		return AjaxResult.success(actTaskService.formDataShow(taskID));
+	}
+
+	// 保存表单
+	@PostMapping(value = "/formDataSave/{taskID}")
+	public AjaxResult formDataSave(@PathVariable("taskID") String taskID,
+			@RequestBody List<ActWorkflowFormDataDTO> formData) throws ParseException {
+		return toAjax(actTaskService.formDataSave(taskID, formData));
+
+	}
+
+	/**
+	 * 删除用户
+	 */
+	//@PreAuthorize("@ss.hasPermi('system:user:remove')")
+	@GetMapping("/setAssigns/{taskId}/{assign}")
+	public AjaxResult setAssigns(@PathVariable("taskId") String taskId,@PathVariable("assign") String assign) {
+
+		return toAjax(actTaskService.setAssign(taskId,assign));
+	}
+
+	/**
+	 * 删除流程
+	 */
+	//@PreAuthorize("@ss.hasPermi('system:user:remove')")
+	@GetMapping("/deleteTaskByProcessId/{instanceId}")
+	public AjaxResult deleteTaskByProcessId(@PathVariable("instanceId") String instanceId) {
+
+		Map map = new HashMap();
+		try{
+			actTaskService.deleteTaskByProcessId(instanceId);
+			return AjaxResult.success("删除成功");
+		}catch (Exception e){
+			e.printStackTrace();
+			return AjaxResult.error("删除失败");
+		}
+	}
+}

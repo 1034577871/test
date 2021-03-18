@@ -1,0 +1,802 @@
+<template>
+  <div class="app-container">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      v-show="showSearch"
+      label-width="90px"
+    >
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="所属公司" prop="belongCompanyname">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.belongCompanyName"
+              placeholder="请输入所属分公司"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in belongCompanyNameList"
+                :key="dict.deptId"
+                :label="dict.deptName"
+                :value="dict.deptId"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="所属部门" prop="belongDeptname">
+            <treeselect
+              style="width:100%;"
+              v-model="queryParams.belongDeptname"
+              :options="deptOptions"
+              :show-count="false"
+              placeholder="请选择所属部门"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="申请编号" prop="reqNo">
+            <el-input
+              v-model="queryParams.reqNo"
+              placeholder="请输入申请编号"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="项目名称" prop="proName">
+            <el-input
+              v-model="queryParams.proName"
+              placeholder="请输入项目名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="项目类型" prop="proTypeName">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.proTypeName"
+              placeholder="请选择项目类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in proTypeNameList"
+                :key="dict.id"
+                :label="dict.typeName"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="项目分类" prop="classification">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.classification"
+              placeholder="请输入项目分类"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in projectSortOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="状态" prop="status">
+            <el-select
+              style="width:100%;"
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in collectTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button
+              type="cyan"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['projectApproval:appNgc:add']"
+          >新增</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['projectApproval:appNgc:edit']"
+          >修改</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['projectApproval:appNgc:remove']"
+          >删除</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['projectApproval:appNgc:export']"
+          >导出</el-button
+        >
+      </el-col>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
+    </el-row>
+
+    <el-table
+      v-loading="loading"
+      :data="appNgcList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="唯一ID" align="center" prop="id" v-if="show" />
+      <el-table-column label="申请编号" align="center" prop="reqNo" />
+      <el-table-column label="项目名称" align="center" prop="proName" />
+      <el-table-column label="项目类型" align="center" prop="proTypeName" />
+      <el-table-column label="项目分类" align="center" prop="className" />
+      <el-table-column
+        label="合同金额"
+        align="center"
+        prop="contractAmountTotal"
+      />
+      <el-table-column
+        label="不含税金额"
+        align="center"
+        prop="contractAmountTax"
+      />
+      <el-table-column
+        label="所属分公司名称"
+        align="center"
+        prop="belongCompanyname"
+      />
+
+      <el-table-column
+        label="所属部门名称"
+        align="center"
+        prop="belongDeptname"
+      />
+      <el-table-column label="状态说明" align="center" prop="statusPs" />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['projectApproval:appNgc:edit']"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['projectApproval:appNgc:remove']"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改非集客项目对话框 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="60%"
+      append-to-body
+      :rules="rules"
+    >
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="项目名称" prop="proName">
+              <el-input v-model="form.proName" placeholder="请输入项目名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="所属公司" prop="belongCompanyid">
+              <el-select
+                v-model="form.belongCompanyid"
+                placeholder="请输入所属分公司"
+                clearable
+                style="width:100%;"
+                size="small"
+              >
+                <el-option
+                  v-for="dict in belongCompanyNameList"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="所属部门" prop="belongDeptid">
+              <treeselect
+                v-model="form.belongDeptid"
+                :options="deptOptions"
+                :show-count="false"
+                placeholder="请选择所属部门"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="项目类型" prop="proType">
+              <el-select
+                v-model="form.proType"
+                style="width:100%;"
+                placeholder="请选择项目类型"
+              >
+                <el-option
+                  v-for="dict in proTypeNameList"
+                  :key="dict.id"
+                  :label="dict.typeName"
+                  :value="dict.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="项目分类" prop="classification">
+              <el-select
+                style="width:100%;"
+                v-model="form.classification"
+                placeholder="请输入项目分类"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in projectSortOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="合同金额" prop="contractAmountTotal">
+              <el-input
+                v-model="form.contractAmountTotal"
+                placeholder="请输入合同金额"
+                v-on:input="changeNum()"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="税率(%)" prop="taxrate">
+              <el-input
+                v-model="form.taxrate"
+                placeholder="请输入税率"
+                v-on:input="changeNum()"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="不含税金额" prop="contractAmountTax">
+              <el-input
+                v-model="form.contractAmountTax"
+                placeholder="不含税金额"
+    
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="税额(元)" prop="taxamount" >
+              <el-input
+                v-model="form.taxamount"
+             
+                placeholder="税额"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="申请原因" prop="reqReason">
+              <el-input
+                v-model="form.reqReason"
+                type="textarea"
+                placeholder="请输入内容"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="说明" prop="explainInfo">
+              <el-input
+                v-model="form.explainInfo"
+                type="textarea"
+                placeholder="请输入内容"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="附件" prop="files">
+          <el-upload
+            ref="field101"
+            :file-list="field101fileList"
+            :action="field101Action"
+            :headers="token"
+            :on-success="handleAvatarSuccess"
+            :on-remove="removeFile"
+            :auto-upload="autoUploadFalg"
+            multiple
+            :limit="20"
+            :before-upload="field101BeforeUpload"
+          >
+            <el-button slot="trigger" size="small" type="primary"
+              >选取文件</el-button
+            >
+            <!-- <div slot="tip" class="el-upload__tip">
+              只能上传jpg/png文件，且不超过500kb
+            </div> -->
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="success" @click="submitForm(0)">保 存</el-button>
+        <el-button type="primary" @click="submitForm(1)">提 交</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import {
+  findProjectType,
+  findBranchOffice,
+  delFileById,
+  findFileListByPid,
+  downloadfileById
+} from "@/api/utils";
+import { treeselect } from "@/api/system/dept";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { getToken } from "@/utils/auth";
+
+import {
+  listAppNgc,
+  getAppNgc,
+  delAppNgc,
+  addAppNgc,
+  updateAppNgc,
+  exportAppNgc
+} from "@/api/projectApproval/appNgc";
+
+export default {
+  name: "AppNgc",
+  components: {
+    Treeselect
+  },
+  data() {
+    return {
+      formData: {
+        field101: null
+      },
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      autoUploadFalg: true,
+      show: false,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: false,
+      // 总条数
+      total: 0,
+      // 非集客项目表格数据
+      appNgcList: [],
+      proTypeNameList: [],
+      belongCompanyNameList: [],
+      projectSortOptions: [],
+      deptOptions: [],
+      collectTypeOptions: [],
+      field101Action: "/dev-api/dictionary/fileManage/addSaveFile",
+      field101fileList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        classification: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        belongCompanyid: null,
+        belongCompanyname: null,
+        belongDeptid: null,
+        belongDeptname: null,
+        reqReason: null,
+        explainInfo: null,
+        files: null,
+        status: null,
+        statusPs: null,
+        remarks: null
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        proName: [
+          {
+            required: true,
+            message: "请输入项目名称",
+            trigger: "blur"
+          }
+        ],
+        belongCompanyid: [
+          {
+            required: true,
+            message: "请选择所属公司",
+            trigger: "blur"
+          }
+        ],
+        belongDeptid: [
+          {
+            required: true,
+            message: "请选择所属部门",
+            trigger: "blur"
+          }
+        ],
+        proType: [
+          {
+            required: true,
+            message: "请选择项目类型",
+            trigger: "blur"
+          }
+        ],
+        classification: [
+          {
+            required: true,
+            message: "请选择项目分类",
+            trigger: "blur"
+          }
+        ],
+        contractAmountTotal: [
+          {
+            required: true,
+            message: "请输入金额",
+            trigger: "blur"
+          },
+          {
+            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^[1-9]$)|(^\d\.[1-9]{1,2}$)|(^\d\.[0]{1}[1-9]{1}$|(^\d\.[1-9]{1}[0]{1}$)$)/,
+            message: "请正确输入金额",
+            trigger: "blur"
+          }
+        ],
+        taxrate: [
+          {
+            required: true,
+            message: "请输入税率",
+            trigger: "blur"
+          },
+          {
+            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^[1-9]$)|(^\d\.[1-9]{1,2}$)|(^\d\.[0]{1}[1-9]{1}$|(^\d\.[1-9]{1}[0]{1}$)$)/,
+            message: "请正确输入税率",
+            trigger: "blur"
+          }
+        ]
+      },
+      token: {}
+    };
+  },
+  created() {
+    this.getList();
+    this.getTreeselect();
+    findProjectType().then(response => {
+      this.proTypeNameList = response.data;
+    });
+    findBranchOffice().then(response => {
+      this.belongCompanyNameList = response.data;
+    });
+    this.getDicts("project_sort").then(response => {
+      this.projectSortOptions = response.data;
+    });
+    this.getDicts("collect_type").then(response => {
+      this.collectTypeOptions = response.data;
+    });
+  },
+  methods: {
+    /** 查询非集客项目列表 */
+    getList() {
+      this.loading = true;
+      listAppNgc(this.queryParams).then(response => {
+        this.appNgcList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    /** 文件上传检测 **/
+    field101BeforeUpload(file) {
+      let isRightSize = file.size / 1024 / 1024 < 2;
+      if (!isRightSize) {
+        this.$message.error("文件大小超过 2MB");
+      }
+      return isRightSize;
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        reqNo: null,
+        proName: null,
+        proType: null,
+        proTypeName: null,
+        classification: null,
+        contractAmountTotal: null,
+        contractAmountTax: null,
+        taxrate: null,
+        taxamount: null,
+        belongCompanyid: null,
+        belongCompanyname: null,
+        belongDeptid: null,
+        belongDeptname: null,
+        reqReason: null,
+        explainInfo: null,
+        files: null,
+        status: 0,
+        statusPs: null,
+        remarks: null,
+        delFlag: null
+      };
+      this.resetForm("form");
+    },
+    changeNum() {
+      let contractAmountTotal = this.form.contractAmountTotal;
+      let taxrate = this.form.taxrate;
+      if (contractAmountTotal && taxrate) {
+        /** 税率转换 **/
+        let taxrateStr = taxrate / 100;
+        this.form.contractAmountTax = this.formatPrice(
+          contractAmountTotal / (1 + taxrateStr)
+        );
+        this.form.taxamount = this.formatPrice(
+          contractAmountTotal - this.form.contractAmountTax
+        );
+      }
+    },
+    /** 格式化金额 **/
+    formatPrice(value) {
+      let tempVal = parseFloat(value).toFixed(3);
+      let realVal = tempVal.substring(0, tempVal.length - 1);
+      return realVal;
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加非集客项目";
+      /** 加入请求头 **/
+      this.token = { Authorization: getToken() };
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getAppNgc(id).then(response => {
+        this.form = response.data;
+        if (this.form.belongCompanyid) {
+          this.form.belongCompanyid = parseInt(this.form.belongCompanyid);
+        }
+        if (this.form.classification) {
+          this.form.classification = this.form.classification + "";
+        }
+        this.open = true;
+        this.title = "修改非集客项目";
+      });
+      /** 获取文件列表 **/
+      findFileListByPid(id).then(response => {
+        this.field101fileList = response.data;
+         console.log(this.field101fileList)
+      });
+    },
+    /** 提交按钮 */
+    submitForm(number) {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.form.status = number;
+          if (this.form.id != null) {
+            updateAppNgc(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addAppNgc(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm(
+        '是否确认删除非集客项目编号为"' + ids + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(function() {
+          return delAppNgc(ids);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        });
+    },
+    /** 上传文件成功操作 **/
+    handleAvatarSuccess(res, file, fileList) {
+      for (let index = 0; index < fileList.length; index++) {
+        const element = fileList[index];
+        if (element.uid == file.uid) {
+          element.uid = res.msg;
+        }
+      }
+      if (this.form.files) {
+        this.form.files += res.msg + ",";
+      } else {
+        this.form.files = res.msg + ",";
+      }
+    },
+    /** 删除文件操作 **/
+    removeFile(file, fileList) {
+      delFileById(file.uid).then(response => {
+        if (response.code == 200) {
+          this.form.files = null;
+          for (let index = 0; index < fileList.length; index++) {
+            const element = fileList[index];
+            if (this.form.files) {
+              this.form.files += element.uid + ",";
+            } else {
+              this.form.files = element.uid + ",";
+            }
+          }
+        }
+      });
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所有非集客项目数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return exportAppNgc(queryParams);
+        })
+        .then(response => {
+          this.download(response.msg);
+        });
+    }
+  }
+};
+</script>
+<style scoped  lang="scss">
+.el-textarea .el-textarea__inner {
+  resize: none;
+}
+</style>

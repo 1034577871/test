@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ruoyi.projectApproval.ApprovalNg.mapper.CtBuApprovalNgMapper">
+
+	<resultMap type="CtBuApprovalNg" id="CtBuApprovalNgResult">
+		<result property="id" column="id" />
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="reqNo" column="req_no" />
+		<result property="proName" column="pro_name" />
+		<result property="proType" column="pro_type" />
+		<result property="proTypeName" column="pro_type_name" />
+		<result property="belongCompanyid" column="belong_companyid" />
+		<result property="belongCompanyName"
+			column="belong_company_name" />
+		<result property="belongDeptid" column="belong_deptid" />
+		<result property="belongDeptName" column="belong_dept_name" />
+		<result property="contractAmountTotal"
+			column="contract_amount_total" />
+		<result property="contractAmountTax"
+			column="contract_amount_tax" />
+		<result property="taxrate" column="taxrate" />
+		<result property="taxamount" column="taxamount" />
+		<result property="status" column="status" />
+		<result property="statusPs" column="status_ps" />
+		<result property="remarks" column="remarks" />
+		<result property="delFlag" column="del_flag" />
+		<result property="instanceId" column="instance_id" />
+	</resultMap>
+
+	<sql id="selectCtBuApprovalNgVo">
+		select id, create_by, create_time, update_by, update_time, req_no, pro_name,
+		pro_type, pro_type_name, belong_companyid, belong_company_name,
+		belong_deptid, belong_dept_name, contract_amount_total,
+		contract_amount_tax, taxrate, taxamount, status, status_ps, remarks,
+		del_flag,instance_id from ct_bu_approval_ng
+	</sql>
+
+	<select id="selectCtBuApprovalNgList"
+		parameterType="CtBuApprovalNg" resultMap="CtBuApprovalNgResult">
+		<include refid="selectCtBuApprovalNgVo" />
+		<where>
+			del_flag = '1'
+			<if test="reqNo != null  and reqNo != ''"> and req_no = #{reqNo}</if>
+			<if test="proName != null  and proName != ''"> and pro_name like concat('%', #{proName}, '%')</if>
+			<if test="proType != null  and proType != ''"> and pro_type = #{proType}</if>
+			<if test="proTypeName != null  and proTypeName != ''"> and pro_type_name like concat('%', #{proTypeName}, '%')
+			</if>
+			<if test="belongCompanyid != null  and belongCompanyid != ''"> and belong_companyid = #{belongCompanyid}</if>
+			<if test="belongCompanyName != null  and belongCompanyName != ''"> and belong_company_name like concat('%',
+				#{belongCompanyName}, '%')</if>
+			<if test="belongDeptid != null  and belongDeptid != ''"> and belong_deptid = #{belongDeptid}</if>
+			<if test="belongDeptName != null  and belongDeptName != ''"> and belong_dept_name like concat('%', #{belongDeptName},
+				'%')</if>
+			<if test="contractAmountTotal != null "> and contract_amount_total = #{contractAmountTotal}</if>
+			<if test="contractAmountTax != null "> and contract_amount_tax = #{contractAmountTax}</if>
+			<if test="taxrate != null  and taxrate != ''"> and taxrate = #{taxrate}</if>
+			<if test="taxamount != null "> and taxamount = #{taxamount}</if>
+			<if test="status != null "> and status = #{status}</if>
+			<if test="statusPs != null  and statusPs != ''"> and status_ps = #{statusPs}</if>
+			<if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+			<if test="instanceId != null  and instanceId != ''"> and instance_id = #{instanceId}</if>
+		</where>
+		ORDER BY create_time DESC
+	</select>
+
+	<select id="selectCtBuApprovalNgById" parameterType="String"
+		resultMap="CtBuApprovalNgResult">
+		<include refid="selectCtBuApprovalNgVo" />
+		where id = #{id} and del_flag = '1'
+	</select>
+
+	<insert id="insertCtBuApprovalNg" parameterType="CtBuApprovalNg">
+		insert into ct_bu_approval_ng
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="createBy != null">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="reqNo != null">req_no,</if>
+			<if test="proName != null">pro_name,</if>
+			<if test="proType != null">pro_type,</if>
+			<if test="proTypeName != null">pro_type_name,</if>
+			<if test="belongCompanyid != null">belong_companyid,</if>
+			<if test="belongCompanyName != null">belong_company_name,</if>
+			<if test="belongDeptid != null">belong_deptid,</if>
+			<if test="belongDeptName != null">belong_dept_name,</if>
+			<if test="contractAmountTotal != null">contract_amount_total,</if>
+			<if test="contractAmountTax != null">contract_amount_tax,</if>
+			<if test="taxrate != null">taxrate,</if>
+			<if test="taxamount != null">taxamount,</if>
+			<if test="status != null">status,</if>
+			<if test="statusPs != null">status_ps,</if>
+			<if test="remarks != null">remarks,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="instanceId != null">instance_id,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="createBy != null">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="reqNo != null">#{reqNo},</if>
+			<if test="proName != null">#{proName},</if>
+			<if test="proType != null">#{proType},</if>
+			<if test="proTypeName != null">#{proTypeName},</if>
+			<if test="belongCompanyid != null">#{belongCompanyid},</if>
+			<if test="belongCompanyName != null">#{belongCompanyName},</if>
+			<if test="belongDeptid != null">#{belongDeptid},</if>
+			<if test="belongDeptName != null">#{belongDeptName},</if>
+			<if test="contractAmountTotal != null">#{contractAmountTotal},</if>
+			<if test="contractAmountTax != null">#{contractAmountTax},</if>
+			<if test="taxrate != null">#{taxrate},</if>
+			<if test="taxamount != null">#{taxamount},</if>
+			<if test="status != null">#{status},</if>
+			<if test="statusPs != null">#{statusPs},</if>
+			<if test="remarks != null">#{remarks},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="instanceId != null">#{instanceId},</if>
+		</trim>
+	</insert>
+
+	<update id="updateCtBuApprovalNg" parameterType="CtBuApprovalNg">
+		update ct_bu_approval_ng
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="createBy != null">create_by = #{createBy},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="reqNo != null">req_no = #{reqNo},</if>
+			<if test="proName != null">pro_name = #{proName},</if>
+			<if test="proType != null">pro_type = #{proType},</if>
+			<if test="proTypeName != null">pro_type_name = #{proTypeName},</if>
+			<if test="belongCompanyid != null">belong_companyid = #{belongCompanyid},</if>
+			<if test="belongCompanyName != null">belong_company_name = #{belongCompanyName},</if>
+			<if test="belongDeptid != null">belong_deptid = #{belongDeptid},</if>
+			<if test="belongDeptName != null">belong_dept_name = #{belongDeptName},</if>
+			<if test="contractAmountTotal != null">contract_amount_total = #{contractAmountTotal},</if>
+			<if test="contractAmountTax != null">contract_amount_tax = #{contractAmountTax},</if>
+			<if test="taxrate != null">taxrate = #{taxrate},</if>
+			<if test="taxamount != null">taxamount = #{taxamount},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="statusPs != null">status_ps = #{statusPs},</if>
+			<if test="remarks != null">remarks = #{remarks},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+			<if test="instanceId != null">instance_id = #{instanceId},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+<!-- 	<delete id="deleteCtBuApprovalNgById" parameterType="String">
+		delete from ct_bu_approval_ng where id = #{id}
+	</delete> -->
+	
+	<update id="deleteCtBuApprovalNgById" parameterType="String">
+		update ct_bu_approval_ng set del_flag = '2' where id = #{id}
+	</update>
+
+	<delete id="deleteCtBuApprovalNgByIds" parameterType="String">
+		delete from ct_bu_approval_ng where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

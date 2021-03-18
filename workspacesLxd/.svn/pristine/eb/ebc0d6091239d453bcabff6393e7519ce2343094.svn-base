@@ -1,0 +1,14 @@
+package com.ruoyi.collection.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class test {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("john");
+        list.add("cc");
+        String str = org.apache.commons.lang.StringUtils.join(list.toArray(),",");
+        System.out.println(str);
+    }
+}

@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.ruoyi.projectApproval.AppxNgReq.mapper.AppxNgReqMapper">
+
+    <resultMap type="AppxNgReq" id="AppxNgReqResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="bid" column="bid"/>
+        <result property="applyCompany" column="apply_company"/>
+        <result property="appxNgNo" column="appx_ng_no"/>
+        <result property="appxNgName" column="appx_ng_name"/>
+        <result property="proType" column="pro_type"/>
+        <result property="applyDate" column="apply_date"/>
+        <result property="tranrevenue" column="tranrevenue"/>
+        <result property="trantaxrate" column="trantaxrate"/>
+        <result property="tranrevenueno" column="tranrevenueno"/>
+        <result property="tranoutput" column="tranoutput"/>
+        <result property="tranremarks" column="tranremarks"/>
+        <result property="devicerevenue" column="devicerevenue"/>
+        <result property="devicetaxrate" column="devicetaxrate"/>
+        <result property="devicerevenueno" column="devicerevenueno"/>
+        <result property="deviceoutput" column="deviceoutput"/>
+        <result property="deviceremarks" column="deviceremarks"/>
+        <result property="serverevenue" column="serverevenue"/>
+        <result property="servetaxrate" column="servetaxrate"/>
+        <result property="serverevenueno" column="serverevenueno"/>
+        <result property="serveoutput" column="serveoutput"/>
+        <result property="serveremarks" column="serveremarks"/>
+        <result property="projectrevenue" column="projectrevenue"/>
+        <result property="projecttaxrate" column="projecttaxrate"/>
+        <result property="projectrevenueno" column="projectrevenueno"/>
+        <result property="projectoutput" column="projectoutput"/>
+        <result property="projectremarks" column="projectremarks"/>
+        <result property="leaserevenue" column="leaserevenue"/>
+        <result property="leasetaxrate" column="leasetaxrate"/>
+        <result property="leaserevenueno" column="leaserevenueno"/>
+        <result property="leaseoutput" column="leaseoutput"/>
+        <result property="leaseremarks" column="leaseremarks"/>
+        <result property="softwarerevenue" column="softwarerevenue"/>
+        <result property="softwaretaxrate" column="softwaretaxrate"/>
+        <result property="softwarerevenueno" column="softwarerevenueno"/>
+        <result property="softwareoutput" column="softwareoutput"/>
+        <result property="softwareremarks" column="softwareremarks"/>
+        <result property="advertrevenue" column="advertrevenue"/>
+        <result property="adverttaxrate" column="adverttaxrate"/>
+        <result property="advertrevenueno" column="advertrevenueno"/>
+        <result property="advertoutput" column="advertoutput"/>
+        <result property="advertremarks" column="advertremarks"/>
+        <result property="incomerevenue" column="incomerevenue"/>
+        <result property="incomerevenueno" column="incomerevenueno"/>
+        <result property="incomeoutput" column="incomeoutput"/>
+        <result property="devicecostmoney" column="devicecostmoney"/>
+        <result property="devicecosttaxrate" column="devicecosttaxrate"/>
+        <result property="devicecostmoneyno" column="devicecostmoneyno"/>
+        <result property="devicecostincome" column="devicecostincome"/>
+        <result property="devicecostremarks" column="devicecostremarks"/>
+        <result property="stuffcostmoney" column="stuffcostmoney"/>
+        <result property="stuffcosttaxrate" column="stuffcosttaxrate"/>
+        <result property="stuffcostmoneyno" column="stuffcostmoneyno"/>
+        <result property="stuffcostincome" column="stuffcostincome"/>
+        <result property="stuffcostremarks" column="stuffcostremarks"/>
+        <result property="turncostmoney" column="turncostmoney"/>
+        <result property="turncosttaxrate" column="turncosttaxrate"/>
+        <result property="turncostmoneyno" column="turncostmoneyno"/>
+        <result property="turncostincome" column="turncostincome"/>
+        <result property="turncostremarks" column="turncostremarks"/>
+        <result property="servecostmoney" column="servecostmoney"/>
+        <result property="servecosttaxrate" column="servecosttaxrate"/>
+        <result property="servecostmoneyno" column="servecostmoneyno"/>
+        <result property="servecostincome" column="servecostincome"/>
+        <result property="servecostremarks" column="servecostremarks"/>
+        <result property="buildcostmoney" column="buildcostmoney"/>
+        <result property="buildcosttaxrate" column="buildcosttaxrate"/>
+        <result property="buildcostmoneyno" column="buildcostmoneyno"/>
+        <result property="buildcostincome" column="buildcostincome"/>
+        <result property="buildcostremarks" column="buildcostremarks"/>
+        <result property="havedevicemoney" column="havedevicemoney"/>
+        <result property="havedevicetaxrate" column="havedevicetaxrate"/>
+        <result property="havedevicemoneyno" column="havedevicemoneyno"/>
+        <result property="havedeviceincome" column="havedeviceincome"/>
+        <result property="havedeviceremarks" column="havedeviceremarks"/>
+        <result property="havelinemoney" column="havelinemoney"/>
+        <result property="havelinetaxrate" column="havelinetaxrate"/>
+        <result property="havelinemoneyno" column="havelinemoneyno"/>
+        <result property="havelineincome" column="havelineincome"/>
+        <result property="upholdcostmoney" column="upholdcostmoney"/>
+        <result property="upholdcosttaxrate" column="upholdcosttaxrate"/>
+        <result property="upholdcostmoneyno" column="upholdcostmoneyno"/>
+        <result property="upholdcostincome" column="upholdcostincome"/>
+        <result property="upholdcostremarks" column="upholdcostremarks"/>
+        <result property="othercostmoney" column="othercostmoney"/>
+        <result property="othercosttaxrate" column="othercosttaxrate"/>
+        <result property="othercostmoneyno" column="othercostmoneyno"/>
+        <result property="othercostincome" column="othercostincome"/>
+        <result property="othercostremarks" column="othercostremarks"/>
+        <result property="interestcostmoney" column="interestcostmoney"/>
+        <result property="interestcosttaxrate"
+                column="interestcosttaxrate"/>
+        <result property="interestcostmoneyno"
+                column="interestcostmoneyno"/>
+        <result property="interestcostincome"
+                column="interestcostincome"/>
+        <result property="interestcostremarks"
+                column="interestcostremarks"/>
+        <result property="costmoney" column="costmoney"/>
+        <result property="costmoneyno" column="costmoneyno"/>
+        <result property="costincome" column="costincome"/>
+        <result property="incrementtaxrate" column="incrementtaxrate"/>
+        <result property="incrementremarks" column="incrementremarks"/>
+        <result property="attachtaxrate" column="attachtaxrate"/>
+        <result property="attachremarks" column="attachremarks"/>
+        <result property="culturebuild" column="culturebuild"/>
+        <result property="culturebuildremarks"
+                column="culturebuildremarks"/>
+        <result property="estimateprofit" column="estimateprofit"/>
+        <result property="estimateprofitremarks"
+                column="estimateprofitremarks"/>
+        <result property="epmargin" column="epmargin"/>
+        <result property="epmarginremarks" column="epmarginremarks"/>
+        <result property="remarks" column="remarks"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectAppxNgReqVo">
+		select id, create_by, create_time, update_by, update_time,
+		bid,apply_company,appx_ng_no
+		,appx_ng_name,pro_type,apply_date,tranrevenue,
+		trantaxrate,
+		tranrevenueno, tranoutput, tranremarks, devicerevenue,
+		devicetaxrate,
+		devicerevenueno, deviceoutput, deviceremarks,
+		serverevenue,
+		servetaxrate, serverevenueno, serveoutput, serveremarks,
+		projectrevenue, projecttaxrate, projectrevenueno, projectoutput,
+		projectremarks, leaserevenue, leasetaxrate, leaserevenueno,
+		leaseoutput, leaseremarks, softwarerevenue, softwaretaxrate,
+		softwarerevenueno, softwareoutput, softwareremarks, advertrevenue,
+		adverttaxrate, advertrevenueno, advertoutput, advertremarks,
+		incomerevenue, incomerevenueno, incomeoutput, devicecostmoney,
+		devicecosttaxrate, devicecostmoneyno, devicecostincome,
+		devicecostremarks, stuffcostmoney, stuffcosttaxrate, stuffcostmoneyno,
+		stuffcostincome, stuffcostremarks, turncostmoney, turncosttaxrate,
+		turncostmoneyno, turncostincome, turncostremarks, servecostmoney,
+		servecosttaxrate, servecostmoneyno, servecostincome, servecostremarks,
+		buildcostmoney, buildcosttaxrate, buildcostmoneyno, buildcostincome,
+		buildcostremarks, havedevicemoney, havedevicetaxrate,
+		havedevicemoneyno, havedeviceincome, havedeviceremarks, havelinemoney,
+		havelinetaxrate, havelinemoneyno, havelineincome, upholdcostmoney,
+		upholdcosttaxrate, upholdcostmoneyno, upholdcostincome,
+		upholdcostremarks, othercostmoney, othercosttaxrate, othercostmoneyno,
+		othercostincome, othercostremarks, interestcostmoney,
+		interestcosttaxrate, interestcostmoneyno, interestcostincome,
+		interestcostremarks, costmoney, costmoneyno, costincome,
+		incrementtaxrate, incrementremarks, attachtaxrate, attachremarks,
+		culturebuild, culturebuildremarks, estimateprofit,
+		estimateprofitremarks, epmargin, epmarginremarks, remarks, del_flag
+		from ct_bu_approvaldt_ng_req
+	</sql>
+
+    <select id="selectAppxNgReqList" parameterType="AppxNgReq"
+            resultMap="AppxNgReqResult">
+        <include refid="selectAppxNgReqVo"/>
+        <where>
+            del_flag = '1'
+            <if test="bid != null  and bid != ''">and bid = #{bid}</if>
+            <if test="tranrevenue != null ">and tranrevenue = #{tranrevenue}</if>
+            <if test="trantaxrate != null ">and trantaxrate = #{trantaxrate}</if>
+            <if test="tranrevenueno != null ">and tranrevenueno = #{tranrevenueno}</if>
+            <if test="tranoutput != null ">and tranoutput = #{tranoutput}</if>
+            <if test="tranremarks != null  and tranremarks != ''">and tranremarks = #{tranremarks}</if>
+            <if test="devicerevenue != null ">and devicerevenue = #{devicerevenue}</if>
+            <if test="devicetaxrate != null ">and devicetaxrate = #{devicetaxrate}</if>
+            <if test="devicerevenueno != null ">and devicerevenueno = #{devicerevenueno}</if>
+            <if test="deviceoutput != null ">and deviceoutput = #{deviceoutput}</if>
+            <if test="deviceremarks != null  and deviceremarks != ''">and deviceremarks = #{deviceremarks}</if>
+            <if test="serverevenue != null ">and serverevenue = #{serverevenue}</if>
+            <if test="servetaxrate != null ">and servetaxrate = #{servetaxrate}</if>
+            <if test="serverevenueno != null ">and serverevenueno = #{serverevenueno}</if>
+            <if test="serveoutput != null ">and serveoutput = #{serveoutput}</if>
+            <if test="serveremarks != null  and serveremarks != ''">and serveremarks = #{serveremarks}</if>
+            <if test="projectrevenue != null ">and projectrevenue = #{projectrevenue}</if>
+            <if test="projecttaxrate != null ">and projecttaxrate = #{projecttaxrate}</if>
+            <if test="projectrevenueno != null ">and projectrevenueno = #{projectrevenueno}</if>
+            <if test="projectoutput != null ">and projectoutput = #{projectoutput}</if>
+            <if test="projectremarks != null  and projectremarks != ''">and projectremarks = #{projectremarks}</if>
+            <if test="leaserevenue != null ">and leaserevenue = #{leaserevenue}</if>
+            <if test="leasetaxrate != null ">and leasetaxrate = #{leasetaxrate}</if>
+            <if test="leaserevenueno != null ">and leaserevenueno = #{leaserevenueno}</if>
+            <if test="leaseoutput != null ">and leaseoutput = #{leaseoutput}</if>
+            <if test="leaseremarks != null  and leaseremarks != ''">and leaseremarks = #{leaseremarks}</if>
+            <if test="softwarerevenue != null ">and softwarerevenue = #{softwarerevenue}</if>
+            <if test="softwaretaxrate != null ">and softwaretaxrate = #{softwaretaxrate}</if>
+            <if test="softwarerevenueno != null ">and softwarerevenueno = #{softwarerevenueno}</if>
+            <if test="softwareoutput != null ">and softwareoutput = #{softwareoutput}</if>
+            <if test="softwareremarks != null  and softwareremarks != ''">and softwareremarks = #{softwareremarks}</if>
+            <if test="advertrevenue != null ">and advertrevenue = #{advertrevenue}</if>
+            <if test="adverttaxrate != null ">and adverttaxrate = #{adverttaxrate}</if>
+            <if test="advertrevenueno != null ">and advertrevenueno = #{advertrevenueno}</if>
+            <if test="advertoutput != null ">and advertoutput = #{advertoutput}</if>
+            <if test="advertremarks != null  and advertremarks != ''">and advertremarks = #{advertremarks}</if>
+            <if test="incomerevenue != null ">and incomerevenue = #{incomerevenue}</if>
+            <if test="incomerevenueno != null ">and incomerevenueno = #{incomerevenueno}</if>
+            <if test="incomeoutput != null ">and incomeoutput = #{incomeoutput}</if>
+            <if test="devicecostmoney != null ">and devicecostmoney = #{devicecostmoney}</if>
+            <if test="devicecosttaxrate != null ">and devicecosttaxrate = #{devicecosttaxrate}</if>
+            <if test="devicecostmoneyno != null ">and devicecostmoneyno = #{devicecostmoneyno}</if>
+            <if test="devicecostincome != null ">and devicecostincome = #{devicecostincome}</if>
+            <if test="devicecostremarks != null  and devicecostremarks != ''">and devicecostremarks =
+                #{devicecostremarks}
+            </if>
+            <if test="stuffcostmoney != null ">and stuffcostmoney = #{stuffcostmoney}</if>
+            <if test="stuffcosttaxrate != null ">and stuffcosttaxrate = #{stuffcosttaxrate}</if>
+            <if test="stuffcostmoneyno != null ">and stuffcostmoneyno = #{stuffcostmoneyno}</if>
+            <if test="stuffcostincome != null ">and stuffcostincome = #{stuffcostincome}</if>
+            <if test="stuffcostremarks != null  and stuffcostremarks != ''">and stuffcostremarks = #{stuffcostremarks}
+            </if>
+            <if test="turncostmoney != null ">and turncostmoney = #{turncostmoney}</if>
+            <if test="turncosttaxrate != null ">and turncosttaxrate = #{turncosttaxrate}</if>
+            <if test="turncostmoneyno != null ">and turncostmoneyno = #{turncostmoneyno}</if>
+            <if test="turncostincome != null ">and turncostincome = #{turncostincome}</if>
+            <if test="turncostremarks != null  and turncostremarks != ''">and turncostremarks = #{turncostremarks}</if>
+            <if test="servecostmoney != null ">and servecostmoney = #{servecostmoney}</if>
+            <if test="servecosttaxrate != null ">and servecosttaxrate = #{servecosttaxrate}</if>
+            <if test="servecostmoneyno != null ">and servecostmoneyno = #{servecostmoneyno}</if>
+            <if test="servecostincome != null ">and servecostincome = #{servecostincome}</if>
+            <if test="servecostremarks != null  and servecostremarks != ''">and servecostremarks = #{servecostremarks}
+            </if>
+            <if test="buildcostmoney != null ">and buildcostmoney = #{buildcostmoney}</if>
+            <if test="buildcosttaxrate != null ">and buildcosttaxrate = #{buildcosttaxrate}</if>
+            <if test="buildcostmoneyno != null ">and buildcostmoneyno = #{buildcostmoneyno}</if>
+            <if test="buildcostincome != null ">and buildcostincome = #{buildcostincome}</if>
+            <if test="buildcostremarks != null  and buildcostremarks != ''">and buildcostremarks = #{buildcostremarks}
+            </if>
+            <if test="havedevicemoney != null ">and havedevicemoney = #{havedevicemoney}</if>
+            <if test="havedevicetaxrate != null ">and havedevicetaxrate = #{havedevicetaxrate}</if>
+            <if test="havedevicemoneyno != null ">and havedevicemoneyno = #{havedevicemoneyno}</if>
+            <if test="havedeviceincome != null ">and havedeviceincome = #{havedeviceincome}</if>
+            <if test="havedeviceremarks != null  and havedeviceremarks != ''">and havedeviceremarks =
+                #{havedeviceremarks}
+            </if>
+            <if test="havelinemoney != null ">and havelinemoney = #{havelinemoney}</if>
+            <if test="havelinetaxrate != null ">and havelinetaxrate = #{havelinetaxrate}</if>
+            <if test="havelinemoneyno != null ">and havelinemoneyno = #{havelinemoneyno}</if>
+            <if test="havelineincome != null ">and havelineincome = #{havelineincome}</if>
+            <if test="upholdcostmoney != null ">and upholdcostmoney = #{upholdcostmoney}</if>
+            <if test="upholdcosttaxrate != null ">and upholdcosttaxrate = #{upholdcosttaxrate}</if>
+            <if test="upholdcostmoneyno != null ">and upholdcostmoneyno = #{upholdcostmoneyno}</if>
+            <if test="upholdcostincome != null ">and upholdcostincome = #{upholdcostincome}</if>
+            <if test="upholdcostremarks != null  and upholdcostremarks != ''">and upholdcostremarks =
+                #{upholdcostremarks}
+            </if>
+            <if test="othercostmoney != null ">and othercostmoney = #{othercostmoney}</if>
+            <if test="othercosttaxrate != null ">and othercosttaxrate = #{othercosttaxrate}</if>
+            <if test="othercostmoneyno != null ">and othercostmoneyno = #{othercostmoneyno}</if>
+            <if test="othercostincome != null ">and othercostincome = #{othercostincome}</if>
+            <if test="othercostremarks != null  and othercostremarks != ''">and othercostremarks = #{othercostremarks}
+            </if>
+            <if test="interestcostmoney != null ">and interestcostmoney = #{interestcostmoney}</if>
+            <if test="interestcosttaxrate != null ">and interestcosttaxrate = #{interestcosttaxrate}</if>
+            <if test="interestcostmoneyno != null ">and interestcostmoneyno = #{interestcostmoneyno}</if>
+            <if test="interestcostincome != null ">and interestcostincome = #{interestcostincome}</if>
+            <if
+                    test="interestcostremarks != null  and interestcostremarks != ''">and interestcostremarks =
+                #{interestcostremarks}
+            </if>
+            <if test="costmoney != null ">and costmoney = #{costmoney}</if>
+            <if test="costmoneyno != null ">and costmoneyno = #{costmoneyno}</if>
+            <if test="costincome != null ">and costincome = #{costincome}</if>
+            <if test="incrementtaxrate != null ">and incrementtaxrate = #{incrementtaxrate}</if>
+            <if test="incrementremarks != null  and incrementremarks != ''">and incrementremarks = #{incrementremarks}
+            </if>
+            <if test="attachtaxrate != null ">and attachtaxrate = #{attachtaxrate}</if>
+            <if test="attachremarks != null  and attachremarks != ''">and attachremarks = #{attachremarks}</if>
+            <if test="culturebuild != null ">and culturebuild = #{culturebuild}</if>
+            <if
+                    test="culturebuildremarks != null  and culturebuildremarks != ''">and culturebuildremarks =
+                #{culturebuildremarks}
+            </if>
+            <if test="estimateprofit != null ">and estimateprofit = #{estimateprofit}</if>
+            <if
+                    test="estimateprofitremarks != null  and estimateprofitremarks != ''">and estimateprofitremarks =
+                #{estimateprofitremarks}
+            </if>
+            <if test="epmargin != null ">and epmargin = #{epmargin}</if>
+            <if test="epmarginremarks != null  and epmarginremarks != ''">and epmarginremarks = #{epmarginremarks}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+        </where>
+    </select>
+
+    <select id="selectAppxNgReqById" parameterType="String"
+            resultMap="AppxNgReqResult">
+        <include refid="selectAppxNgReqVo"/>
+        where id = #{id} and del_flag = '1'
+    </select>
+
+    <select id="selectAppxNgReqByBid" parameterType="String"
+            resultMap="AppxNgReqResult">
+        <include refid="selectAppxNgReqVo"/>
+        where bid = #{id} and del_flag = '1'
+    </select>
+
+    <insert id="insertAppxNgReq" parameterType="AppxNgReq">
+        insert into ct_bu_approvaldt_ng_req
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="bid != null">bid,</if>
+            <if test="applyCompany != null ">apply_company,</if>
+            <if test="appxNgNo != null ">appx_ng_no,</if>
+            <if test="appxNgName != null ">appx_ng_name,</if>
+            <if test="proType != null  ">pro_type,</if>
+            <if test="applyDate != null ">apply_date,</if>
+            <if test="tranrevenue != null">tranrevenue,</if>
+            <if test="trantaxrate != null">trantaxrate,</if>
+            <if test="tranrevenueno != null">tranrevenueno,</if>
+            <if test="tranoutput != null">tranoutput,</if>
+            <if test="tranremarks != null">tranremarks,</if>
+            <if test="devicerevenue != null">devicerevenue,</if>
+            <if test="devicetaxrate != null">devicetaxrate,</if>
+            <if test="devicerevenueno != null">devicerevenueno,</if>
+            <if test="deviceoutput != null">deviceoutput,</if>
+            <if test="deviceremarks != null">deviceremarks,</if>
+            <if test="serverevenue != null">serverevenue,</if>
+            <if test="servetaxrate != null">servetaxrate,</if>
+            <if test="serverevenueno != null">serverevenueno,</if>
+            <if test="serveoutput != null">serveoutput,</if>
+            <if test="serveremarks != null">serveremarks,</if>
+            <if test="projectrevenue != null">projectrevenue,</if>
+            <if test="projecttaxrate != null">projecttaxrate,</if>
+            <if test="projectrevenueno != null">projectrevenueno,</if>
+            <if test="projectoutput != null">projectoutput,</if>
+            <if test="projectremarks != null">projectremarks,</if>
+            <if test="leaserevenue != null">leaserevenue,</if>
+            <if test="leasetaxrate != null">leasetaxrate,</if>
+            <if test="leaserevenueno != null">leaserevenueno,</if>
+            <if test="leaseoutput != null">leaseoutput,</if>
+            <if test="leaseremarks != null">leaseremarks,</if>
+            <if test="softwarerevenue != null">softwarerevenue,</if>
+            <if test="softwaretaxrate != null">softwaretaxrate,</if>
+            <if test="softwarerevenueno != null">softwarerevenueno,</if>
+            <if test="softwareoutput != null">softwareoutput,</if>
+            <if test="softwareremarks != null">softwareremarks,</if>
+            <if test="advertrevenue != null">advertrevenue,</if>
+            <if test="adverttaxrate != null">adverttaxrate,</if>
+            <if test="advertrevenueno != null">advertrevenueno,</if>
+            <if test="advertoutput != null">advertoutput,</if>
+            <if test="advertremarks != null">advertremarks,</if>
+            <if test="incomerevenue != null">incomerevenue,</if>
+            <if test="incomerevenueno != null">incomerevenueno,</if>
+            <if test="incomeoutput != null">incomeoutput,</if>
+            <if test="devicecostmoney != null">devicecostmoney,</if>
+            <if test="devicecosttaxrate != null">devicecosttaxrate,</if>
+            <if test="devicecostmoneyno != null">devicecostmoneyno,</if>
+            <if test="devicecostincome != null">devicecostincome,</if>
+            <if test="devicecostremarks != null">devicecostremarks,</if>
+            <if test="stuffcostmoney != null">stuffcostmoney,</if>
+            <if test="stuffcosttaxrate != null">stuffcosttaxrate,</if>
+            <if test="stuffcostmoneyno != null">stuffcostmoneyno,</if>
+            <if test="stuffcostincome != null">stuffcostincome,</if>
+            <if test="stuffcostremarks != null">stuffcostremarks,</if>
+            <if test="turncostmoney != null">turncostmoney,</if>
+            <if test="turncosttaxrate != null">turncosttaxrate,</if>
+            <if test="turncostmoneyno != null">turncostmoneyno,</if>
+            <if test="turncostincome != null">turncostincome,</if>
+            <if test="turncostremarks != null">turncostremarks,</if>
+            <if test="servecostmoney != null">servecostmoney,</if>
+            <if test="servecosttaxrate != null">servecosttaxrate,</if>
+            <if test="servecostmoneyno != null">servecostmoneyno,</if>
+            <if test="servecostincome != null">servecostincome,</if>
+            <if test="servecostremarks != null">servecostremarks,</if>
+            <if test="buildcostmoney != null">buildcostmoney,</if>
+            <if test="buildcosttaxrate != null">buildcosttaxrate,</if>
+            <if test="buildcostmoneyno != null">buildcostmoneyno,</if>
+            <if test="buildcostincome != null">buildcostincome,</if>
+            <if test="buildcostremarks != null">buildcostremarks,</if>
+            <if test="havedevicemoney != null">havedevicemoney,</if>
+            <if test="havedevicetaxrate != null">havedevicetaxrate,</if>
+            <if test="havedevicemoneyno != null">havedevicemoneyno,</if>
+            <if test="havedeviceincome != null">havedeviceincome,</if>
+            <if test="havedeviceremarks != null">havedeviceremarks,</if>
+            <if test="havelinemoney != null">havelinemoney,</if>
+            <if test="havelinetaxrate != null">havelinetaxrate,</if>
+            <if test="havelinemoneyno != null">havelinemoneyno,</if>
+            <if test="havelineincome != null">havelineincome,</if>
+            <if test="upholdcostmoney != null">upholdcostmoney,</if>
+            <if test="upholdcosttaxrate != null">upholdcosttaxrate,</if>
+            <if test="upholdcostmoneyno != null">upholdcostmoneyno,</if>
+            <if test="upholdcostincome != null">upholdcostincome,</if>
+            <if test="upholdcostremarks != null">upholdcostremarks,</if>
+            <if test="othercostmoney != null">othercostmoney,</if>
+            <if test="othercosttaxrate != null">othercosttaxrate,</if>
+            <if test="othercostmoneyno != null">othercostmoneyno,</if>
+            <if test="othercostincome != null">othercostincome,</if>
+            <if test="othercostremarks != null">othercostremarks,</if>
+            <if test="interestcostmoney != null">interestcostmoney,</if>
+            <if test="interestcosttaxrate != null">interestcosttaxrate,</if>
+            <if test="interestcostmoneyno != null">interestcostmoneyno,</if>
+            <if test="interestcostincome != null">interestcostincome,</if>
+            <if test="interestcostremarks != null">interestcostremarks,</if>
+            <if test="costmoney != null">costmoney,</if>
+            <if test="costmoneyno != null">costmoneyno,</if>
+            <if test="costincome != null">costincome,</if>
+            <if test="incrementtaxrate != null">incrementtaxrate,</if>
+            <if test="incrementremarks != null">incrementremarks,</if>
+            <if test="attachtaxrate != null">attachtaxrate,</if>
+            <if test="attachremarks != null">attachremarks,</if>
+            <if test="culturebuild != null">culturebuild,</if>
+            <if test="culturebuildremarks != null">culturebuildremarks,</if>
+            <if test="estimateprofit != null">estimateprofit,</if>
+            <if test="estimateprofitremarks != null">estimateprofitremarks,</if>
+            <if test="epmargin != null">epmargin,</if>
+            <if test="epmarginremarks != null">epmarginremarks,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="bid != null">#{bid},</if>
+            <if test="applyCompany != null ">#{applyCompany},</if>
+            <if test="appxNgNo != null ">#{appxNgNo},</if>
+            <if test="appxNgName != null ">#{appxNgName},</if>
+            <if test="proType != null ">#{proType},</if>
+            <if test="applyDate != null ">#{applyDate},</if>
+            <if test="tranrevenue != null">#{tranrevenue},</if>
+            <if test="trantaxrate != null">#{trantaxrate},</if>
+            <if test="tranrevenueno != null">#{tranrevenueno},</if>
+            <if test="tranoutput != null">#{tranoutput},</if>
+            <if test="tranremarks != null">#{tranremarks},</if>
+            <if test="devicerevenue != null">#{devicerevenue},</if>
+            <if test="devicetaxrate != null">#{devicetaxrate},</if>
+            <if test="devicerevenueno != null">#{devicerevenueno},</if>
+            <if test="deviceoutput != null">#{deviceoutput},</if>
+            <if test="deviceremarks != null">#{deviceremarks},</if>
+            <if test="serverevenue != null">#{serverevenue},</if>
+            <if test="servetaxrate != null">#{servetaxrate},</if>
+            <if test="serverevenueno != null">#{serverevenueno},</if>
+            <if test="serveoutput != null">#{serveoutput},</if>
+            <if test="serveremarks != null">#{serveremarks},</if>
+            <if test="projectrevenue != null">#{projectrevenue},</if>
+            <if test="projecttaxrate != null">#{projecttaxrate},</if>
+            <if test="projectrevenueno != null">#{projectrevenueno},</if>
+            <if test="projectoutput != null">#{projectoutput},</if>
+            <if test="projectremarks != null">#{projectremarks},</if>
+            <if test="leaserevenue != null">#{leaserevenue},</if>
+            <if test="leasetaxrate != null">#{leasetaxrate},</if>
+            <if test="leaserevenueno != null">#{leaserevenueno},</if>
+            <if test="leaseoutput != null">#{leaseoutput},</if>
+            <if test="leaseremarks != null">#{leaseremarks},</if>
+            <if test="softwarerevenue != null">#{softwarerevenue},</if>
+            <if test="softwaretaxrate != null">#{softwaretaxrate},</if>
+            <if test="softwarerevenueno != null">#{softwarerevenueno},</if>
+            <if test="softwareoutput != null">#{softwareoutput},</if>
+            <if test="softwareremarks != null">#{softwareremarks},</if>
+            <if test="advertrevenue != null">#{advertrevenue},</if>
+            <if test="adverttaxrate != null">#{adverttaxrate},</if>
+            <if test="advertrevenueno != null">#{advertrevenueno},</if>
+            <if test="advertoutput != null">#{advertoutput},</if>
+            <if test="advertremarks != null">#{advertremarks},</if>
+            <if test="incomerevenue != null">#{incomerevenue},</if>
+            <if test="incomerevenueno != null">#{incomerevenueno},</if>
+            <if test="incomeoutput != null">#{incomeoutput},</if>
+            <if test="devicecostmoney != null">#{devicecostmoney},</if>
+            <if test="devicecosttaxrate != null">#{devicecosttaxrate},</if>
+            <if test="devicecostmoneyno != null">#{devicecostmoneyno},</if>
+            <if test="devicecostincome != null">#{devicecostincome},</if>
+            <if test="devicecostremarks != null">#{devicecostremarks},</if>
+            <if test="stuffcostmoney != null">#{stuffcostmoney},</if>
+            <if test="stuffcosttaxrate != null">#{stuffcosttaxrate},</if>
+            <if test="stuffcostmoneyno != null">#{stuffcostmoneyno},</if>
+            <if test="stuffcostincome != null">#{stuffcostincome},</if>
+            <if test="stuffcostremarks != null">#{stuffcostremarks},</if>
+            <if test="turncostmoney != null">#{turncostmoney},</if>
+            <if test="turncosttaxrate != null">#{turncosttaxrate},</if>
+            <if test="turncostmoneyno != null">#{turncostmoneyno},</if>
+            <if test="turncostincome != null">#{turncostincome},</if>
+            <if test="turncostremarks != null">#{turncostremarks},</if>
+            <if test="servecostmoney != null">#{servecostmoney},</if>
+            <if test="servecosttaxrate != null">#{servecosttaxrate},</if>
+            <if test="servecostmoneyno != null">#{servecostmoneyno},</if>
+            <if test="servecostincome != null">#{servecostincome},</if>
+            <if test="servecostremarks != null">#{servecostremarks},</if>
+            <if test="buildcostmoney != null">#{buildcostmoney},</if>
+            <if test="buildcosttaxrate != null">#{buildcosttaxrate},</if>
+            <if test="buildcostmoneyno != null">#{buildcostmoneyno},</if>
+            <if test="buildcostincome != null">#{buildcostincome},</if>
+            <if test="buildcostremarks != null">#{buildcostremarks},</if>
+            <if test="havedevicemoney != null">#{havedevicemoney},</if>
+            <if test="havedevicetaxrate != null">#{havedevicetaxrate},</if>
+            <if test="havedevicemoneyno != null">#{havedevicemoneyno},</if>
+            <if test="havedeviceincome != null">#{havedeviceincome},</if>
+            <if test="havedeviceremarks != null">#{havedeviceremarks},</if>
+            <if test="havelinemoney != null">#{havelinemoney},</if>
+            <if test="havelinetaxrate != null">#{havelinetaxrate},</if>
+            <if test="havelinemoneyno != null">#{havelinemoneyno},</if>
+            <if test="havelineincome != null">#{havelineincome},</if>
+            <if test="upholdcostmoney != null">#{upholdcostmoney},</if>
+            <if test="upholdcosttaxrate != null">#{upholdcosttaxrate},</if>
+            <if test="upholdcostmoneyno != null">#{upholdcostmoneyno},</if>
+            <if test="upholdcostincome != null">#{upholdcostincome},</if>
+            <if test="upholdcostremarks != null">#{upholdcostremarks},</if>
+            <if test="othercostmoney != null">#{othercostmoney},</if>
+            <if test="othercosttaxrate != null">#{othercosttaxrate},</if>
+            <if test="othercostmoneyno != null">#{othercostmoneyno},</if>
+            <if test="othercostincome != null">#{othercostincome},</if>
+            <if test="othercostremarks != null">#{othercostremarks},</if>
+            <if test="interestcostmoney != null">#{interestcostmoney},</if>
+            <if test="interestcosttaxrate != null">#{interestcosttaxrate},</if>
+            <if test="interestcostmoneyno != null">#{interestcostmoneyno},</if>
+            <if test="interestcostincome != null">#{interestcostincome},</if>
+            <if test="interestcostremarks != null">#{interestcostremarks},</if>
+            <if test="costmoney != null">#{costmoney},</if>
+            <if test="costmoneyno != null">#{costmoneyno},</if>
+            <if test="costincome != null">#{costincome},</if>
+            <if test="incrementtaxrate != null">#{incrementtaxrate},</if>
+            <if test="incrementremarks != null">#{incrementremarks},</if>
+            <if test="attachtaxrate != null">#{attachtaxrate},</if>
+            <if test="attachremarks != null">#{attachremarks},</if>
+            <if test="culturebuild != null">#{culturebuild},</if>
+            <if test="culturebuildremarks != null">#{culturebuildremarks},</if>
+            <if test="estimateprofit != null">#{estimateprofit},</if>
+            <if test="estimateprofitremarks != null">#{estimateprofitremarks},</if>
+            <if test="epmargin != null">#{epmargin},</if>
+            <if test="epmarginremarks != null">#{epmarginremarks},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAppxNgReq" parameterType="AppxNgReq">
+        update ct_bu_approvaldt_ng_req
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="bid != null">bid = #{bid},</if>
+            <if test="applyCompany != null ">apply_company = #{applyCompany},</if>
+            <if test="appxNgNo != null ">appx_ng_no = #{appxNgNo},</if>
+            <if test="appxNgName != null ">appx_ng_name = #{appxNgName},</if>
+            <if test="proType != null ">pro_type = #{proType},</if>
+            <if test="applyDate != null ">apply_date = #{applyDate},</if>
+            <if test="tranrevenue != null">tranrevenue = #{tranrevenue},</if>
+            <if test="trantaxrate != null">trantaxrate = #{trantaxrate},</if>
+            <if test="tranrevenueno != null">tranrevenueno = #{tranrevenueno},</if>
+            <if test="tranoutput != null">tranoutput = #{tranoutput},</if>
+            <if test="tranremarks != null">tranremarks = #{tranremarks},</if>
+            <if test="devicerevenue != null">devicerevenue = #{devicerevenue},</if>
+            <if test="devicetaxrate != null">devicetaxrate = #{devicetaxrate},</if>
+            <if test="devicerevenueno != null">devicerevenueno = #{devicerevenueno},</if>
+            <if test="deviceoutput != null">deviceoutput = #{deviceoutput},</if>
+            <if test="deviceremarks != null">deviceremarks = #{deviceremarks},</if>
+            <if test="serverevenue != null">serverevenue = #{serverevenue},</if>
+            <if test="servetaxrate != null">servetaxrate = #{servetaxrate},</if>
+            <if test="serverevenueno != null">serverevenueno = #{serverevenueno},</if>
+            <if test="serveoutput != null">serveoutput = #{serveoutput},</if>
+            <if test="serveremarks != null">serveremarks = #{serveremarks},</if>
+            <if test="projectrevenue != null">projectrevenue = #{projectrevenue},</if>
+            <if test="projecttaxrate != null">projecttaxrate = #{projecttaxrate},</if>
+            <if test="projectrevenueno != null">projectrevenueno = #{projectrevenueno},</if>
+            <if test="projectoutput != null">projectoutput = #{projectoutput},</if>
+            <if test="projectremarks != null">projectremarks = #{projectremarks},</if>
+            <if test="leaserevenue != null">leaserevenue = #{leaserevenue},</if>
+            <if test="leasetaxrate != null">leasetaxrate = #{leasetaxrate},</if>
+            <if test="leaserevenueno != null">leaserevenueno = #{leaserevenueno},</if>
+            <if test="leaseoutput != null">leaseoutput = #{leaseoutput},</if>
+            <if test="leaseremarks != null">leaseremarks = #{leaseremarks},</if>
+            <if test="softwarerevenue != null">softwarerevenue = #{softwarerevenue},</if>
+            <if test="softwaretaxrate != null">softwaretaxrate = #{softwaretaxrate},</if>
+            <if test="softwarerevenueno != null">softwarerevenueno = #{softwarerevenueno},</if>
+            <if test="softwareoutput != null">softwareoutput = #{softwareoutput},</if>
+            <if test="softwareremarks != null">softwareremarks = #{softwareremarks},</if>
+            <if test="advertrevenue != null">advertrevenue = #{advertrevenue},</if>
+            <if test="adverttaxrate != null">adverttaxrate = #{adverttaxrate},</if>
+            <if test="advertrevenueno != null">advertrevenueno = #{advertrevenueno},</if>
+            <if test="advertoutput != null">advertoutput = #{advertoutput},</if>
+            <if test="advertremarks != null">advertremarks = #{advertremarks},</if>
+            <if test="incomerevenue != null">incomerevenue = #{incomerevenue},</if>
+            <if test="incomerevenueno != null">incomerevenueno = #{incomerevenueno},</if>
+            <if test="incomeoutput != null">incomeoutput = #{incomeoutput},</if>
+            <if test="devicecostmoney != null">devicecostmoney = #{devicecostmoney},</if>
+            <if test="devicecosttaxrate != null">devicecosttaxrate = #{devicecosttaxrate},</if>
+            <if test="devicecostmoneyno != null">devicecostmoneyno = #{devicecostmoneyno},</if>
+            <if test="devicecostincome != null">devicecostincome = #{devicecostincome},</if>
+            <if test="devicecostremarks != null">devicecostremarks = #{devicecostremarks},</if>
+            <if test="stuffcostmoney != null">stuffcostmoney = #{stuffcostmoney},</if>
+            <if test="stuffcosttaxrate != null">stuffcosttaxrate = #{stuffcosttaxrate},</if>
+            <if test="stuffcostmoneyno != null">stuffcostmoneyno = #{stuffcostmoneyno},</if>
+            <if test="stuffcostincome != null">stuffcostincome = #{stuffcostincome},</if>
+            <if test="stuffcostremarks != null">stuffcostremarks = #{stuffcostremarks},</if>
+            <if test="turncostmoney != null">turncostmoney = #{turncostmoney},</if>
+            <if test="turncosttaxrate != null">turncosttaxrate = #{turncosttaxrate},</if>
+            <if test="turncostmoneyno != null">turncostmoneyno = #{turncostmoneyno},</if>
+            <if test="turncostincome != null">turncostincome = #{turncostincome},</if>
+            <if test="turncostremarks != null">turncostremarks = #{turncostremarks},</if>
+            <if test="servecostmoney != null">servecostmoney = #{servecostmoney},</if>
+            <if test="servecosttaxrate != null">servecosttaxrate = #{servecosttaxrate},</if>
+            <if test="servecostmoneyno != null">servecostmoneyno = #{servecostmoneyno},</if>
+            <if test="servecostincome != null">servecostincome = #{servecostincome},</if>
+            <if test="servecostremarks != null">servecostremarks = #{servecostremarks},</if>
+            <if test="buildcostmoney != null">buildcostmoney = #{buildcostmoney},</if>
+            <if test="buildcosttaxrate != null">buildcosttaxrate = #{buildcosttaxrate},</if>
+            <if test="buildcostmoneyno != null">buildcostmoneyno = #{buildcostmoneyno},</if>
+            <if test="buildcostincome != null">buildcostincome = #{buildcostincome},</if>
+            <if test="buildcostremarks != null">buildcostremarks = #{buildcostremarks},</if>
+            <if test="havedevicemoney != null">havedevicemoney = #{havedevicemoney},</if>
+            <if test="havedevicetaxrate != null">havedevicetaxrate = #{havedevicetaxrate},</if>
+            <if test="havedevicemoneyno != null">havedevicemoneyno = #{havedevicemoneyno},</if>
+            <if test="havedeviceincome != null">havedeviceincome = #{havedeviceincome},</if>
+            <if test="havedeviceremarks != null">havedeviceremarks = #{havedeviceremarks},</if>
+            <if test="havelinemoney != null">havelinemoney = #{havelinemoney},</if>
+            <if test="havelinetaxrate != null">havelinetaxrate = #{havelinetaxrate},</if>
+            <if test="havelinemoneyno != null">havelinemoneyno = #{havelinemoneyno},</if>
+            <if test="havelineincome != null">havelineincome = #{havelineincome},</if>
+            <if test="upholdcostmoney != null">upholdcostmoney = #{upholdcostmoney},</if>
+            <if test="upholdcosttaxrate != null">upholdcosttaxrate = #{upholdcosttaxrate},</if>
+            <if test="upholdcostmoneyno != null">upholdcostmoneyno = #{upholdcostmoneyno},</if>
+            <if test="upholdcostincome != null">upholdcostincome = #{upholdcostincome},</if>
+            <if test="upholdcostremarks != null">upholdcostremarks = #{upholdcostremarks},</if>
+            <if test="othercostmoney != null">othercostmoney = #{othercostmoney},</if>
+            <if test="othercosttaxrate != null">othercosttaxrate = #{othercosttaxrate},</if>
+            <if test="othercostmoneyno != null">othercostmoneyno = #{othercostmoneyno},</if>
+            <if test="othercostincome != null">othercostincome = #{othercostincome},</if>
+            <if test="othercostremarks != null">othercostremarks = #{othercostremarks},</if>
+            <if test="interestcostmoney != null">interestcostmoney = #{interestcostmoney},</if>
+            <if test="interestcosttaxrate != null">interestcosttaxrate = #{interestcosttaxrate},</if>
+            <if test="interestcostmoneyno != null">interestcostmoneyno = #{interestcostmoneyno},</if>
+            <if test="interestcostincome != null">interestcostincome = #{interestcostincome},</if>
+            <if test="interestcostremarks != null">interestcostremarks = #{interestcostremarks},</if>
+            <if test="costmoney != null">costmoney = #{costmoney},</if>
+            <if test="costmoneyno != null">costmoneyno = #{costmoneyno},</if>
+            <if test="costincome != null">costincome = #{costincome},</if>
+            <if test="incrementtaxrate != null">incrementtaxrate = #{incrementtaxrate},</if>
+            <if test="incrementremarks != null">incrementremarks = #{incrementremarks},</if>
+            <if test="attachtaxrate != null">attachtaxrate = #{attachtaxrate},</if>
+            <if test="attachremarks != null">attachremarks = #{attachremarks},</if>
+            <if test="culturebuild != null">culturebuild = #{culturebuild},</if>
+            <if test="culturebuildremarks != null">culturebuildremarks = #{culturebuildremarks},</if>
+            <if test="estimateprofit != null">estimateprofit = #{estimateprofit},</if>
+            <if test="estimateprofitremarks != null">estimateprofitremarks = #{estimateprofitremarks},</if>
+            <if test="epmargin != null">epmargin = #{epmargin},</if>
+            <if test="epmarginremarks != null">epmarginremarks = #{epmarginremarks},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteAppxNgReqByBid" parameterType="String">
+		update
+		ct_bu_approvaldt_ng_req set del_flag = '2' where id = #{id}
+	</update>
+
+    <delete id="deleteAppxNgReqById" parameterType="String">
+		delete from
+		ct_bu_approvaldt_ng_req where id = #{id}
+	</delete>
+
+    <delete id="deleteAppxNgReqByIds" parameterType="String">
+        delete from ct_bu_approvaldt_ng_req where id in
+        <foreach item="id" collection="array" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据传入的时间获取对应时间内的条数 -->
+    <select id="findNumsByData" parameterType="AppxNgReq"
+            resultType="Integer">
+		SELECT IFNULL(COUNT(*),0) nums FROM ct_bu_approvaldt_ng_req
+		WHERE
+		create_time >= #{stime} AND #{etime} >= create_time
+	</select>
+
+</mapper>

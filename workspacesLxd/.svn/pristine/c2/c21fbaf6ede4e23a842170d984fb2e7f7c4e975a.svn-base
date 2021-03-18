@@ -1,0 +1,265 @@
+package com.ruoyi.projectApproval.ApprovalNg.domain;
+
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.projectApproval.AppNgBase.domain.AppNgBase;
+import com.ruoyi.projectApproval.AppNgConst.domain.AppNgConst;
+import com.ruoyi.projectApproval.AppNgMaterial.domain.AppNgMaterial;
+import com.ruoyi.projectApproval.AppxNgReq.domain.AppxNgReq;
+
+/**
+ * 事前审批主(集客类)对象 ct_bu_approval_ng
+ * 
+ * @author Mu
+ * @date 2020-12-08
+ */
+public class CtBuApprovalNg extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
+
+	/** 唯一ID */
+	private String id;
+
+	/** 申请编号 */
+	@Excel(name = "申请编号")
+	private String reqNo;
+
+	/** 项目名称 */
+	@Excel(name = "项目名称")
+	private String proName;
+
+	/** 项目类型编号 */
+	@Excel(name = "项目类型编号")
+	private String proType;
+
+	/** 项目类型名称 */
+	@Excel(name = "项目类型名称")
+	private String proTypeName;
+
+	/** 所属分公司编号 */
+	@Excel(name = "所属分公司编号")
+	private String belongCompanyid;
+
+	/** 所属分公司名称 */
+	@Excel(name = "所属分公司名称")
+	private String belongCompanyName;
+
+	/** 所属部门编号 */
+	@Excel(name = "所属部门编号")
+	private String belongDeptid;
+
+	/** 所属部门名称 */
+	@Excel(name = "所属部门名称")
+	private String belongDeptName;
+
+	/** 合同金额 */
+	@Excel(name = "合同金额")
+	private Long contractAmountTotal;
+
+	/** 不含税金额 */
+	@Excel(name = "不含税金额")
+	private Long contractAmountTax;
+
+	/** 税率 */
+	@Excel(name = "税率")
+	private String taxrate;
+
+	/** 税额 */
+	@Excel(name = "税额")
+	private Long taxamount;
+
+	/** 状态 */
+	@Excel(name = "状态")
+	private Long status;
+
+	/** 状态说明 */
+	@Excel(name = "状态说明")
+	private String statusPs;
+
+	/** 备注信息 */
+	@Excel(name = "备注信息")
+	private String remarks;
+
+	/** 删除标记 */
+	private Long delFlag;
+
+	/** 项目基本情况 **/
+	private AppNgBase appNgBase;
+
+	/** 施工费情况 **/
+	private AppNgConst appNgConst;
+
+	/** 材料使用情况 **/
+	private AppNgMaterial appNgMaterial;
+
+	/** 事前审批对象 **/
+	private AppxNgReq appxNgReq;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setReqNo(String reqNo) {
+		this.reqNo = reqNo;
+	}
+
+	public String getReqNo() {
+		return reqNo;
+	}
+
+	public void setProName(String proName) {
+		this.proName = proName;
+	}
+
+	public String getProName() {
+		return proName;
+	}
+
+	public void setProType(String proType) {
+		this.proType = proType;
+	}
+
+	public String getProType() {
+		return proType;
+	}
+
+	public void setProTypeName(String proTypeName) {
+		this.proTypeName = proTypeName;
+	}
+
+	public String getProTypeName() {
+		return proTypeName;
+	}
+
+	public void setBelongCompanyid(String belongCompanyid) {
+		this.belongCompanyid = belongCompanyid;
+	}
+
+	public String getBelongCompanyid() {
+		return belongCompanyid;
+	}
+
+	public void setBelongCompanyName(String belongCompanyName) {
+		this.belongCompanyName = belongCompanyName;
+	}
+
+	public String getBelongCompanyName() {
+		return belongCompanyName;
+	}
+
+	public void setBelongDeptid(String belongDeptid) {
+		this.belongDeptid = belongDeptid;
+	}
+
+	public String getBelongDeptid() {
+		return belongDeptid;
+	}
+
+	public void setBelongDeptName(String belongDeptName) {
+		this.belongDeptName = belongDeptName;
+	}
+
+	public String getBelongDeptName() {
+		return belongDeptName;
+	}
+
+	public void setContractAmountTotal(Long contractAmountTotal) {
+		this.contractAmountTotal = contractAmountTotal;
+	}
+
+	public Long getContractAmountTotal() {
+		return contractAmountTotal;
+	}
+
+	public void setContractAmountTax(Long contractAmountTax) {
+		this.contractAmountTax = contractAmountTax;
+	}
+
+	public Long getContractAmountTax() {
+		return contractAmountTax;
+	}
+
+	public void setTaxrate(String taxrate) {
+		this.taxrate = taxrate;
+	}
+
+	public String getTaxrate() {
+		return taxrate;
+	}
+
+	public void setTaxamount(Long taxamount) {
+		this.taxamount = taxamount;
+	}
+
+	public Long getTaxamount() {
+		return taxamount;
+	}
+
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+
+	public Long getStatus() {
+		return status;
+	}
+
+	public void setStatusPs(String statusPs) {
+		this.statusPs = statusPs;
+	}
+
+	public String getStatusPs() {
+		return statusPs;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setDelFlag(Long delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public Long getDelFlag() {
+		return delFlag;
+	}
+
+	public AppNgBase getAppNgBase() {
+		return appNgBase;
+	}
+
+	public void setAppNgBase(AppNgBase appNgBase) {
+		this.appNgBase = appNgBase;
+	}
+
+	public AppNgConst getAppNgConst() {
+		return appNgConst;
+	}
+
+	public void setAppNgConst(AppNgConst appNgConst) {
+		this.appNgConst = appNgConst;
+	}
+
+	public AppNgMaterial getAppNgMaterial() {
+		return appNgMaterial;
+	}
+
+	public void setAppNgMaterial(AppNgMaterial appNgMaterial) {
+		this.appNgMaterial = appNgMaterial;
+	}
+
+	public AppxNgReq getAppxNgReq() {
+		return appxNgReq;
+	}
+
+	public void setAppxNgReq(AppxNgReq appxNgReq) {
+		this.appxNgReq = appxNgReq;
+	}
+}

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" id="sample-diagram" targetNamespace="http://activiti.org/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="xmlx2" name="跨区项目(金额≥10万元 或 5万元≤投资额＜50万元)" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>Flow_1nw1r2f</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="Activity_0ih4ugj" name="项目申请" activiti:assignee="${apply}">
+      <bpmn2:incoming>Flow_1nw1r2f</bpmn2:incoming>
+      <bpmn2:incoming>Flow_1vuhubz</bpmn2:incoming>
+      <bpmn2:incoming>Flow_1ar6q7x</bpmn2:incoming>
+      <bpmn2:incoming>Flow_090t38e</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0or4urz</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_17oej7m</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="fgfzsh_audit" name="分管副总审核" activiti:formKey="fgfzsh_audit" activiti:assignee="${fgfzsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="fgfzshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+        <activiti:taskListener class="com.ruoyi.activiti.config.lxsh2fzProcessEndListener" event="complete" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0eohed1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1mz3h74</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics activiti:collection="${fgfzshList}" activiti:elementVariable="fgfzsh">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${pass==false}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="jkbsh_audit" name="市公司集客部/财务资产部审核" activiti:formKey="jkbsh_audit" activiti:assignee="${jkbsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="jkbshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+        <activiti:taskListener class="com.ruoyi.activiti.config.lxsh2jkbProcessEndListener" event="complete" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1n3fl57</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0prlhy6</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1fmzib0</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics activiti:collection="${jkbshList}" activiti:elementVariable="jkbsh">
+        <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">${pass==false}</bpmn2:completionCondition>
+      </bpmn2:multiInstanceLoopCharacteristics>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="Flow_1mz3h74" sourceRef="fgfzsh_audit" targetRef="Gateway_0yhv8lz" />
+    <bpmn2:userTask id="zjlsh_audit" name="总经理审核" activiti:formKey="zjlsh_audit" activiti:candidateUsers="${zjlsh}">
+      <bpmn2:extensionElements>
+        <activiti:formProperty id="zjlshstate--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0kxhnlh</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_14xpcew</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:endEvent id="Event_10d66ns">
+      <bpmn2:extensionElements>
+        <activiti:executionListener delegateExpression="${lxsh2ProcessEndListener}" event="end" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0pwrkjj</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1nw1r2f" sourceRef="StartEvent_1" targetRef="Activity_0ih4ugj" />
+    <bpmn2:sequenceFlow id="Flow_17oej7m" sourceRef="Activity_0ih4ugj" targetRef="Gateway_1iye4u9" />
+    <bpmn2:sequenceFlow id="Flow_14xpcew" sourceRef="zjlsh_audit" targetRef="Gateway_0kibq0u" />
+    <bpmn2:exclusiveGateway id="Gateway_1lnamvk">
+      <bpmn2:incoming>Flow_1fmzib0</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0eohed1</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1vuhubz</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0eohed1" sourceRef="Gateway_1lnamvk" targetRef="fgfzsh_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${jkbshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="Gateway_0yhv8lz">
+      <bpmn2:incoming>Flow_1mz3h74</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0kxhnlh</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1ar6q7x</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0kxhnlh" sourceRef="Gateway_0yhv8lz" targetRef="zjlsh_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${fgfzshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_1ar6q7x" sourceRef="Gateway_0yhv8lz" targetRef="Activity_0ih4ugj">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${fgfzshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="Gateway_0kibq0u">
+      <bpmn2:incoming>Flow_14xpcew</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0pwrkjj</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_090t38e</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0pwrkjj" sourceRef="Gateway_0kibq0u" targetRef="Event_10d66ns">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${zjlshstate==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_1vuhubz" sourceRef="Gateway_1lnamvk" targetRef="Activity_0ih4ugj">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${jkbshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_090t38e" sourceRef="Gateway_0kibq0u" targetRef="Activity_0ih4ugj">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${zjlshstate==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_1fmzib0" sourceRef="jkbsh_audit" targetRef="Gateway_1lnamvk" />
+    <bpmn2:userTask id="ghbsh_audit" name="规划部审核" activiti:formKey="ghbsh_audit" activiti:candidateUsers="${ghbsh}">
+	
+	  <bpmn2:extensionElements>
+        <activiti:formProperty id="ghsh--__!!radio--__!!审批意见--__!!i--__!!同意--__--不同意" type="string" />
+        <activiti:formProperty id="FormProperty_0lffpcm--__!!textarea--__!!批注--__!!f__!!null" type="string" />
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1pqdj9e</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_092zzin</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_1iye4u9">
+      <bpmn2:incoming>Flow_17oej7m</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1n3fl57</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1pqdj9e</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_1n3fl57" sourceRef="Gateway_1iye4u9" targetRef="jkbsh_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${ifgh==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_1pqdj9e" sourceRef="Gateway_1iye4u9" targetRef="ghbsh_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${ifgh==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="Gateway_0esu3mu">
+      <bpmn2:incoming>Flow_092zzin</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0prlhy6</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0or4urz</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_092zzin" sourceRef="ghbsh_audit" targetRef="Gateway_0esu3mu" />
+    <bpmn2:sequenceFlow id="Flow_0prlhy6" sourceRef="Gateway_0esu3mu" targetRef="jkbsh_audit">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${ghsh==0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0or4urz" sourceRef="Gateway_0esu3mu" targetRef="Activity_0ih4ugj">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${ghsh==1}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="xmlx2">
+      <bpmndi:BPMNEdge id="Flow_1fmzib0_di" bpmnElement="Flow_1fmzib0">
+        <di:waypoint x="650" y="230" />
+        <di:waypoint x="705" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_090t38e_di" bpmnElement="Flow_090t38e">
+        <di:waypoint x="1260" y="205" />
+        <di:waypoint x="1260" y="90" />
+        <di:waypoint x="350" y="90" />
+        <di:waypoint x="350" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vuhubz_di" bpmnElement="Flow_1vuhubz">
+        <di:waypoint x="730" y="205" />
+        <di:waypoint x="730" y="90" />
+        <di:waypoint x="350" y="90" />
+        <di:waypoint x="350" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pwrkjj_di" bpmnElement="Flow_0pwrkjj">
+        <di:waypoint x="1285" y="230" />
+        <di:waypoint x="1322" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ar6q7x_di" bpmnElement="Flow_1ar6q7x">
+        <di:waypoint x="1010" y="205" />
+        <di:waypoint x="1010" y="90" />
+        <di:waypoint x="350" y="90" />
+        <di:waypoint x="350" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kxhnlh_di" bpmnElement="Flow_0kxhnlh">
+        <di:waypoint x="1035" y="230" />
+        <di:waypoint x="1090" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eohed1_di" bpmnElement="Flow_0eohed1">
+        <di:waypoint x="755" y="230" />
+        <di:waypoint x="820" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14xpcew_di" bpmnElement="Flow_14xpcew">
+        <di:waypoint x="1190" y="230" />
+        <di:waypoint x="1235" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17oej7m_di" bpmnElement="Flow_17oej7m">
+        <di:waypoint x="400" y="230" />
+        <di:waypoint x="445" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nw1r2f_di" bpmnElement="Flow_1nw1r2f">
+        <di:waypoint x="258" y="230" />
+        <di:waypoint x="300" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mz3h74_di" bpmnElement="Flow_1mz3h74">
+        <di:waypoint x="920" y="230" />
+        <di:waypoint x="985" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1n3fl57_di" bpmnElement="Flow_1n3fl57">
+        <di:waypoint x="495" y="230" />
+        <di:waypoint x="550" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pqdj9e_di" bpmnElement="Flow_1pqdj9e">
+        <di:waypoint x="470" y="255" />
+        <di:waypoint x="470" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_092zzin_di" bpmnElement="Flow_092zzin">
+        <di:waypoint x="520" y="350" />
+        <di:waypoint x="575" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0prlhy6_di" bpmnElement="Flow_0prlhy6">
+        <di:waypoint x="600" y="325" />
+        <di:waypoint x="600" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0or4urz_di" bpmnElement="Flow_0or4urz">
+        <di:waypoint x="600" y="375" />
+        <di:waypoint x="600" y="440" />
+        <di:waypoint x="350" y="440" />
+        <di:waypoint x="350" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="222" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ih4ugj_di" bpmnElement="Activity_0ih4ugj">
+        <dc:Bounds x="300" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10d66ns_di" bpmnElement="Event_10d66ns">
+        <dc:Bounds x="1322" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0kibq0u_di" bpmnElement="Gateway_0kibq0u" isMarkerVisible="true">
+        <dc:Bounds x="1235" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1s4exwf_di" bpmnElement="zjlsh_audit">
+        <dc:Bounds x="1090" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0yhv8lz_di" bpmnElement="Gateway_0yhv8lz" isMarkerVisible="true">
+        <dc:Bounds x="985" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kt9bfh_di" bpmnElement="fgfzsh_audit">
+        <dc:Bounds x="820" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1lnamvk_di" bpmnElement="Gateway_1lnamvk" isMarkerVisible="true">
+        <dc:Bounds x="705" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1iye4u9_di" bpmnElement="Gateway_1iye4u9" isMarkerVisible="true">
+        <dc:Bounds x="445" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15dbis9_di" bpmnElement="ghbsh_audit">
+        <dc:Bounds x="420" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0esu3mu_di" bpmnElement="Gateway_0esu3mu" isMarkerVisible="true">
+        <dc:Bounds x="575" y="325" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qkmgqh_di" bpmnElement="jkbsh_audit">
+        <dc:Bounds x="550" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

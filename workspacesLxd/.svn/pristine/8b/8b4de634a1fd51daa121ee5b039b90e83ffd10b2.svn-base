@@ -1,0 +1,116 @@
+package com.ruoyi.projectApproval.AppNgBase.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.projectApproval.AppNgBase.domain.AppNgBase;
+import com.ruoyi.projectApproval.AppNgBase.mapper.AppNgBaseMapper;
+import com.ruoyi.projectApproval.AppNgBase.service.IAppNgBaseService;
+
+/**
+ * 事前审批明细(集客类-项目基本情况)Service业务层处理
+ * 
+ * @author Mu
+ * @date 2020-12-09
+ */
+@Service
+public class AppNgBaseServiceImpl implements IAppNgBaseService {
+
+	@Autowired
+	private AppNgBaseMapper appNgBaseMapper;
+
+	/**
+	 * 查询事前审批明细(集客类-项目基本情况)
+	 * 
+	 * @param id 事前审批明细(集客类-项目基本情况)ID
+	 * @return 事前审批明细(集客类-项目基本情况)
+	 */
+	@Override
+	public AppNgBase selectAppNgBaseById(String id) {
+		return appNgBaseMapper.selectAppNgBaseById(id);
+	}
+
+	/**
+	 * @Title: IAppNgBaseService.java
+	 * @Description: 根据事前审批主表ID获取基本信息
+	 * @Author M.Mu
+	 * @Date 2020-12-09
+	 */
+	@Override
+	public AppNgBase selectAppNgBaseByBid(String id) {
+
+		return appNgBaseMapper.selectAppNgBaseByBid(id);
+	}
+
+	/**
+	 * 查询事前审批明细(集客类-项目基本情况)列表
+	 * 
+	 * @param appNgBase 事前审批明细(集客类-项目基本情况)
+	 * @return 事前审批明细(集客类-项目基本情况)
+	 */
+	@Override
+	public List<AppNgBase> selectAppNgBaseList(AppNgBase appNgBase) {
+		return appNgBaseMapper.selectAppNgBaseList(appNgBase);
+	}
+
+	/**
+	 * 新增事前审批明细(集客类-项目基本情况)
+	 * 
+	 * @param appNgBase 事前审批明细(集客类-项目基本情况)
+	 * @return 结果
+	 */
+	@Override
+	public int insertAppNgBase(AppNgBase appNgBase) {
+		appNgBase.setCreateTime(DateUtils.getNowDate());
+		return appNgBaseMapper.insertAppNgBase(appNgBase);
+	}
+
+	/**
+	 * 修改事前审批明细(集客类-项目基本情况)
+	 * 
+	 * @param appNgBase 事前审批明细(集客类-项目基本情况)
+	 * @return 结果
+	 */
+	@Override
+	public int updateAppNgBase(AppNgBase appNgBase) {
+		appNgBase.setUpdateTime(DateUtils.getNowDate());
+		return appNgBaseMapper.updateAppNgBase(appNgBase);
+	}
+
+	/**
+	 * 批量删除事前审批明细(集客类-项目基本情况)
+	 * 
+	 * @param ids 需要删除的事前审批明细(集客类-项目基本情况)ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteAppNgBaseByIds(String[] ids) {
+		return appNgBaseMapper.deleteAppNgBaseByIds(ids);
+	}
+
+	/**
+	 * 删除事前审批明细(集客类-项目基本情况)信息
+	 * 
+	 * @param id 事前审批明细(集客类-项目基本情况)ID
+	 * @return 结果
+	 */
+	@Override
+	public int deleteAppNgBaseById(String id) {
+		return appNgBaseMapper.deleteAppNgBaseById(id);
+	}
+
+	/**
+	 * @Title: IAppNgBaseService.java
+	 * @Description: 根据事前审批主表ID逻辑删除项目基本信息
+	 * @Author M.Mu
+	 * @Date 2020-12-09
+	 */
+	@Override
+	public int deleteAppNgBaseByBid(String id) {
+
+		return appNgBaseMapper.deleteAppNgBaseByBid(id);
+	}
+}

@@ -1,0 +1,174 @@
+<template>
+  <div class="dashboard-editor-container">
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+
+    <el-row style="margin-bottom:32px;" :gutter="20">
+      <el-col :xs="12" :sm="12" :lg="12" >
+          <el-card class="box-card">
+          	<div slot="header" class="clearfix">
+              <img src="../assets/image/notice.png" />
+          		<span>&nbsp;通知公告</span>
+          		<el-button style="float: right; padding: 3px 0" type="text"><i class="el-icon-more"></i></el-button>
+          	</div>
+          	<div v-for="i in 5" :key="i" class="row-text">
+          		<el-col :xs="15" :sm="15" :lg="15" >{{'列表内容 ' + i }}</el-col>
+              <el-col :xs="4" :sm="4" :lg="4" >王大海</el-col>
+              <el-col :xs="5" :sm="5" :lg="5" >2020-12-18</el-col>
+          	</div>
+          </el-card>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="12" >
+        <el-card class="box-card">
+        	<div slot="header" class="clearfix">
+            <img src="../assets/image/schedule.png" />
+        		<span>&nbsp;我的待办</span>
+        		<el-button style="float: right; padding: 3px 0" type="text" >
+
+              <router-link :to="'/task/dbTask'" class="link-type">
+                <span><i class="el-icon-more"> </i></span>
+              </router-link>
+
+           </el-button>
+        	</div>
+        	<div v-for="(task , index) in taskList" :key="index" v-if="index < 5" class="row-text">
+        		<el-col :xs="12" :sm="12" :lg="12"   v-bind:title="(task.instanceName)">{{(task.instanceName).length>18?(task.instanceName).substring(0,18): (task.instanceName)}}</el-col>
+        	  <el-col :xs="4" :sm="4" :lg="4" >{{task.applyName }}</el-col>
+        	  <el-col  :xs="8" :sm="8" :lg="8"  >{{task.createdDate }}</el-col>
+<!--            <el-col :xs="2" :sm="2" :lg="2"  align="right">-->
+<!--              <el-button type="primary" plain icon="el-icon-edit" size="mini" @click="examineAndApprove(task)"></el-button>-->
+<!--            </el-col>-->
+        	</div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <p style="border-left:5px solid #409EFF;padding-left: 10px;">2020年06月履约执行合同统计</p>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper">
+          <line-chart :chart-data="lineChartData" />
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import PanelGroup from './dashboard/PanelGroup'
+  import LineChart from './dashboard/LineChart'
+  import request from '@/utils/request'
+  const lineChartData = {
+    newVisitis: {
+      expectedData: [100, 120, 161, 134, 105, 160, 165],
+      actualData: [120, 82, 91, 154, 162, 140, 145]
+    },
+    messages: {
+      expectedData: [200, 192, 120, 144, 160, 130, 140],
+      actualData: [180, 160, 151, 106, 145, 150, 130]
+    },
+    purchases: {
+      expectedData: [80, 100, 121, 104, 105, 90, 100],
+      actualData: [120, 90, 100, 138, 142, 130, 130]
+    },
+    shoppings: {
+      expectedData: [130, 140, 141, 142, 145, 150, 160],
+      actualData: [120, 82, 91, 154, 162, 140, 130]
+    }
+  }
+  export default {
+    name: 'Index',
+    components: {
+      PanelGroup,
+      LineChart
+    },
+    data() {
+      return {
+        showMsg:null,
+        lineChartData: lineChartData.newVisitis,
+        taskList:[],
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+        },
+        // path:"ws://127.0.0.1:9001/qrCodePage/ID=1/refreshTime=5",
+        //new WebSocket("ws://localhost:8888/WebSocketServer/2");
+        path:"ws://127.0.0.1:9001/webSocketServer/2",
+        socket:"",
+        queueReceiveSetting: { // 消息队列配置
+          websock: null,
+          client: null,
+          wsuri: "ws://127.0.0.1:9001/websocket/",
+        }
+      }
+    },
+    created(){
+
+      // this.showMessage();
+      this.getTaskList();
+    },
+    methods: {
+      //获取代办列表
+      getTaskList(){
+        let query = this.queryParams;
+        return request({
+          url: '/task/list',
+          method: 'get',
+          params: query
+        }).then(response => {
+          this.taskList = response.rows;
+        });
+      },
+
+      handleSetLineChartData(type) {
+        this.lineChartData = lineChartData[type]
+      },
+    },
+
+
+
+  }
+</script>
+
+<style lang="scss" scoped>
+  .dashboard-editor-container {
+    padding: 10px 32px;
+    background-color: #fafafa;
+    position: relative;
+
+    .chart-wrapper {
+      background: #fff;
+      padding: 16px 16px 0;
+      margin-bottom: 32px;
+    }
+  }
+
+  @media (max-width:1024px) {
+    .chart-wrapper {
+      padding: 8px;
+    }
+  }
+  .news-col{
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+  }
+  .box-card img{
+    width: 20px;
+    vertical-align: bottom;
+  }
+  .box-card .row-text{
+    font-size: 14px;
+    line-height: 36px;
+    height: 36px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+</style>

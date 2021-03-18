@@ -1,0 +1,158 @@
+package com.ruoyi.projectApproval.AppNgConst.domain;
+
+import java.math.BigDecimal;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * 事前审批明细(集客类-施工费情况)对象 ct_bu_approvaldt_ng_construcost
+ * 
+ * @author Mu
+ * @date 2020-12-09
+ */
+public class AppNgConst extends BaseEntity {
+
+	private static final long serialVersionUID = 1L;
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	private String cid;
+	/** 唯一ID */
+	private String id;
+
+	/** 申请编号 */
+	@Excel(name = "申请编号")
+	private String bid;
+
+	/** 施工项目 */
+	@Excel(name = "施工项目")
+	private String projectName;
+
+	/** 内容说明 */
+	@Excel(name = "内容说明")
+	private String description;
+
+	/** 单位 */
+	@Excel(name = "单位")
+	private String projectUnit;
+
+	/** 所需工日 */
+	@Excel(name = "所需工日")
+	private BigDecimal days;
+
+	/** 工日单价 */
+	@Excel(name = "工日单价")
+	private BigDecimal daysPrice;
+
+	/** 金额 */
+	@Excel(name = "金额")
+	private BigDecimal daysAmount;
+
+	/** 备注信息 */
+	@Excel(name = "备注信息")
+	private String remarks;
+
+	/** 删除标记 */
+	private Integer delFlag;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setBid(String bid) {
+		this.bid = bid;
+	}
+
+	public String getBid() {
+		return bid;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setProjectUnit(String projectUnit) {
+		this.projectUnit = projectUnit;
+	}
+
+	public String getProjectUnit() {
+		return projectUnit;
+	}
+
+	public void setDays(BigDecimal days) {
+		this.days = days;
+	}
+
+	public BigDecimal getDays() {
+		return days;
+	}
+
+	public void setDaysPrice(BigDecimal daysPrice) {
+		this.daysPrice = daysPrice;
+	}
+
+	public BigDecimal getDaysPrice() {
+		return daysPrice;
+	}
+
+	public void setDaysAmount(BigDecimal daysAmount) {
+		this.daysAmount = daysAmount;
+	}
+
+	public BigDecimal getDaysAmount() {
+		return daysAmount;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("id", getId())
+				.append("createBy", getCreateBy()).append("createTime", getCreateTime())
+				.append("updateBy", getUpdateBy()).append("updateTime", getUpdateTime()).append("bid", getBid())
+				.append("projectName", getProjectName()).append("description", getDescription())
+				.append("projectUnit", getProjectUnit()).append("days", getDays()).append("daysPrice", getDaysPrice())
+				.append("daysAmount", getDaysAmount()).append("remarks", getRemarks()).append("delFlag", getDelFlag())
+				.toString();
+	}
+}

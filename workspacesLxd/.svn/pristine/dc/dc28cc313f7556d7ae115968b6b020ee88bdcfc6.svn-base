@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.contract.contractInfo.mapper.CtBuContractMapper">
+
+    <resultMap type="CtBuContract" id="CtBuContractResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="projectCategory"    column="project_category"    />
+        <result property="projectCategoryName"    column="project_category_name"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectNo"    column="project_no"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="contractName"    column="contract_name"    />
+        <result property="month"    column="month"    />
+        <result property="contractCategory"    column="contract_category"    />
+        <result property="contractCategoryName"    column="contract_category_name"    />
+        <result property="incomeType"    column="income_type"    />
+        <result property="oppositeName"    column="opposite_name"    />
+        <result property="oppositeBank"    column="opposite_bank"    />
+        <result property="oppositeBankId"    column="opposite_bank_id"    />
+        <result property="oppositeContacts"    column="opposite_contacts"    />
+        <result property="oppositePhone"    column="opposite_phone"    />
+        <result property="oppositeAddress"    column="opposite_address"    />
+        <result property="oppositeCreditCode"    column="opposite_credit_code"    />
+        <result property="ourName"    column="our_name"    />
+        <result property="ourContacts"    column="our_contacts"    />
+        <result property="ourPhone"    column="our_phone"    />
+        <result property="ourBank"    column="our_bank"    />
+        <result property="ourBankId"    column="our_bank_id"    />
+        <result property="ourAddress"    column="our_address"    />
+        <result property="starttime"    column="starttime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="contractServeStart"    column="contract_serve_start"    />
+        <result property="serviceTerm"    column="service_term"    />
+        <result property="contractServeEnd"    column="contract_serve_end"    />
+        <result property="totalMoney"    column="total_money"    />
+        <result property="taxrate"    column="taxrate"    />
+        <result property="notTaxMoney"    column="not_tax_money"    />
+        <result property="payMethod"    column="pay_method"    />
+        <result property="payMethodName"    column="pay_method_name"    />
+        <result property="archiveFiles"    column="archive_files"    />
+        <result property="manageDeptment"    column="manage_deptment"    />
+        <result property="manageUser"    column="manage_user"    />
+        <result property="originalId"    column="original_id"    />
+        <result property="status"    column="status"    />
+        <result property="statusPs"    column="status_ps"    />
+        <result property="contractScanningFile"    column="contract_scanning_file"    />
+        <result property="receiveAmount"    column="receive_amount"    />
+        <result property="contractApprovalFile"    column="contract_approval_file"    />
+        <result property="outstandingAmount"    column="outstanding_amount"    />
+        <result property="writeOffAmount"    column="write_off_amount"    />
+        <result property="otherFiles"    column="other_files"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="nwriteOffAmount"    column="nwrite_off_amount"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="instanceId"    column="instance_id"    />
+    </resultMap>
+
+    <sql id="selectCtBuContractVo">
+        select id, create_by, create_time, update_by, update_time, project_category, project_category_name, project_id, project_no, project_name, contract_no, contract_name, month, contract_category, contract_category_name, income_type, opposite_name, opposite_bank, opposite_bank_id, opposite_contacts, opposite_phone, opposite_address, our_name, our_contacts, our_phone, our_bank, our_bank_id, our_address, starttime, endtime, contract_serve_start, service_term, contract_serve_end, total_money, taxrate, not_tax_money, pay_method, pay_method_name, archive_files, manage_deptment, manage_user, original_id, status, status_ps, contract_scanning_file, receive_amount, contract_approval_file, outstanding_amount, write_off_amount, other_files, del_flag, nwrite_off_amount, remarks from ct_bu_contract
+    </sql>
+
+    <select id="selectCtBuContractList" parameterType="CtBuContract" resultMap="CtBuContractResult">
+        <include refid="selectCtBuContractVo"/>
+        <where>
+            del_flag = '1'
+            <if test="projectCategory != null and projectCategory != ''">and project_category = #{projectCategory}</if>
+            <if test="projectCategoryName != null ">and project_category_name = #{projectCategoryName}</if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="projectNo != null  and projectNo != ''">and project_no = #{projectNo}</if>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="contractNo != null  and contractNo != ''">and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''">and contract_name like concat('%', #{contractName},
+                '%')
+            </if>
+            <if test="month != null  and month != ''">and month = #{month}</if>
+            <if test="contractCategory != null  and contractCategory != ''">and contract_category =
+                #{contractCategory}
+            </if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''">and contract_category_name =
+                #{contractCategoryName}
+            </if>
+            <if test="incomeType != null ">and income_type = #{incomeType}</if>
+            <if test="oppositeName != null  and oppositeName != ''">and opposite_name like concat('%', #{oppositeName},
+                '%')
+            </if>
+            <if test="oppositeBank != null  and oppositeBank != ''">and opposite_bank = #{oppositeBank}</if>
+            <if test="oppositeBankId != null  and oppositeBankId != ''">and opposite_bank_id = #{oppositeBankId}</if>
+            <if test="oppositeContacts != null  and oppositeContacts != ''">and opposite_contacts =
+                #{oppositeContacts}
+            </if>
+            <if test="oppositePhone != null  and oppositePhone != ''">and opposite_phone = #{oppositePhone}</if>
+            <if test="oppositeAddress != null  and oppositeAddress != ''">and opposite_address = #{oppositeAddress}</if>
+            <if test="oppositeCreditCode != null  and oppositeCreditCode != ''">and opposite_credit_code = #{oppositeCreditCode}</if>
+            <if test="ourName != null  and ourName != ''">and our_name like concat('%', #{ourName}, '%')</if>
+            <if test="ourContacts != null  and ourContacts != ''">and our_contacts = #{ourContacts}</if>
+            <if test="ourPhone != null  and ourPhone != ''">and our_phone = #{ourPhone}</if>
+            <if test="ourBank != null  and ourBank != ''">and our_bank = #{ourBank}</if>
+            <if test="ourBankId != null  and ourBankId != ''">and our_bank_id = #{ourBankId}</if>
+            <if test="ourAddress != null  and ourAddress != ''">and our_address = #{ourAddress}</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="endtime != null ">and endtime = #{endtime}</if>
+            <if test="endtime != null ">and endtime = #{endtime}</if>
+
+            <if test="contractServeStart != null ">and contract_serve_start = #{contractServeStart}</if>
+            <if test="serviceTerm != null ">and service_term = #{serviceTerm}</if>
+            <if test="contractServeEnd != null ">and contract_serve_end = #{contractServeEnd}</if>
+            <if test="totalMoney != null ">and total_money = #{totalMoney}</if>
+            <if test="taxrate != null ">and taxrate = #{taxrate}</if>
+            <if test="notTaxMoney != null ">and not_tax_money = #{notTaxMoney}</if>
+            <if test="payMethod != null ">and pay_method = #{payMethod}</if>
+            <if test="payMethodName != null ">and pay_method_name = #{payMethodName}</if>
+            <if test="archiveFiles != null  and archiveFiles != ''">and archive_files = #{archiveFiles}</if>
+            <if test="manageDeptment != null  and manageDeptment != ''">and manage_deptment = #{manageDeptment}</if>
+            <if test="manageUser != null  and manageUser != ''">and manage_user = #{manageUser}</if>
+            <if test="originalId != null  and originalId != ''">and original_id = #{originalId}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="statusPs != null  and statusPs != ''">and status_ps = #{statusPs}</if>
+            <if test="contractScanningFile != null  and contractScanningFile != ''">and contract_scanning_file =
+                #{contractScanningFile}
+            </if>
+            <if test="contractApprovalFile != null  and contractApprovalFile != ''">and contract_approval_file =
+                #{contractApprovalFile}
+            </if>
+            <if test="otherFiles != null  and otherFiles != ''">and other_files = #{otherFiles}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="instanceId != null  and instanceId != ''">and instance_id = #{instanceId}</if>
+        </where>
+        ORDER BY contract_no DESC
+    </select>
+
+
+    <resultMap type="HashMap" id="CtBuContractSum">
+        <result property="totalMoneySum"    column="IF(ISNULL(SUM(total_money)),0,SUM(total_money))"    />
+        <result property="notTaxMoneySum"    column="IF(ISNULL(SUM(not_tax_money)),0,SUM(not_tax_money))"    />
+        <result property="receiveAmountSum"    column="IF(ISNULL(SUM(receive_amount)),0,SUM(receive_amount))"    />
+        <result property="outstandingAmountSum"    column="IF(ISNULL(SUM(outstanding_amount)),0,SUM(outstanding_amount))"    />
+        <result property="writeOffAmountSum"    column="IF(ISNULL(SUM(write_off_amount)),0,SUM(write_off_amount))"    />
+        <result property="nwriteOffAmountSum"    column="IF(ISNULL(SUM(nwrite_off_amount)),0,SUM(nwrite_off_amount))"    />
+    </resultMap>
+
+
+    <select id="selectCtBuContractSum" parameterType="HashMap" resultMap="CtBuContractSum">
+        SELECT IF(ISNULL(SUM(total_money)),0,SUM(total_money)),IF(ISNULL(SUM(not_tax_money)),0,SUM(not_tax_money)),IF(ISNULL(SUM(receive_amount)),0,SUM(receive_amount)),IF(ISNULL(SUM(outstanding_amount)),0,SUM(outstanding_amount)),IF(ISNULL(SUM(write_off_amount)),0,SUM(write_off_amount)),IF(ISNULL(SUM(nwrite_off_amount)),0,SUM(nwrite_off_amount))
+        FROM ct_bu_contract
+        <where>
+            del_flag = '1'
+            <if test="projectCategory != null ">and project_category = #{projectCategory}</if>
+            <if test="projectCategoryName != null ">and project_category_name = #{projectCategoryName}</if>
+            <if test="projectId != null  and projectId != ''">and project_id = #{projectId}</if>
+            <if test="projectNo != null  and projectNo != ''">and project_no = #{projectNo}</if>
+            <if test="projectName != null  and projectName != ''">and project_name like concat('%', #{projectName},
+                '%')
+            </if>
+            <if test="contractNo != null  and contractNo != ''">and contract_no = #{contractNo}</if>
+            <if test="contractName != null  and contractName != ''">and contract_name like concat('%', #{contractName},
+                '%')
+            </if>
+            <if test="month != null  and month != ''">and month = #{month}</if>
+            <if test="contractCategory != null  and contractCategory != ''">and contract_category =
+                #{contractCategory}
+            </if>
+            <if test="contractCategoryName != null  and contractCategoryName != ''">and contract_category_name =
+                #{contractCategoryName}
+            </if>
+            <if test="incomeType != null ">and income_type = #{incomeType}</if>
+            <if test="oppositeName != null  and oppositeName != ''">and opposite_name like concat('%', #{oppositeName},
+                '%')
+            </if>
+            <if test="oppositeBank != null  and oppositeBank != ''">and opposite_bank = #{oppositeBank}</if>
+            <if test="oppositeBankId != null  and oppositeBankId != ''">and opposite_bank_id = #{oppositeBankId}</if>
+            <if test="oppositeContacts != null  and oppositeContacts != ''">and opposite_contacts =
+                #{oppositeContacts}
+            </if>
+            <if test="oppositePhone != null  and oppositePhone != ''">and opposite_phone = #{oppositePhone}</if>
+            <if test="oppositeAddress != null  and oppositeAddress != ''">and opposite_address = #{oppositeAddress}</if>
+            <if test="oppositeCreditCode != null  and oppositeCreditCode != ''">and opposite_credit_code = #{oppositeCreditCode}</if>
+            <if test="ourName != null  and ourName != ''">and our_name like concat('%', #{ourName}, '%')</if>
+            <if test="ourContacts != null  and ourContacts != ''">and our_contacts = #{ourContacts}</if>
+            <if test="ourPhone != null  and ourPhone != ''">and our_phone = #{ourPhone}</if>
+            <if test="ourBank != null  and ourBank != ''">and our_bank = #{ourBank}</if>
+            <if test="ourBankId != null  and ourBankId != ''">and our_bank_id = #{ourBankId}</if>
+            <if test="ourAddress != null  and ourAddress != ''">and our_address = #{ourAddress}</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(starttime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(starttime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+            <if test="endtime != null ">and endtime = #{endtime}</if>
+
+            <if test="contractServeStart != null ">and contract_serve_start = #{contractServeStart}</if>
+            <if test="serviceTerm != null ">and service_term = #{serviceTerm}</if>
+            <if test="contractServeEnd != null ">and contract_serve_end = #{contractServeEnd}</if>
+            <if test="totalMoney != null ">and total_money = #{totalMoney}</if>
+            <if test="taxrate != null ">and taxrate = #{taxrate}</if>
+            <if test="notTaxMoney != null ">and not_tax_money = #{notTaxMoney}</if>
+            <if test="payMethod != null ">and pay_method = #{payMethod}</if>
+            <if test="payMethodName != null ">and pay_method_name = #{payMethodName}</if>
+            <if test="archiveFiles != null  and archiveFiles != ''">and archive_files = #{archiveFiles}</if>
+            <if test="manageDeptment != null  and manageDeptment != ''">and manage_deptment = #{manageDeptment}</if>
+            <if test="manageUser != null  and manageUser != ''">and manage_user = #{manageUser}</if>
+            <if test="originalId != null  and originalId != ''">and original_id = #{originalId}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="statusPs != null  and statusPs != ''">and status_ps = #{statusPs}</if>
+            <if test="contractScanningFile != null  and contractScanningFile != ''">and contract_scanning_file =
+                #{contractScanningFile}
+            </if>
+            <if test="contractApprovalFile != null  and contractApprovalFile != ''">and contract_approval_file =
+                #{contractApprovalFile}
+            </if>
+            <if test="otherFiles != null  and otherFiles != ''">and other_files = #{otherFiles}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="instanceId != null  and instanceId != ''">and instance_id = #{instanceId}</if>
+        </where>
+    </select>
+
+    <select id="selectCtBuContractById" parameterType="String" resultMap="CtBuContractResult">
+        <include refid="selectCtBuContractVo"/>
+        where id = #{id} AND del_flag = '1'
+    </select>
+
+    <insert id="insertCtBuContract" parameterType="CtBuContract">
+        insert into ct_bu_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="projectCategory != null">project_category,</if>
+            <if test="projectCategoryName != null">project_category_name,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="projectNo != null">project_no,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="contractNo != null">contract_no,</if>
+            <if test="contractName != null">contract_name,</if>
+            <if test="month != null">month,</if>
+            <if test="contractCategory != null">contract_category,</if>
+            <if test="contractCategoryName != null">contract_category_name,</if>
+            <if test="incomeType != null">income_type,</if>
+            <if test="oppositeName != null">opposite_name,</if>
+            <if test="oppositeBank != null">opposite_bank,</if>
+            <if test="oppositeBankId != null">opposite_bank_id,</if>
+            <if test="oppositeContacts != null">opposite_contacts,</if>
+            <if test="oppositePhone != null">opposite_phone,</if>
+            <if test="oppositeAddress != null">opposite_address,</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code,</if>
+            <if test="ourName != null">our_name,</if>
+            <if test="ourContacts != null">our_contacts,</if>
+            <if test="ourPhone != null">our_phone,</if>
+            <if test="ourBank != null">our_bank,</if>
+            <if test="ourBankId != null">our_bank_id,</if>
+            <if test="ourAddress != null">our_address,</if>
+            <if test="starttime != null">starttime,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="contractServeStart != null">contract_serve_start,</if>
+            <if test="serviceTerm != null">service_term,</if>
+            <if test="contractServeEnd != null">contract_serve_end,</if>
+            <if test="totalMoney != null">total_money,</if>
+            <if test="taxrate != null">taxrate,</if>
+            <if test="notTaxMoney != null">not_tax_money,</if>
+            <if test="payMethod != null">pay_method,</if>
+            <if test="payMethodName != null">pay_method_name,</if>
+            <if test="archiveFiles != null">archive_files,</if>
+            <if test="manageDeptment != null">manage_deptment,</if>
+            <if test="manageUser != null">manage_user,</if>
+            <if test="originalId != null">original_id,</if>
+            <if test="status != null">status,</if>
+            <if test="statusPs != null">status_ps,</if>
+            <if test="contractScanningFile != null">contract_scanning_file,</if>
+            <if test="receiveAmount != null">receive_amount,</if>
+            <if test="contractApprovalFile != null">contract_approval_file,</if>
+            <if test="outstandingAmount != null">outstanding_amount,</if>
+            <if test="writeOffAmount != null">write_off_amount,</if>
+            <if test="otherFiles != null">other_files,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="instanceId != null">instance_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="projectCategory != null">#{projectCategory},</if>
+            <if test="projectCategoryName != null">#{projectCategoryName},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectNo != null">#{projectNo},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="contractName != null">#{contractName},</if>
+            <if test="month != null">#{month},</if>
+            <if test="contractCategory != null">#{contractCategory},</if>
+            <if test="contractCategoryName != null">#{contractCategoryName},</if>
+            <if test="incomeType != null">#{incomeType},</if>
+            <if test="oppositeName != null">#{oppositeName},</if>
+            <if test="oppositeBank != null">#{oppositeBank},</if>
+            <if test="oppositeBankId != null">#{oppositeBankId},</if>
+            <if test="oppositeContacts != null">#{oppositeContacts},</if>
+            <if test="oppositePhone != null">#{oppositePhone},</if>
+            <if test="oppositeAddress != null">#{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">#{opposite_credit_code},</if>
+            <if test="ourName != null">#{ourName},</if>
+            <if test="ourContacts != null">#{ourContacts},</if>
+            <if test="ourPhone != null">#{ourPhone},</if>
+            <if test="ourBank != null">#{ourBank},</if>
+            <if test="ourBankId != null">#{ourBankId},</if>
+            <if test="ourAddress != null">#{ourAddress},</if>
+            <if test="starttime != null">#{starttime},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="contractServeStart != null">#{contractServeStart},</if>
+            <if test="serviceTerm != null">#{serviceTerm},</if>
+            <if test="contractServeEnd != null">#{contractServeEnd},</if>
+            <if test="totalMoney != null">#{totalMoney},</if>
+            <if test="taxrate != null">#{taxrate},</if>
+            <if test="notTaxMoney != null">#{notTaxMoney},</if>
+            <if test="payMethod != null">#{payMethod},</if>
+            <if test="payMethodName != null">#{payMethodName},</if>
+            <if test="archiveFiles != null">#{archiveFiles},</if>
+            <if test="manageDeptment != null">#{manageDeptment},</if>
+            <if test="manageUser != null">#{manageUser},</if>
+            <if test="originalId != null">#{originalId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="statusPs != null">#{statusPs},</if>
+            <if test="contractScanningFile != null">#{contractScanningFile},</if>
+            <if test="receiveAmount != null">#{receiveAmount},</if>
+            <if test="contractApprovalFile != null">#{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">#{outstandingAmount},</if>
+            <if test="writeOffAmount != null">#{writeOffAmount},</if>
+            <if test="otherFiles != null">#{otherFiles},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="nwriteOffAmount != null">#{nwriteOffAmount},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="instanceId != null">#{instanceId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCtBuContract" parameterType="CtBuContract">
+        update ct_bu_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectCategory != null">project_category = #{projectCategory},</if>
+            <if test="projectCategoryName != null">project_category_name = #{projectCategoryName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectNo != null">project_no = #{projectNo},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="incomeType != null">income_type = #{incomeType},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code = #{oppositeCreditCode},</if>
+            <if test="ourName != null">our_name = #{ourName},</if>
+            <if test="ourContacts != null">our_contacts = #{ourContacts},</if>
+            <if test="ourPhone != null">our_phone = #{ourPhone},</if>
+            <if test="ourBank != null">our_bank = #{ourBank},</if>
+            <if test="ourBankId != null">our_bank_id = #{ourBankId},</if>
+            <if test="ourAddress != null">our_address = #{ourAddress},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="contractServeStart != null">contract_serve_start = #{contractServeStart},</if>
+            <if test="serviceTerm != null">service_term = #{serviceTerm},</if>
+            <if test="contractServeEnd != null">contract_serve_end = #{contractServeEnd},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="taxrate != null">taxrate = #{taxrate},</if>
+            <if test="notTaxMoney != null">not_tax_money = #{notTaxMoney},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payMethodName != null">pay_method_name = #{payMethodName},</if>
+            <if test="archiveFiles != null">archive_files = #{archiveFiles},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusPs != null">status_ps = #{statusPs},</if>
+            <if test="contractScanningFile != null">contract_scanning_file = #{contractScanningFile},</if>
+            <if test="receiveAmount != null">receive_amount = #{receiveAmount},</if>
+            <if test="contractApprovalFile != null">contract_approval_file = #{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">outstanding_amount = #{outstandingAmount},</if>
+            <if test="writeOffAmount != null">write_off_amount = #{writeOffAmount},</if>
+            <if test="otherFiles != null">other_files = #{otherFiles},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount = #{nwriteOffAmount},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateCtBuContractByInstanceId" parameterType="CtBuContract">
+        update ct_bu_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectCategory != null">project_category = #{projectCategory},</if>
+            <if test="projectCategoryName != null">project_category_name = #{projectCategoryName},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectNo != null">project_no = #{projectNo},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="contractCategory != null">contract_category = #{contractCategory},</if>
+            <if test="contractCategoryName != null">contract_category_name = #{contractCategoryName},</if>
+            <if test="incomeType != null">income_type = #{incomeType},</if>
+            <if test="oppositeName != null">opposite_name = #{oppositeName},</if>
+            <if test="oppositeBank != null">opposite_bank = #{oppositeBank},</if>
+            <if test="oppositeBankId != null">opposite_bank_id = #{oppositeBankId},</if>
+            <if test="oppositeContacts != null">opposite_contacts = #{oppositeContacts},</if>
+            <if test="oppositePhone != null">opposite_phone = #{oppositePhone},</if>
+            <if test="oppositeAddress != null">opposite_address = #{oppositeAddress},</if>
+            <if test="oppositeCreditCode != null">opposite_credit_code = #{oppositeCreditCode},</if>
+            <if test="ourName != null">our_name = #{ourName},</if>
+            <if test="ourContacts != null">our_contacts = #{ourContacts},</if>
+            <if test="ourPhone != null">our_phone = #{ourPhone},</if>
+            <if test="ourBank != null">our_bank = #{ourBank},</if>
+            <if test="ourBankId != null">our_bank_id = #{ourBankId},</if>
+            <if test="ourAddress != null">our_address = #{ourAddress},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="contractServeStart != null">contract_serve_start = #{contractServeStart},</if>
+            <if test="serviceTerm != null">service_term = #{serviceTerm},</if>
+            <if test="contractServeEnd != null">contract_serve_end = #{contractServeEnd},</if>
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="taxrate != null">taxrate = #{taxrate},</if>
+            <if test="notTaxMoney != null">not_tax_money = #{notTaxMoney},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
+            <if test="payMethodName != null">pay_method_name = #{payMethodName},</if>
+            <if test="archiveFiles != null">archive_files = #{archiveFiles},</if>
+            <if test="manageDeptment != null">manage_deptment = #{manageDeptment},</if>
+            <if test="manageUser != null">manage_user = #{manageUser},</if>
+            <if test="originalId != null">original_id = #{originalId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="statusPs != null">status_ps = #{statusPs},</if>
+            <if test="contractScanningFile != null">contract_scanning_file = #{contractScanningFile},</if>
+            <if test="receiveAmount != null">receive_amount = #{receiveAmount},</if>
+            <if test="contractApprovalFile != null">contract_approval_file = #{contractApprovalFile},</if>
+            <if test="outstandingAmount != null">outstanding_amount = #{outstandingAmount},</if>
+            <if test="writeOffAmount != null">write_off_amount = #{writeOffAmount},</if>
+            <if test="otherFiles != null">other_files = #{otherFiles},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="nwriteOffAmount != null">nwrite_off_amount = #{nwriteOffAmount},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="instanceId != null">instance_id = #{instanceId},</if>
+        </trim>
+        where instance_id = #{instanceId}
+    </update>
+
+    <delete id="deleteCtBuContractById" parameterType="String">
+        delete from ct_bu_contract where id = #{id}
+    </delete>
+
+    <delete id="deleteCtBuContractByIds" parameterType="String">
+        delete from ct_bu_contract where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countContract" parameterType="String" resultType="int">
+        SELECT count(1) FROM ct_bu_contract
+        where contract_no like concat(#{contractNo},'%')
+    </select>
+
+    <select id="newestContractNo" parameterType="String" resultType="String">
+        SELECT contract_no
+        FROM ct_bu_contract
+        where contract_no like concat(#{contractNo},'%')
+        ORDER BY contract_no DESC limit 0,1
+    </select>
+
+
+    <update id="updateCtBuContractByIds" parameterType="String">
+        update ct_bu_contract set del_flag= '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateCtBuContractById" parameterType="String">
+        update ct_bu_contract set del_flag= '2' where id = #{id}
+    </update>
+
+
+    <select id="selectWarning" parameterType="Date" resultType="com.ruoyi.contract.contractInfo.domain.CtBuContract">
+        SELECT cbc.id,
+               cbc.contract_no AS contractNo,
+               cbc.contract_name AS contractName,
+               cbc.manage_deptment AS manageDeptment,
+               cbc.manage_user AS manageUser,
+               cbc.del_flag AS delFlag,
+               cbcp.id AS cbcpId,
+               cbcp.contract_id AS contractId,
+               cbcp.estimate_time AS estimateTime,
+               cbcp.estimate_money AS estimateMoney,
+               cbcp.actual_money AS actualMoney
+        FROM ct_bu_contract_payinfo cbcp
+        LEFT JOIN ct_bu_contract cbc ON cbcp.contract_id = cbc.contract_no
+        WHERE cbcp.estimate_time = #{WarningDate} AND cbc.del_flag = 1 AND cbc.contract_category = '1' AND cbcp.estimate_money > cbcp.actual_money AND cbcp.is_warning = 1
+
+    </select>
+
+</mapper>

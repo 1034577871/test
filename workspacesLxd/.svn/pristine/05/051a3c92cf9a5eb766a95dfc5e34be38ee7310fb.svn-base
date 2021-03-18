@@ -1,0 +1,27 @@
+import request from '@/utils/request'
+
+// 查询项目类型
+export function findProjectType(query) {
+  return request({
+    url: '/dictionary/protype/findProjectType',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询地区
+export function findBranchOffice(query) {
+  return request({
+    url: '/system/dept/findBranchOffice',
+    method: 'get',
+    params: query
+  })
+}
+
+// 删除文件(逻辑删除,传入文件ID)
+export function delFileById(id) {
+  return request({
+    url: '/dictionary/fileManage/' + id,
+    method: 'delete'
+  })
+}
